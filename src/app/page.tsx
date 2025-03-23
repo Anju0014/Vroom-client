@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -21,9 +20,9 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      {/* Hero Section */}
+      
       <div className="relative h-[500px] w-full">
-        {/* Background Image */}
+        
         <div className="absolute inset-0 z-0">
           <Image 
             src="/images/desert-background.png" 
@@ -34,7 +33,7 @@ export default function Home() {
           />
         </div>
         
-        {/* Content Overlay */}
+        
         <div className="absolute inset-0 z-10 flex flex-col justify-center px-8 md:px-16 bg-black/20">
           <div className="max-w-4xl">
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">
@@ -45,7 +44,7 @@ export default function Home() {
               Book from our wide selection of vehicles for any occasion at the best prices.
             </p>
 
-            {/* Search Form */}
+            
             <div className="bg-white p-4 rounded-lg shadow-lg max-w-3xl">
               <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-2">
                 <div className="flex-1">
@@ -101,14 +100,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Why Choose Vroom Section */}
+      
       <section className="py-16 px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-3">Why Choose Vroom</h2>
           <p className="text-gray-600 text-center mb-12">We offer the best car rental experience with premium service and satisfaction, always.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Feature 1 */}
+            
             <div className="flex flex-col items-center">
               <div className="bg-yellow-100 p-4 rounded-full mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,7 +118,7 @@ export default function Home() {
               <p className="text-gray-600 text-center text-sm">From economy to luxury, we've got you covered.</p>
             </div>
 
-            {/* Feature 2 */}
+            
             <div className="flex flex-col items-center">
               <div className="bg-blue-100 p-4 rounded-full mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -130,7 +129,7 @@ export default function Home() {
               <p className="text-gray-600 text-center text-sm">All vehicles are verified for your safety.</p>
             </div>
 
-            {/* Feature 3 */}
+            
             <div className="flex flex-col items-center">
               <div className="bg-green-100 p-4 rounded-full mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -141,7 +140,7 @@ export default function Home() {
               <p className="text-gray-600 text-center text-sm">Secure online payments with PayPal.</p>
             </div>
 
-            {/* Feature 4 */}
+            
             <div className="flex flex-col items-center">
               <div className="bg-purple-100 p-4 rounded-full mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -155,14 +154,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      
       <section className="py-16 px-8 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-3">How It Works</h2>
           <p className="text-gray-600 text-center mb-12">Renting a car never been easier. Follow these simple steps.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Step 1 */}
+          
             <div className="flex flex-col items-center">
               <div className="relative">
                 <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mb-6">1</div>
@@ -174,7 +173,7 @@ export default function Home() {
               <p className="text-gray-600 text-center">Check our inventory by location, date, and car type to find your perfect match.</p>
             </div>
 
-            {/* Step 2 */}
+            
             <div className="flex flex-col items-center">
               <div className="relative">
                 <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mb-6">2</div>
@@ -186,7 +185,7 @@ export default function Home() {
               <p className="text-gray-600 text-center">Reserve your car instantly with our secure payment system.</p>
             </div>
 
-            {/* Step 3 */}
+            
             <div className="flex flex-col items-center">
               <div className="relative">
                 <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mb-6">3</div>

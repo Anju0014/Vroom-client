@@ -1,10 +1,11 @@
 
 import axiosInstance from "@/config/axiosInstance";
-import { SignupData } from "@/types/authTypes";
+import { SignupData, GoogleSignInData } from "@/types/authTypes";
+
 
 export const OwnerAuthService = {
   registerCarOwner: async (userData: SignupData ) => {
-    return await axiosInstance.post("/owner/signup", { userData});
+    return await axiosInstance.post("/owner/signup", userData);
   },
   verifyotpCarOwner: async ({ email, otp }: { email: string; otp: string }) => {
     return await axiosInstance.post("/owner/verifyotp", { email, otp });
@@ -23,5 +24,8 @@ export const OwnerAuthService = {
 },
 logoutOwner: async () => {
   return await axiosInstance.post('owner/logout', {}, { withCredentials: true });
-}
+},
+googlesigninOwner: async (data: GoogleSignInData) => {
+  return await axiosInstance.post("/googleSignIn", data);
+},
 };

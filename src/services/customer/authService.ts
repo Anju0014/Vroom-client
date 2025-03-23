@@ -1,5 +1,6 @@
 import axiosInstance from "@/config/axiosInstance";
-import { SignupData } from "@/types/authTypes";
+import { SignupData, GoogleSignInData } from "@/types/authTypes";
+
 
 export const AuthService = {
   registerCustomer: async (userData: SignupData) => {
@@ -22,7 +23,11 @@ export const AuthService = {
   },
   logoutCustomer: async () => {
     return await axiosInstance.post('/logout', {}, { withCredentials: true });
-  }
+  },
+   
+  googlesigninCustomer: async (data: GoogleSignInData) => {
+    return await axiosInstance.post("/googleSignIn", data);
+  },
 
 };
 

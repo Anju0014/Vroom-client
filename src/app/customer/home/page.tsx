@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Image from 'next/image';
 import Header from '@/components/HeaderCustomer';
 import VroomFooter from '@/components/Footer';
@@ -10,6 +10,15 @@ const LandingPage = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   // const [carType, setCarType] = useState('');
+  const [hydrated, setHydrated] = useState(false);
+
+  // Prevent hydration mismatch:
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) return null;
+
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,13 +34,14 @@ const LandingPage = () => {
       <div className="relative h-[500px] w-full">
      
         <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/desert-background.png" 
-            alt="Desert with SUV" 
-            layout="fill"
-            objectFit="cover"
-            priority
-          />
+        <Image 
+        src="/images/desert-background.png" 
+        alt="Desert with SUV" 
+        fill  
+        style={{ objectFit: "cover" }}
+        priority
+        />
+
         </div>
         
   
@@ -79,6 +89,9 @@ const LandingPage = () => {
                     onChange={(e) => setEndDate(e.target.value)}
                   />
                 </div>
+                </form>
+
+
                 {/* <div className="flex-1">
                   <label htmlFor="car-type" className="block text-sm font-medium text-gray-700 mb-1">Car Type</label>
                   <select
@@ -93,7 +106,8 @@ const LandingPage = () => {
                     <option value="luxury">Luxury</option>
                   </select>
                 </div> */}
-              </form>
+             
+
               <button
                 type="submit"
                 onClick={handleSearch}

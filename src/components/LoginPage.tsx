@@ -1,6 +1,6 @@
 "use client";
 
-import { useState} from "react";
+import { useState,useEffect} from "react";
 import { useRouter } from "next/navigation";
 import Image from 'next/image';
 import Link from "next/link";
@@ -11,6 +11,8 @@ import { OwnerAuthService } from "@/services/carOwner/authService";
 import { useAuthStore } from "@/store/customer/authStore";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
 import { IUser } from "@/types/authTypes";
+import { signIn, useSession } from "next-auth/react";
+
 
 interface LoginData {
   email: string;
@@ -35,6 +37,7 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
   const [rememberMe, setRememberMe] = useState(false);
   const { setAuth } = useAuthStore();
   const { setAuthOwner } = useAuthStoreOwner();
+  const {data:session} =useSession();
 
 
 
@@ -69,7 +72,7 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
           email: formData.email,
           password: formData.password,
         });
-  
+
         accessToken = response.data.accessToken;
         user = response.data.user;
         if(user && accessToken){
@@ -127,6 +130,162 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
       setLoading(false);
     }
   };
+
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/" });
+    } catch (error) {
+      console.error("Google Login Failed:", error);
+      toast.error("Google Login Failed");
+    }
+  };
+
+  useEffect(() => {
+    const handleGoogleLoginResponse = async () => {
+      if (session?.user) {
+        try {
+          let response;
+          let accessToken;
+          let user;
+
+          if (formData.role === "customer") {
+            response = await AuthService.googlesigninCustomer({
+              fullName: session.user.name ?? "",
+              email: session.user.email ?? "",
+              image: session.user.image ?? "",
+              provider: "google",
+            });
+            accessToken = response.data.accessToken;
+            user = response.data.user;
+            if (user && accessToken) {
+              setAuth(user, accessToken);
+            }
+          } else {
+            response = await OwnerAuthService.googlesigninOwner({
+              fullName: session.user.name ?? "",
+              email: session.user.email ?? "",
+              image: session.user.image ?? "",
+              provider: "google",
+              role: "carOwner",
+            });
+            accessToken = response.data.accessToken;
+            user = response.data.user;
+            if (user && accessToken) {
+              setAuthOwner(user, accessToken);
+            }
+          }
+
+          if (!accessToken) {
+            throw new Error("Access token is missing.");
+          }
+
+          // Store tokens based on rememberMe
+          if (rememberMe) {
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userRole", formData.role);
+          } else {
+            sessionStorage.setItem("accessToken", accessToken);
+            sessionStorage.setItem("isLoggedIn", "true");
+            sessionStorage.setItem("userRole", formData.role);
+          }
+          sessionStorage.setItem("provider", "google");
+          sessionStorage.setItem("userEmail", session.user.email ?? "");
+
+          toast.success("Google Login Successful!");
+
+          if (formData.role === "customer") {
+            router.push("/");
+          } else {
+            router.push("/carOwner/home");
+          }
+        } catch (error) {
+          console.error("Google Login Failed:", error);
+          toast.error("Google Login Failed");
+        }
+      }
+    };
+
+    handleGoogleLoginResponse();
+  }, [session, formData.role, router, rememberMe, setAuth, setAuthOwner]);
+
+    // const handleGoogleSignup = async () => {
+    //   await signIn("google", { callbackUrl: "/" });
+
+    // };
+
+
+
+    //  const handleGoogleSignup = async () => {
+    //     try {
+    //       await signIn("google", { callbackUrl: "/" });
+    //     } catch (error) {
+    //       console.error("Google Signup Failed:", error);
+    //       toast.error("Google Signup Failed");
+    //     }
+    //   };
+    
+    //   useEffect(() => {
+    //     const handleGoogleSignUp = async () => {
+    //       let  accessToken ;
+    //       if (session?.user) {
+    //         try {
+    //           if (role === "customer") {
+    //             const response= await AuthService.googlesigninCustomer({
+    //               fullName: session.user.name ?? "",
+    //               email: session.user.email ?? "",
+    //               image: session.user.image ?? "",
+    //               provider: "google",
+    //             });
+    //             let accessToken = response.data.accessToken;
+    //             const user1 = response.data.user;
+    //             if(user1 && accessToken){
+    //               setAuth(user1,accessToken);
+    //               sessionStorage.setItem("provider", "google");
+    //             }else {
+    //               throw new Error("User or access token is missing.");
+    //             }
+    //           } else {
+    //             const response= await OwnerAuthService.googlesigninOwner({
+    //               fullName: session.user.name ?? "",
+    //               email: session.user.email ?? "",
+    //               image: session.user.image ?? "",
+    //               provider: "google",
+    //               role: "carOwner",
+    //             });
+    //             let  accessToken = response.data.accessToken;
+    //             const user1 = response.data.user;
+    //             if(user1 && accessToken){
+    //               setAuthOwner(user1,accessToken);
+    //               sessionStorage.setItem("provider", "google");
+    //             }else {
+    //               throw new Error("User or access token is missing.");
+    //             }
+    //           }
+              
+    //           if (accessToken) {
+    //               localStorage.setItem("accessToken", accessToken);
+    //           }
+    //           toast.success("Google Signup Successful!");
+    
+    //           sessionStorage.setItem("userEmail", session.user.email ?? "");
+    //           sessionStorage.setItem("role", role);
+    //           if (role === "customer") {
+    //             router.push("/");
+    //           } else {
+    //             router.push("/carOwner/home");
+    //           }
+    //         } catch (error) {
+    //           console.error("Google Signup Failed:", error);
+    //           toast.error("Google Signup Failed");
+    //         }
+    //       }
+    //     };
+      
+    //     handleGoogleSignUp();
+    //   }, [session, role, router]);
+      
 
   return (
     <div className="flex min-h-screen">
@@ -283,6 +442,13 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
               {loading ? `Signing In as ${formData.role}...` : `Sign In as ${formData.role}`}
             </button>
           </form>
+          <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
+            >
+             Login through Google
+            </button>
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">

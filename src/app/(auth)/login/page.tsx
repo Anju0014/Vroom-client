@@ -1,4 +1,4 @@
-
+"use client"
 import LoginPage from "@/components/LoginPage";
 
  const Login=()=>{

@@ -1,27 +1,37 @@
 "use client";
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
-import { useAuthStore } from '@/store/customer/authStore';
+import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/store/customer/authStore'
 import { AuthService } from '@/services/customer/authService';
 import { useRouter } from 'next/navigation';
-
-
+import { signOut } from "next-auth/react";
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const router=useRouter()
-  const { user, logout, accessToken } = useAuthStore();
-  console.log(user)
-  const handlelogout= async()=>{
-    try {
-      await AuthService.logoutCustomer();
-      logout();
-      router.push("/login");
-    } catch (error) {
-      console.log("Logout failed:", error);
-    }
-  }
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isGoogleUser, setIsGoogleUser] = useState(false);
+    const router = useRouter();
+    const { user, logout, accessToken } = useAuthStore();
+    const [clientAccessToken, setClientAccessToken] = useState<string | null>(null);
+    const [hydrated, setHydrated] = useState(false);
+
+
+    useEffect(() => {
+      setHydrated(true);
+      setIsGoogleUser(sessionStorage.getItem("provider") === "google");
+    }, []);
+  
+    const handlelogout = async () => {
+      try {
+        await AuthService.logoutCustomer();
+        if (isGoogleUser) {
+          await signOut({ callbackUrl: "/" });
+         }
+         logout();
+        router.push("/");
+      } catch (error) {
+        console.log("Logout failed:", error);
+      }
+    };
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,7 +95,7 @@ const Header = () => {
           </div>
           </div>
           
-          {/* Mobile menu button */}
+       
           <div className="flex items-center md:hidden">
             <button
               type="button"
@@ -153,7 +163,7 @@ const Header = () => {
             {accessToken ? (
               <>
                 <span className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Hi, {user?.fullName}</span>
-                <button onClick={logout} className="bg-red-500 text-white px-3 py-1 rounded">
+                <button onClick={handlelogout} className="bg-red-500 text-white px-3 py-1 rounded">
                   Sign Out
                 </button>
               </>
