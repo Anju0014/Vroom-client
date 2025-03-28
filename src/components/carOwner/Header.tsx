@@ -42,8 +42,8 @@ const Header = () => {
           <div className="flex items-center space-x-4">
           {accessToken ? (
               <>
-               <Link href="/profile" className="text-sm font-medium text-gray-500 hover:text-gray-700">
-              My Profile
+               <Link href="/carOwner/dashboard/profile" className="text-sm font-medium text-gray-500 hover:text-gray-700">
+              My DashBoard
             </Link> 
                 <span className="text-sm text-gray-700">Hi, {user?.fullName}</span>
                 <button onClick={handlelogout} className="bg-red-500 text-white px-3 py-1 rounded">

@@ -1,31 +1,49 @@
 
 import axiosInstance from "@/config/axiosInstance";
-import { SignupData, GoogleSignInData } from "@/types/authTypes";
+import { SignupData, GoogleSignInData,Address } from "@/types/authTypes";
 
+const carOwnerApi = axiosInstance("carOwner");
 
 export const OwnerAuthService = {
   registerCarOwner: async (userData: SignupData ) => {
-    return await axiosInstance.post("/owner/signup", userData);
+    return await carOwnerApi.post("/owner/signup", userData);
   },
   verifyotpCarOwner: async ({ email, otp }: { email: string; otp: string }) => {
-    return await axiosInstance.post("/owner/verifyotp", { email, otp });
+    return await carOwnerApi.post("/owner/verifyotp", { email, otp });
   },
   resendotpCarOwner: async ({ email }: { email: string }) => {
-    return await axiosInstance.post("/owner/resendotp", { email });
+    return await carOwnerApi.post("/owner/resendotp", { email });
   },
   loginCarOwner: async ({ email, password }: { email: string; password: string }) => {
-    return await axiosInstance.post("/owner/login", { email, password });
+    return await carOwnerApi.post("/owner/login", { email, password });
   },
   forgotPasswordCarOwner:async({email}:{email:string})=>{
-    return await axiosInstance.post("owner/forgotpassword",{email})
+    return await carOwnerApi.post("owner/forgotpassword",{email})
  },
  resetPasswordCarOwner:async({token,newPassword}:{token:string|null,newPassword:string})=>{
-  return await axiosInstance.post("/resetpassword",{token,newPassword})
+  return await carOwnerApi.post("/resetpassword",{token,newPassword})
 },
 logoutOwner: async () => {
-  return await axiosInstance.post('owner/logout', {}, { withCredentials: true });
+  return await carOwnerApi.post('/owner/logout', {}, { withCredentials: true });
 },
 googlesigninOwner: async (data: GoogleSignInData) => {
-  return await axiosInstance.post("/googleSignIn", data);
+  return await carOwnerApi.post("owner/googleSignIn", data);
 },
+getOwnerProfile:async()=>{
+
+  const response = await carOwnerApi.get("owner/getOwnerProfile");
+  if (response.status !== 200) throw new Error("Failed to fetch profile");
+  return response.data.owner; 
+},
+updateOwnerProfile: async (payload: { phoneNumber: string; address: Address,profileImage:string }) => {
+  const response = await carOwnerApi.put("owner/updateProfile", payload);
+  console.log(response.data)
+  return response.data;
+},
+updateOwnerIdProof: async ({idProof}:{idProof:string}) => {
+  const response = await carOwnerApi.put("owner/updateProfileIdProof", {idProof});
+  console.log(response.data)
+  return response.data;
+},
+
 };

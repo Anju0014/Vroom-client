@@ -71,7 +71,22 @@ export const resetPasswordSchema = z.object({
     path: ["confirmPassword"], // Error will show under confirmPassword
   });
 
-
+// ✅ Zod Schema for Address
+const addressSchema = z.object({
+    addressLine1: z.string().min(1, "Address Line 1 is required"),
+    addressLine2: z.string().optional(),
+    city: z.string().min(1, "City is required"),
+    state: z.string().min(1, "State is required"),
+    postalCode: z.string().min(5, "Postal Code must be at least 5 characters"),
+    country: z.string().min(1, "Country is required"),
+  });
+  
+  // ✅ Zod Schema for Profile
+  export const profileSchema = z.object({
+    phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+    address: addressSchema,
+    profileImage: z.string().url("Invalid image URL").optional(),
+  });
 
 
 // export const validateSignup = (data: { fullName: string; email: string; password: string; confirmPassword: string; phoneNumber: string }) => {

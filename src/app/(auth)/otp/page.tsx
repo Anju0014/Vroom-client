@@ -72,7 +72,7 @@ const OTPVerification = () => {
       // const response = await AuthService.verifyotpCustomer({ email, otp });
       console.log(response);
       toast.success("OTP Verified! Redirecting...");
-      const redirectPath = role === "customer" ? "/login" : "/owner/login";
+      const redirectPath = role === "customer" ? "/login" : "/login";
        setTimeout(() => router.push(redirectPath), 2000);
       // setTimeout(() => router.push("/login"), 2000); 
     } catch (error: any) {

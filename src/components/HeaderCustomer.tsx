@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/store/customer/authStore'
 import { AuthService } from '@/services/customer/authService';
 import { useRouter } from 'next/navigation';
-import { signOut } from "next-auth/react";
+import { signOut,useSession } from "next-auth/react";
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isGoogleUser, setIsGoogleUser] = useState(false);
@@ -15,6 +15,8 @@ const Header = () => {
     const [hydrated, setHydrated] = useState(false);
 
 
+    
+
     useEffect(() => {
       setHydrated(true);
       setIsGoogleUser(sessionStorage.getItem("provider") === "google");
@@ -22,7 +24,7 @@ const Header = () => {
   
     const handlelogout = async () => {
       try {
-        await AuthService.logoutCustomer();
+        // await AuthService.logoutCustomer();
         if (isGoogleUser) {
           await signOut({ callbackUrl: "/" });
          }
@@ -79,7 +81,7 @@ const Header = () => {
              <div className="flex items-center space-x-4">
             {accessToken ? (
               <>
-               <Link href="/profile" className="text-sm font-medium text-gray-500 hover:text-gray-700">
+               <Link href="/customer/dashboard/profile" className="text-sm font-medium text-gray-500 hover:text-gray-700">
               My Profile
             </Link> 
                 <span className="text-sm text-gray-700">Hi, {user?.fullName}</span>

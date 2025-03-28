@@ -14,26 +14,17 @@ export interface SignupData {
     id: string;
     fullName: string;
     email: string;
-    phone?: string;
+    phoneNumber?: string;
     role: UserRole;
     profileImage?: string;
     createdAt?: string;
     updatedAt?: string;
+    address?:[],
   }
   
 
 
-  export interface Car {
-    id: string;
-    make?: string;
-    model: string;
-    year?: number;
-    fuelType?: string,
-    rcBookNo?: string,
-    licensePlate?: string;
-    image?: string;
-    isVerified?:boolean
-  }
+
   
   export interface Booking {
     id: string;
@@ -52,6 +43,7 @@ export interface SignupData {
     documentUrl: string;
   }
   
+
   export interface IdProof {
     id: string;
     type: 'driver_license' | 'passport' | 'national_id';
@@ -66,7 +58,79 @@ export interface SignupData {
   export interface GoogleSignInData {
     fullName: string;
     email: string;
-    image: string;
+    profileImage: string;
     provider: string;
     role?: "customer" | "carOwner";
+  }
+
+
+
+  // export interface Car {
+  //   id: string;                
+  //   carName: string;
+  //   brand: string;
+  //   year?: string;
+  //   fuelType?: string;
+  //   rcBookNo?: string;          
+  //   expectedWage: string;
+  //   location: string;
+  //   make?: string;
+  //   model: string;
+  //   isVerified?:boolean
+  //   images?: string[];          
+  //   videos?: string[];         
+  //   imageFiles?: File[];        
+  //   videoFiles?: File[];        
+  // }
+  
+  export interface Car {
+    id: string;
+    carName: string;
+    brand: string;
+    year?: string;
+    fuelType?: string;
+    rcBookNo?: string;
+    expectedWage: string;
+    location: string;
+    make?: string;
+    model: string;
+    isVerified?: boolean;
+    images?: string[];  
+    videos?: string[]; 
+   }
+
+
+   export interface CarFormData {
+    carName: string;
+    brand: string;
+    year: string;
+    fuelType: string;
+    rcBookNo: string;
+    expectedWage: string;
+    location: string;
+    imageFiles: File[];  // Files to upload
+    videoFiles: File[];  // Files to upload
+  }
+
+  export interface Address {
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  }
+
+
+
+  export interface Customer {
+    id: string;
+    name: string;
+    email: string;
+    status: 'verified' | 'not_verified';
+    isBlocked: boolean;
+    createdAt: Date;
+    lastLogin?: Date;
+    phoneNumber?: string;
+    address?: string;
   }
