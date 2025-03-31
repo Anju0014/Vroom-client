@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { ReactNode, useEffect, useState } from "react";
@@ -6,18 +5,16 @@ import Sidebar from "./Sidebar";
 import { AuthService } from "@/services/customer/authService";
 import { useAuthStore } from "@/store/customer/authStore";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
- 
   const [loading, setLoading] = useState(true);
-
-  const { user, accessToken, setAuth } = useAuthStore();
-  console.log("check user",user);
-  console.log("check access", accessToken)
-
+  const { user, accessToken, setAuth, logout } = useAuthStore();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -26,25 +23,43 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         setLoading(false);
         return;
       }
-  
+
       try {
         const userData = await AuthService.getCustomerProfile();
-        console.log("userData",userData)
-        setAuth(userData, accessToken);
+        console.log("userData", userData);
+
+    
+        if (userData?.customer?.status === -2) {
+          logout();
+          toast.error("You have been blocked by the admin.");
+          router.push("/login");
+          return;
+        }
+
+        setAuth(userData.customer, accessToken);
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
-  
+
     if (!user) {
       fetchUser();
+    } else if (user?.status === -2) {
+      logout();
+      toast.error("You have been blocked by the admin.");
+      router.push("/login");
     } else {
-      setLoading(false);  
+      setLoading(false);
     }
-  }, [user, accessToken, setAuth]);
+
   
+    const interval = setInterval(() => {
+      fetchUser();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [user, accessToken, setAuth, logout, router]);
 
   if (loading) {
     return (
@@ -64,8 +79,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-    
-      <Sidebar  />
+      <Sidebar />
       <main className="flex-1 p-6">{children}</main>
     </div>
   );

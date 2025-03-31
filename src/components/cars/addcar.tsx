@@ -1,24 +1,15 @@
-// File: components/AddNewCarModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-
-// Define the car data interface
-interface CarFormData {
-  carName: string;
-  brand: string;
-  year: string;
-  fuelType: string;
-  rcBookNo: string;
-  expectedWage: string;
-  location: string;
-  images: File[];
-  videos: File[];
-}
+import InputField from '@/components/InputField';
+import FileUpload from '@/components/FileUpload';
+import { CarFormData } from '@/types/authTypes';
+import { OwnerAuthService } from '@/services/carOwner/authService';
+import toast from 'react-hot-toast';
 
 interface AddNewCarModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddCar: (carData: CarFormData) => Promise<void>;
+  onAddCar?: (carData: CarFormData) => Promise<void>;
 }
 
 const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onAddCar }) => {
@@ -31,43 +22,45 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onAddC
     expectedWage: '',
     location: '',
     images: [],
-    videos: []
+    videos: [],
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [mounted, setMounted] = useState<boolean>(false);
-  
-  // Handle client-side mounting for portal
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files) {
-      setFormData({
-        ...formData,
-        [name]: Array.from(files)
-      });
-    }
-  };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     
+    // Validate form
+    if (formData.images.length === 0) {
+      toast.error('Please upload at least one image of your car');
+      return;
+    }
+    
+    setIsSubmitting(true);
+
     try {
-      await onAddCar(formData);
-      // Reset form
+      // Call the service to add car
+      await OwnerAuthService.addCar(formData);
+      
+      // if (onAddCar) {
+      //   await onAddCar(formData);
+      // }
+
+      // Show success toast
+      toast.success('Car added successfully!');
+      
+    
       setFormData({
         carName: '',
         brand: '',
@@ -77,166 +70,96 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onAddC
         expectedWage: '',
         location: '',
         images: [],
-        videos: []
+        videos: [],
       });
+      
       // Close modal
       onClose();
     } catch (error) {
       console.error('Error adding new car:', error);
-      alert('Failed to add new car. Please try again.');
+      toast.error('Failed to add new car. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
   
-  // Form field component
-  const FormField: React.FC<{
-    label: string;
-    name: string;
-    type?: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    required?: boolean;
-  }> = ({ label, name, type = "text", value, onChange, required = false }) => {
-    return (
-      <div className="mb-4">
-        <label className="block mb-2 text-sm font-medium">{label}</label>
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-          required={required}
-          className="block w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-    );
-  };
-  
-  // If not open or not mounted (client-side), don't render
   if (!isOpen || !mounted) {
     return null;
   }
-  
-  // Use portal to render modal outside of normal DOM hierarchy
+
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-blue-200 rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Add New Car</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-blue-100 rounded-xl shadow-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+        
+        <div className="flex justify-between items-center mb-6 pb-3 border-b border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-800">Add New Car</h2>
           <button 
             type="button" 
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+            className="text-gray-500 hover:text-gray-700 text-2xl font-bold hover:bg-gray-100 h-8 w-8 rounded-full flex items-center justify-center transition-colors"
+            aria-label="Close"
           >
             ×
           </button>
         </div>
-        
-        <form onSubmit={handleSubmit}>
+
+        <form onSubmit={handleSubmit} className="bg-white p-5 rounded-lg shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left Column */}
-            <div>
-              <FormField 
-                label="Car Name" 
-                name="carName"
-                value={formData.carName}
-                onChange={handleChange}
-                required
-              />
-              
-              <FormField 
-                label="Manufacturing Year" 
-                name="year" 
-                type="number"
-                value={formData.year}
-                onChange={handleChange}
-                required
-              />
-              
-              <FormField 
-                label="Fuel Type" 
-                name="fuelType"
-                value={formData.fuelType}
-                onChange={handleChange}
-                required
-              />
-              
+            
+            <div className="">
+              <InputField label="Car Name" name="carName" type="text"  onChange={handleChange} required />
+              <InputField label="Manufacturing Year" name="year" type="number"  onChange={handleChange} required />
+              <InputField label="Fuel Type" name="fuelType" type="text"  onChange={handleChange} required />
+
               <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium">Car Images</label>
-                <input 
-                  type="file" 
-                  name="images"
-                  onChange={handleFileChange}
+                <label className="block text-sm font-medium text-gray-700 mb-1">Car Images</label>
+                <FileUpload 
                   accept="image/*"
-                  multiple
-                  className="block w-full text-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium">Car Videos</label>
-                <input 
-                  type="file" 
-                  name="videos"
-                  onChange={handleFileChange}
-                  accept="video/*"
-                  multiple
-                  className="block w-full text-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  multiple={true}
+                  maxFiles={5}
+                  onUploadComplete={(uploadedUrls) => {
+                    if (Array.isArray(uploadedUrls)) {
+                      setFormData(prev => ({ ...prev, images: uploadedUrls }));
+                    }
+                  }}
                 />
               </div>
             </div>
-            
-            {/* Right Column */}
+
             <div>
-              <FormField 
-                label="Brand" 
-                name="brand"
-                value={formData.brand}
-                onChange={handleChange}
-                required
-              />
+              <InputField label="Brand" name="brand" type="text" onChange={handleChange} required />
+              <InputField label="RC Book No" name="rcBookNo" type="text" onChange={handleChange} required />
+              <InputField label="Expected Wage Daily" name="expectedWage" type="number"  onChange={handleChange} required />
+              <InputField label="Location" name="location" type="text" onChange={handleChange} required />
               
-              <FormField 
-                label="RC Book No" 
-                name="rcBookNo"
-                value={formData.rcBookNo}
-                onChange={handleChange}
-                required
-              />
-              
-              <FormField 
-                label="Expected Wage Daily" 
-                name="expectedWage"
-                type="number"
-                value={formData.expectedWage}
-                onChange={handleChange}
-                required
-              />
-              
-              <FormField 
-                label="Location" 
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                required
-              />
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Car Video</label>
+                <FileUpload 
+                  accept="video/*"
+                  multiple={false}
+                  maxFiles={1}
+                  onUploadComplete={(uploadedUrl) => {
+                    if (typeof uploadedUrl === 'string') {
+                      setFormData(prev => ({ ...prev, videos: [uploadedUrl] }));  // ✅ Store as an array
+                    }
+                  }}
+                />
+              </div>
             </div>
           </div>
-          
-          {/* Form Buttons */}
-          <div className="flex justify-end space-x-4 mt-6">
+
+          <div className="flex justify-end space-x-4 mt-8 pt-4 border-t border-gray-100">
             <button
               type="button"
               onClick={onClose}
-              className="bg-red-500 text-white px-6 py-2 rounded-md"
+              className="bg-gray-100 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-200 transition-colors font-medium"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-black text-white px-6 py-2 rounded-md"
+              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors font-medium"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Adding...' : 'Add Car'}
@@ -250,3 +173,4 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onAddC
 };
 
 export default AddNewCarModal;
+

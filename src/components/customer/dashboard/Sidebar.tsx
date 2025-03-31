@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React from "react";
@@ -7,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/customer/authStore";
+import { AuthService } from "@/services/customer/authService";
 import { 
   User, 
   Car, 
@@ -20,22 +20,23 @@ import {
   Settings, 
   LogOut 
 } from "lucide-react";
-
-// interface IUser {
-//   id: string;
-//   fullName: string;
-//   email: string;
-//   profileImage?: string;
-// }
-
-// interface SidebarProps {
-//   user: IUser;
-// }
+import toast from "react-hot-toast";
 
 const Sidebar: React.FC = () => {
-    const {user} =useAuthStore();
+    const {user,logout} =useAuthStore();
     console.log("user",user)
   const pathname = usePathname();
+   const handleLogout= async ()=>{
+      try{
+        const response=await AuthService.logoutCustomer();
+        if(!response){
+          throw new Error("Logout Failed")
+        }
+        logout();
+      }catch(error){
+        toast.error("Logout Failed.Please try Again")
+      }
+    }
 
   const navItems = [
     { name: "DashBoard", path: "/carOwner/dashboard/documents", icon: <CreditCard size={18} /> },
@@ -46,7 +47,7 @@ const Sidebar: React.FC = () => {
     // { name: "Revenue", path: "/dashboard/revenue", icon: <DollarSign size={18} /> },
     { name: "Chat", path: "/dashboard/chat", icon: <MessageSquare size={18} /> },
     // { name: "Settings", path: "/dashboard/settings", icon: <Settings size={18} /> },
-    { name: "Logout", path: "/logout", icon: <LogOut size={18} /> },
+    
   ];
 
   return (
@@ -77,7 +78,7 @@ const Sidebar: React.FC = () => {
                 className={`flex items-center py-2 px-3 rounded-md ${
                   pathname === item.path 
                     ? "bg-blue-200" 
-                    : "hover:bg-blue-200 transition-colors duration-200"
+                    : "hover:bg-red-200 transition-colors duration-200"
                 }`}
               >
                 <span className="mr-3 text-orange-700">{item.icon}</span>
@@ -85,6 +86,15 @@ const Sidebar: React.FC = () => {
               </Link>
             </li>
           ))}
+          <li>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center py-2 px-3 rounded-md hover:bg-red-200 transition-colors duration-200 "
+                      >
+                        <LogOut size={18} className="mr-3 text-orange-700" />
+                        <span className="text-sm">Logout</span>
+                      </button>
+                    </li>
         </ul>
       </nav>
     </div>

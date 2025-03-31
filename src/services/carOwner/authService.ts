@@ -1,6 +1,6 @@
 
 import axiosInstance from "@/config/axiosInstance";
-import { SignupData, GoogleSignInData,Address } from "@/types/authTypes";
+import { SignupData, GoogleSignInData,Address, CarFormData } from "@/types/authTypes";
 
 const carOwnerApi = axiosInstance("carOwner");
 
@@ -44,6 +44,20 @@ updateOwnerIdProof: async ({idProof}:{idProof:string}) => {
   const response = await carOwnerApi.put("owner/updateProfileIdProof", {idProof});
   console.log(response.data)
   return response.data;
+},
+
+addCar: async(data:CarFormData)=>{
+  return await carOwnerApi.post("owner/carupload",data)
+},
+
+getCars: async () => {
+  try {
+    const response = await carOwnerApi.get("/owner/getcars"); 
+    return response.data; // Assuming the backend returns { cars: [] }
+  } catch (error) {
+    console.error("Error fetching cars:", error);
+    throw error;
+  }
 },
 
 };

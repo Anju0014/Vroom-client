@@ -1,4 +1,4 @@
-// File: components/ModalProvider.tsx
+
 import React from 'react';
 
 interface ModalProviderProps {

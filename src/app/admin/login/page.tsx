@@ -2,6 +2,7 @@
 "use client"
 import { useState } from 'react';
 import Head from 'next/head';
+import { useAuthStoreAdmin } from '@/store/admin/authStore';
 import { AdminAuthService } from '@/services/admin/adminService';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -13,17 +14,21 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-  
       const response = await  AdminAuthService.loginAdmin({email:email,
         password:password})
       const accessToken = response.data.accessToken;
-
+      const user = response.data.user;
+        if (user && accessToken) {
+          useAuthStoreAdmin.getState().setAuthAdmin(user,accessToken)
+        } 
+     
       if (accessToken) {
         if (rememberMe) {
           localStorage.setItem("accessToken", accessToken);
@@ -31,8 +36,6 @@ export default function AdminLogin() {
           sessionStorage.setItem("accessToken", accessToken);
         }
       }
-
-      
       if (rememberMe) {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("userRole", "admin");
@@ -44,9 +47,8 @@ export default function AdminLogin() {
       
        setTimeout(() => router.push('/admin/dashboard'), 1500);
       
-    } catch (err:unknown) {
-        if(err instanceof Error){
-      setError(err.message || 'An error occurred during login');}
+    } catch (err){
+        toast.error("Invalid Credentials")
     } finally {
       setLoading(false);
     }
@@ -65,11 +67,11 @@ export default function AdminLogin() {
           <p className="mt-2 text-sm text-gray-600">Please sign in to your admin account</p>
         </div>
         
-        {error && (
+        {/* {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
             <p className="text-red-700">{error}</p>
           </div>
-        )}
+        )} */}
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">

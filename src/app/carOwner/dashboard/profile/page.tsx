@@ -8,24 +8,8 @@ import { toast } from "react-hot-toast";
 import Image from "next/image";
 import { FileText, FileUp,Eye } from 'lucide-react';
 import FileUpload from "@/components/FileUpload";
+import { Address ,CarOwner} from "@/types/authTypes";
 
-interface Address {
-    addressLine1: string;
-    addressLine2?: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-}
-
-interface CarOwner {
-  id: string;
-  fullName: string;
-  email: string;
-  phoneNumber?: string;
-  profileImage?: string;
-  address?:Address;
-}
 
 const ProfilePage = () => {
   const [ownerDetails, setOwnerDetails] = useState<CarOwner | null>(null);
@@ -163,6 +147,7 @@ const ProfilePage = () => {
 
         {isEditing && (
           <EditProfileModal
+            // userType="owner"
             currentProfileImage={ownerDetails?.profileImage}
             currentPhoneNumber={ownerDetails?.phoneNumber}
             currentAddress={ownerDetails?.address}

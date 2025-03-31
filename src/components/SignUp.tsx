@@ -1,5 +1,4 @@
 
-
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -33,12 +32,12 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
   const { setAuth } = useAuthStore();
   const { setAuthOwner } = useAuthStoreOwner();
 
-  // Set hydration state after mount
+
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
-  // Safe storage setter function
+
   const setStorageItem = (storage: Storage, key: string, value: string) => {
     if (typeof window !== "undefined") {
       storage.setItem(key, value);
@@ -73,7 +72,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
       setStorageItem(sessionStorage, "userEmail", response.data.email);
       setStorageItem(sessionStorage, "role", role);
       
-      // Use setTimeout inside useEffect to handle client-side navigation
+ 
       setTimeout(() => router.push("/otp"), 2000);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Signup failed");
@@ -91,7 +90,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
     }
   };
 
-  // Handle Google login response after hydration is complete
+ 
   useEffect(() => {
     if (!isHydrated || !session?.user) return;
 
@@ -189,7 +188,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
         </div>
       </div>
       
-      {/* Right side - Form */}
+
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
@@ -199,7 +198,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
             <p className="mt-2 text-gray-600">Join Vroom and start your journey today</p>
           </div>
           
-          {/* Only render form after hydration to prevent mismatch */}
+        
           {isHydrated && (
             <>
               <form onSubmit={handleSubmit} className="mt-8 space-y-5">

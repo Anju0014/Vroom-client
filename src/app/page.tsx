@@ -12,7 +12,7 @@ export default function Home() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement search functionality here
+   
     console.log('Searching with:', { location, pickupDate, carType });
   };
 

@@ -1,38 +1,36 @@
-
-
 "use client";
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { IUser } from "../../types/authTypes";
 
-interface AuthStateOwner {
+interface AuthStateAdmin {
   user: IUser | null;
   accessToken: string | null;
-  setAuthOwner: (user: IUser, accessToken: string) => void;
+  setAuthAdmin: (user: IUser, accessToken: string) => void;
   logout: () => void;
 }
 
-export const useAuthStoreOwner = create<AuthStateOwner>()(
+export const useAuthStoreAdmin = create<AuthStateAdmin>()(
   persist(
     (set) => ({
       user: null,
       accessToken: null,
 
     
-      setAuthOwner: (user, accessToken) => {
+      setAuthAdmin: (user, accessToken) => {
         set({ user, accessToken });
       },
 
       logout: () => {
         set({ user: null, accessToken: null });
-        localStorage.removeItem("authStoreOwner");
+        localStorage.removeItem("authStoreAdmin");
         sessionStorage.removeItem("provider");
         sessionStorage.removeItem("userEmail");
         sessionStorage.removeItem("role");
-        window.location.href = "/login";
+        window.location.href = "/admin/login";
       },
     }),
-    { name: "authStoreOwner" }
+    { name: "authStoreAdmin" }
   )
 );

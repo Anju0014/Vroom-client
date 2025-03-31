@@ -45,7 +45,8 @@ export default function ResetPasswordPage() {
   };
   return (
      <div className="flex min-h-screen">
-          <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-600 to-orange-500 flex-col justify-center items-center p-12 relative">
+          <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-600 to-orange-500 
+          flex-col justify-center items-center p-12 relative">
             <div className="text-center text-white">
               <h1 className="text-5xl font-bold mb-6">Vroom</h1>
               <p className="text-xl max-w-md">Reset Your Password to  Log in to  your account.</p>

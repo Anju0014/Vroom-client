@@ -89,15 +89,5 @@ const addressSchema = z.object({
   });
 
 
-// export const validateSignup = (data: { fullName: string; email: string; password: string; confirmPassword: string; phoneNumber: string }) => {
-//     const errors: Record<string, string> = {};
-  
-//     if (!data.fullName.trim()) errors.firstName = "Name is required";
-//     if (!data.email.includes("@")) errors.email = "Invalid email format";
-//     if (data.password.length < 6) errors.password = "Password must be at least 6 characters";
-//     if (data.password !== data.confirmPassword) errors.confirmPassword = "Passwords do not match";
-//     if (!/^\d{10}$/.test(data.phoneNumber)) errors.phoneNumber = "Phone number must be 10 digits";
-  
-//     return errors;
-//   };
+
   

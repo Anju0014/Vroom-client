@@ -1,16 +1,14 @@
-
-
 "use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { OwnerAuthService } from "@/services/carOwner/authService";
-import { useAuthStoreOwner } from "@/store/carOwner/authStore";
+import { AuthService } from "@/services/customer/authService";
+import { useAuthStore } from "@/store/customer/authStore";
 import { toast } from "react-hot-toast";
 import FileUpload from "@/components/FileUpload";
 import { IUser, UserRole } from "@/types/authTypes";
 import { profileSchema } from "@/lib/validation";
-import { EditProfileModalProps,Address } from "@/types/authTypes";
+import { EditProfileModalProps, Address } from "@/types/authTypes";
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({
   currentPhoneNumber = "",
@@ -30,63 +28,65 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       country: "",
     }
   );
-  const { accessToken, user, setAuthOwner } = useAuthStoreOwner();
+  const { accessToken, user, setAuth } = useAuthStore();
   const [profileImage, setProfileImage] = useState(currentProfileImage);
   const [loading, setLoading] = useState(false);
 
   const handleImageUploadComplete = (uploadedUrl: string | string[]) => {
     if (typeof uploadedUrl === "string") {
-      console.log(uploadedUrl)
+      console.log("Uploaded Image URL:", uploadedUrl);
       setProfileImage(uploadedUrl);
     }
   };
-  
 
-   console.log("Zustand Access Token:", accessToken);
-   console.log("Zustand User:", user);
-  
+  console.log("Zustand Access Token:", accessToken);
+  console.log("Zustand User:", user);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const payload = { phoneNumber, address, profileImage };
-      // profileSchema.parse(payload);
-      const result = profileSchema.safeParse(payload);
-          if (!result.success) {
-            const errorMessages = result.error.errors.map((err) => err.message).join(", ");
-            
-            toast.error(errorMessages);
-            return;
-          }
-    if (!accessToken) {
-      console.error("No access token available");
-      toast.error("No access token available. Please log in again.");
-      setLoading(false);
-      return;
-    }
-      console.log("Validation Passed:", payload);
-      const updatedUser=await OwnerAuthService.updateOwnerProfile(payload);
-      console.log("updated***************************",updatedUser)
-      console.log("Updated User from API:", updatedUser);
-      const updatedOwner = updatedUser.updatedOwner;
-console.log("Updated Owner:", updatedOwner);
-const partialUser: IUser = {
-  id: updatedOwner._id,
-  fullName: updatedOwner.fullName,
-  email: updatedOwner.email,
-  phoneNumber: updatedOwner.phoneNumber,
-  address: updatedOwner.address,
-  role: updatedOwner.role as UserRole, 
-  profileImage: updatedOwner.profileImage ?? "/images/user.png",
-};
-      console.log("Partial User Before Zustand:", partialUser);
-      setAuthOwner(partialUser,accessToken);
-    
-      toast.success("Profile updated successfully");
-      
-      onProfileUpdated(phoneNumber, address, profileImage !== currentProfileImage ? profileImage : undefined);
 
+      // Validate data
+      const result = profileSchema.safeParse(payload);
+      if (!result.success) {
+        const errorMessages = result.error.errors.map((err) => err.message).join(", ");
+        toast.error(errorMessages);
+        setLoading(false);
+        return;
+      }
+
+      if (!accessToken) {
+        console.error("No access token available");
+        toast.error("No access token available. Please log in again.");
+        setLoading(false);
+        return;
+      }
+
+      console.log("Validation Passed:", payload);
+      const updatedUser = await AuthService.updateCustomerProfile(payload);
+
+      console.log("Updated User from API:", updatedUser);
+      const updatedOwner = updatedUser.updatedCustomer;
+
+      const partialUser: IUser = {
+        id: updatedOwner._id,
+        fullName: updatedOwner.fullName,
+        email: updatedOwner.email,
+        phoneNumber: updatedOwner.phoneNumber,
+        address: updatedOwner.address,
+        role: updatedOwner.role as UserRole,
+        profileImage: updatedOwner.profileImage ?? "/images/user.png",
+      };
+
+      console.log("Partial User Before Zustand:", partialUser);
+      setAuth(partialUser, accessToken);
+
+      toast.success("Profile updated successfully");
+
+      onProfileUpdated(phoneNumber, address, profileImage !== currentProfileImage ? profileImage : undefined);
       onClose();
     } catch (error) {
       console.error("Failed to update profile:", error);
@@ -96,10 +96,9 @@ const partialUser: IUser = {
     }
   };
 
-  
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setAddress({ ...address, [name]: value });
+    setAddress((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -107,12 +106,12 @@ const partialUser: IUser = {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-        
+          {/* Profile Image */}
           <div className="flex items-center justify-center">
             <div className="relative">
               <Image
                 src={profileImage}
-                alt="ownerImage"
+                alt="customerImage"
                 width={80}
                 height={80}
                 className="rounded-full border"
@@ -120,8 +119,8 @@ const partialUser: IUser = {
             </div>
           </div>
 
-      
-          <label>image</label>
+          {/* File Upload */}
+          <label className="block text-sm font-medium text-gray-700">Profile Image</label>
           <div className="text-center">
             <FileUpload onUploadComplete={handleImageUploadComplete} accept="image/*" multiple={false} />
           </div>
@@ -134,7 +133,6 @@ const partialUser: IUser = {
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-             
             />
           </div>
 
@@ -150,7 +148,6 @@ const partialUser: IUser = {
                 value={value}
                 onChange={handleAddressChange}
                 className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-               
               />
             </div>
           ))}
@@ -171,3 +168,21 @@ const partialUser: IUser = {
 };
 
 export default EditProfileModal;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { AuthService } from "@/services/customer/authService";
-// import EditProfileModal from "@/components/customer/dashboard/EditProfileModal";
+import EditProfileModal from "@/components/customer/dashboard/EditProfileModal";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import { FileText, FileUp,Eye } from 'lucide-react';
@@ -162,15 +162,16 @@ const ProfilePage = () => {
           Edit Profile
         </button>
 
-        {/* {isEditing && (
+        {isEditing && (
           <EditProfileModal
+          
             currentProfileImage={customerDetails?.profileImage}
             currentPhoneNumber={customerDetails?.phoneNumber}
             currentAddress={customerDetails?.address}
             onClose={() => setIsEditing(false)}
             onProfileUpdated={handleProfileUpdated}
           />
-        )} */}
+        )}
       </div>
 
      

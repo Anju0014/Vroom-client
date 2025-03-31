@@ -1,83 +1,4 @@
-// import React, { ReactNode } from 'react';
-// import Sidebar from './Sidebar';
-// import { IUser } from '@/types/authTypes';
 
-// interface DashboardLayoutProps {
-//   user: IUser;
-//   children: ReactNode;
-// }
-
-// const DashboardLayout: React.FC<DashboardLayoutProps> = ({ user, children }) => {
-//   return (
-//     <div className="flex min-h-screen bg-gray-100">
-//       <Sidebar user={user} />
-//       <main className="flex-1 p-6">
-//         {children}
-//       </main>
-//     </div>
-//   );
-// };
-
-// export default DashboardLayout;
-
-
-
-// "use client";
-
-// import React, { ReactNode, useEffect, useState } from "react";
-// import Sidebar from "./Sidebar";
-// import { OwnerAuthService } from "@/services/carOwner/authService";
-// import { IUser } from "@/types/authTypes";
-
-// interface DashboardLayoutProps {
-//   children: ReactNode;
-// }
-
-// const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
-//   const [user, setUser] = useState<IUser | null>(null);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchUser = async () => {
-//       try {
-//         const userData = await OwnerAuthService.getOwnerProfile();
-//         setUser(userData);
-//       } catch (error) {
-//         console.error("Error fetching user:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchUser();
-//   }, []);
-
-//   if (loading) {
-//     return (
-//       <div className="flex min-h-screen items-center justify-center">
-//         Loading...
-//       </div>
-//     );
-//   }
-
-//   if (!user) {
-//     return (
-//       <div className="flex min-h-screen items-center justify-center">
-//         <p className="text-red-500">Failed to load user</p>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="flex min-h-screen bg-gray-100">
-//       {/* Pass user as a prop */}
-//       <Sidebar user={user} />
-//       <main className="flex-1 p-6">{children}</main>
-//     </div>
-//   );
-// };
-
-// export default DashboardLayout;
 
 "use client";
 
@@ -86,6 +7,8 @@ import Sidebar from "./Sidebar";
 import { OwnerAuthService } from "@/services/carOwner/authService";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -94,30 +17,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
  
   const [loading, setLoading] = useState(true);
 
-  const { user, accessToken, setAuthOwner } = useAuthStoreOwner();
+  const { user, accessToken, setAuthOwner,logout } = useAuthStoreOwner();
   console.log("check user",user);
   console.log("check access", accessToken)
+   const router = useRouter();
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     if (!accessToken) {
-  //       console.error("No access token available");
-  //       return;
-  //     }
-  
-  //     try {
-  //       const userData = await OwnerAuthService.getOwnerProfile();
-  //       // setAuthOwner(accessToken, userData);
-  //     } catch (error) {
-  //       console.error("Error fetching user:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  
-  //   if (!user) fetchUser();
-  //   else setLoading(false);
-  // }, [user, accessToken, setAuthOwner]);
+
   useEffect(() => {
     const fetchUser = async () => {
       if (!accessToken) {
@@ -128,7 +33,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   
       try {
         const userData = await OwnerAuthService.getOwnerProfile();
-        setAuthOwner(userData, accessToken);
+        console.log("userData", userData);
+
+     
+        if (userData?.carOwner?.status === -2) {
+          logout();
+          toast.error("You have been blocked by the admin.");
+          router.push("/login");
+          return;
+        }
+        setAuthOwner(userData.carOwner, accessToken);
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
@@ -138,10 +52,20 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   
     if (!user) {
       fetchUser();
+    } if (user?.status === -2) {
+      logout();
+      toast.error("You have been blocked by the admin.");
+      router.push("/login");
     } else {
-      setLoading(false);  
+      setLoading(false);
     }
-  }, [user, accessToken, setAuthOwner]);
+
+    const interval = setInterval(() => {
+      fetchUser();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [user, accessToken, setAuthOwner, logout, router]);
   
 
   if (loading) {

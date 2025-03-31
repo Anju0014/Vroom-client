@@ -24,7 +24,7 @@ const Header = () => {
   
     const handlelogout = async () => {
       try {
-        // await AuthService.logoutCustomer();
+        await AuthService.logoutCustomer();
         if (isGoogleUser) {
           await signOut({ callbackUrl: "/" });
          }

@@ -5,7 +5,13 @@ export interface SignupData {
     confirmPassword: string;
     phoneNumber: string;
   }
-  
+
+
+  export interface LoginData {
+    email: string;
+    password: string;
+    role: "customer" | "carOwner";
+  }
 
 
   export type UserRole = "admin" | "carOwner" | "customer";
@@ -19,6 +25,7 @@ export interface SignupData {
     profileImage?: string;
     createdAt?: string;
     updatedAt?: string;
+    status?:number;
     address?:[],
   }
   
@@ -35,23 +42,23 @@ export interface SignupData {
     totalPrice: number;
   }
   
-  export interface Agreement {
-    id: string;
-    title: string;
-    signedDate: string;
-    expiryDate: string;
-    documentUrl: string;
-  }
+  // export interface Agreement {
+  //   id: string;
+  //   title: string;
+  //   signedDate: string;
+  //   expiryDate: string;
+  //   documentUrl: string;
+  // }
   
 
-  export interface IdProof {
-    id: string;
-    type: 'driver_license' | 'passport' | 'national_id';
-    number: string;
-    expiryDate: string;
-    verificationStatus: 'pending' | 'verified' | 'rejected';
-    documentUrl: string;
-  }
+  // export interface IdProof {
+  //   id: string;
+  //   type: 'driver_license' | 'passport' | 'national_id';
+  //   number: string;
+  //   expiryDate: string;
+  //   verificationStatus: 'pending' | 'verified' | 'rejected';
+  //   documentUrl: string;
+  // }
 
 
 
@@ -73,7 +80,7 @@ export interface SignupData {
   //   fuelType?: string;
   //   rcBookNo?: string;          
   //   expectedWage: string;
-  //   location: string;
+    // location: string;
   //   make?: string;
   //   model: string;
   //   isVerified?:boolean
@@ -84,7 +91,8 @@ export interface SignupData {
   // }
   
   export interface Car {
-    id: string;
+    _id?:string
+    id?: string;
     carName: string;
     brand: string;
     year?: string;
@@ -93,9 +101,9 @@ export interface SignupData {
     expectedWage: string;
     location: string;
     make?: string;
-    model: string;
+    model?: string;
     isVerified?: boolean;
-    images?: string[];  
+    images: string[];  
     videos?: string[]; 
    }
 
@@ -108,8 +116,8 @@ export interface SignupData {
     rcBookNo: string;
     expectedWage: string;
     location: string;
-    imageFiles: File[];  // Files to upload
-    videoFiles: File[];  // Files to upload
+    images: string[];  
+    videos:  string[];
   }
 
   export interface Address {
@@ -127,10 +135,34 @@ export interface SignupData {
     id: string;
     name: string;
     email: string;
-    status: 'verified' | 'not_verified';
+    status: number;
     isBlocked: boolean;
+    document?:string;
+    cars?:[];
     createdAt: Date;
     lastLogin?: Date;
     phoneNumber?: string;
     address?: string;
   }
+
+
+  export interface CarOwner {
+    id: string;
+    fullName: string;
+    email: string;
+    phoneNumber?: string;
+    profileImage?: string;
+    address?:Address;
+  }
+
+  export interface EditProfileModalProps {
+    // userType:"owner"|"customer";
+    currentPhoneNumber?: string;
+    currentAddress?: Address;
+    currentProfileImage?: string;
+    onClose: () => void;
+    onProfileUpdated: (newPhoneNumber: string, newAddress: Address, newProfileImage?: string) => void;
+  }
+  
+
+  
