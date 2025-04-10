@@ -17,10 +17,9 @@ import { LoginData } from "@/types/authTypes";
 
 interface LoginComponentProps {
   defaultRole?: "customer" | "carOwner";
-  onLoginSuccess?: (role: string, token?: string) => void;
+  // onLoginSuccess?: (role: string, token?: string) => void;
 }
-
-const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginComponentProps) => {
+const LoginComponent = ({ defaultRole = "customer" }: LoginComponentProps) => {
   const router = useRouter();
   const [formData, setFormData] = useState<LoginData>({
     email: "",
@@ -29,7 +28,6 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const { data: session, status } = useSession();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,11 +38,20 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
     setFormData({ ...formData, role });
   };
 
+  const storeSessionData = (role: string, accessToken: string) => {
+    sessionStorage.setItem("accessToken", accessToken);
+    sessionStorage.setItem("isLoggedIn", "true");
+    sessionStorage.setItem("userRole", role);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    const result = loginSchema.safeParse({ email: formData.email, password: formData.password });
+    const result = loginSchema.safeParse({
+      email: formData.email,
+      password: formData.password,
+    });
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message).join(", ");
       setError(errorMessages);
@@ -55,57 +62,40 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
     setLoading(true);
     try {
       let response;
-      let accessToken;
-      let user;
+      let accessToken, user;
 
       if (formData.role === "customer") {
         response = await AuthService.loginCustomer({
           email: formData.email,
           password: formData.password,
         });
-        accessToken = response.data.accessToken;
+        accessToken = response.data.customerAccessToken;
         user = response.data.user;
-        if (user && accessToken) {
-          useAuthStore.getState().setAuth(user, accessToken);
-        } else {
-          throw new Error("User or access token is missing.");
-        }
       } else {
         response = await OwnerAuthService.loginCarOwner({
           email: formData.email,
           password: formData.password,
         });
-        accessToken = response.data.accessToken;
+        accessToken = response.data.ownerAccessToken;
         user = response.data.user;
-        if (user && accessToken) {
+      }
+
+      if (user && accessToken) {
+        // Save the user data and token
+        if (formData.role === "customer") {
+          useAuthStore.getState().setAuth(user, accessToken);
+        } else {
           useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
-        } else {
-          throw new Error("User or access token is missing.");
         }
-      }
 
-      if (accessToken) {
-        if (rememberMe) {
-          localStorage.setItem("accessToken", accessToken);
-        } else {
-          sessionStorage.setItem("accessToken", accessToken);
-        }
-      }
+        storeSessionData(formData.role, accessToken);
 
-      if (rememberMe) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userRole", formData.role);
+        toast.success(`Login successful as ${formData.role}!`);
+        const redirectPath = formData.role === "customer" ? "/customer/home" : "/carOwner/home";
+        setTimeout(() => router.push(redirectPath), 1500);
       } else {
-        sessionStorage.setItem("isLoggedIn", "true");
-        sessionStorage.setItem("userRole", formData.role);
+        throw new Error("User or access token is missing.");
       }
-
-      toast.success(`Login successful as ${formData.role}!`);
-      if (onLoginSuccess) {
-        onLoginSuccess(formData.role, accessToken);
-      }
-      const redirectPath = formData.role === "customer" ? "/customer/home" : "/carOwner/home";
-      setTimeout(() => router.push(redirectPath), 1500);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || "Login failed. Please check your credentials.";
       setError(errorMessage);
@@ -116,18 +106,17 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
   };
 
   const handleGoogleLogin = async () => {
-    sessionStorage.setItem("googleLoginRole", formData.role);
-    try {
-      await signIn("google", {
-        // callbackUrl: formData.role === "customer" ? "/customer/home" : "/carOwner/home",
-        redirect: false,
-      });
-    } catch (error) {
-      console.error("Google Login Failed:", error);
-      toast.error("Google Login Failed");
-    }
-  };
-
+        sessionStorage.setItem("googleLoginRole", formData.role);
+        try {
+          await signIn("google", {
+            // callbackUrl: formData.role === "customer" ? "/customer/home" : "/carOwner/home",
+            redirect: false,
+          });
+        } catch (error) {
+          console.error("Google Login Failed:", error);
+          toast.error("Google Login Failed");
+        }
+      };
   const handleGoogleSignIn = async () => {
     if (status !== "authenticated" || !session?.user) return;
 
@@ -136,8 +125,7 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
 
     try {
       let response;
-      let accessToken;
-      let user;
+      let accessToken, user;
 
       if (storedRole === "customer") {
         response = await AuthService.googlesigninCustomer({
@@ -147,6 +135,8 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
           provider: "google",
           role: "customer",
         });
+        accessToken = response.data.customerAccessToken;
+        user = response.data.user;
       } else {
         response = await OwnerAuthService.googlesigninOwner({
           fullName: session.user.name ?? "",
@@ -155,37 +145,27 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
           provider: "google",
           role: "carOwner",
         });
+        accessToken = response.data.ownerAccessToken;
+        user = response.data.user;
       }
 
-      accessToken = response?.data?.accessToken;
-      user = response?.data?.user;
+      if (user && accessToken) {
+        if (storedRole === "customer") {
+          useAuthStore.getState().setAuth(user, accessToken);
+        } else {
+          useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
+        }
 
-      if (!accessToken || !user) {
+        storeSessionData(storedRole, accessToken);
+        sessionStorage.setItem("provider", "google");
+        sessionStorage.setItem("userEmail", session.user.email ?? "");
+
+        toast.success("Google Login Successful!");
+        router.push(storedRole === "customer" ? "/customer/home" : "/carOwner/home");
+        sessionStorage.removeItem("googleLoginRole");
+      } else {
         throw new Error("User or access token is missing.");
       }
-
-      if (storedRole === "customer") {
-        useAuthStore.getState().setAuth(user, accessToken);
-      } else {
-        useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
-      }
-
-      if (rememberMe) {
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userRole", storedRole);
-      } else {
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("isLoggedIn", "true");
-        sessionStorage.setItem("userRole", storedRole);
-      }
-
-      sessionStorage.setItem("provider", "google");
-      sessionStorage.setItem("userEmail", session.user.email ?? "");
-
-      toast.success("Google Login Successful!");
-      router.push(storedRole === "customer" ? "/customer/home" : "/carOwner/home");
-      sessionStorage.removeItem("googleLoginRole");
     } catch (error: any) {
       console.error("Google Login Error:", error.response?.data || error.message);
       toast.error(error.response?.data?.message || "Google login failed.");
@@ -200,9 +180,208 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
     }
   }, [status, session]);
 
+
+// const LoginComponent = ({ defaultRole = "customer" }: LoginComponentProps) => {
+//   const router = useRouter();
+//   const [formData, setFormData] = useState<LoginData>({
+//     email: "",
+//     password: "",
+//     role: defaultRole,
+//   });
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState("");
+//   // const [rememberMe, setRememberMe] = useState(false);
+//   const { data: session, status } = useSession();
+
+//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   };
+
+//   const handleRoleChange = (role: "customer" | "carOwner") => {
+//     setFormData({ ...formData, role });
+//   };
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     setError("");
+
+//     const result = loginSchema.safeParse({ email: formData.email, password: formData.password });
+//     if (!result.success) {
+//       const errorMessages = result.error.errors.map((err) => err.message).join(", ");
+//       setError(errorMessages);
+//       toast.error(errorMessages);
+//       return;
+//     }
+
+//     setLoading(true);
+//     try {
+//       let response;
+   
+
+//       if (formData.role === "customer") {
+//         response = await AuthService.loginCustomer({
+//           email: formData.email,
+//           password: formData.password,
+//         });
+//         let accessToken = response.data.customerAccessToken;
+//        let  user = response.data.user;
+//         if (user && accessToken) {
+//           useAuthStore.getState().setAuth(user, accessToken);
+//           sessionStorage.setItem("accessToken", accessToken);
+//         } else {
+//           throw new Error("User or access token is missing.");
+//         }
+//       } else {
+//         response = await OwnerAuthService.loginCarOwner({
+//           email: formData.email,
+//           password: formData.password,
+//         });
+//         let accessTokenOwner = response.data.ownerAccessToken;
+//         let user = response.data.user;
+//         if (user && accessTokenOwner) {
+//           useAuthStoreOwner.getState().setAuthOwner(user, accessTokenOwner);
+//           sessionStorage.setItem("accessToken", accessTokenOwner);
+//         } else {
+//           throw new Error("User or access token is missing.");
+//         }
+//       }
+
+//       // if (accessToken) {
+//       //   if (rememberMe) {
+//       //     localStorage.setItem("accessToken", accessToken);
+//       //   } else {
+//       //     sessionStorage.setItem("accessToken", accessToken);
+//       //   }
+//       // }
+
+//       // if (rememberMe) {
+//       //   localStorage.setItem("isLoggedIn", "true");
+//       //   localStorage.setItem("userRole", formData.role);
+//       // } else {
+//         sessionStorage.setItem("isLoggedIn", "true");
+//         sessionStorage.setItem("userRole", formData.role);
+//       // }
+
+//       toast.success(`Login successful as ${formData.role}!`);
+//       // if (onLoginSuccess) {
+//       //   onLoginSuccess(formData.role, accessToken);
+//       // }
+//       const redirectPath = formData.role === "customer" ? "/customer/home" : "/carOwner/home";
+//       setTimeout(() => router.push(redirectPath), 1500);
+//     } catch (err: any) {
+//       const errorMessage = err.response?.data?.message || "Login failed. Please check your credentials.";
+//       setError(errorMessage);
+//       toast.error(errorMessage);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleGoogleLogin = async () => {
+//     sessionStorage.setItem("googleLoginRole", formData.role);
+//     try {
+//       await signIn("google", {
+//         // callbackUrl: formData.role === "customer" ? "/customer/home" : "/carOwner/home",
+//         redirect: false,
+//       });
+//     } catch (error) {
+//       console.error("Google Login Failed:", error);
+//       toast.error("Google Login Failed");
+//     }
+//   };
+
+//   const handleGoogleSignIn = async () => {
+//     if (status !== "authenticated" || !session?.user) return;
+
+//     const storedRole = sessionStorage.getItem("googleLoginRole") || "customer";
+//     setLoading(true);
+
+//     try {
+//       let response;
+//       // let accessToken;
+//       // let user;
+
+//       if (storedRole === "customer") {
+//         response = await AuthService.googlesigninCustomer({
+//           fullName: session.user.name ?? "",
+//           email: session.user.email ?? "",
+//           profileImage: session.user.image ?? "",
+//           provider: "google",
+//           role: "customer",
+//         });
+
+
+//         let accessToken = response.data.customerAccessToken;
+//         let  user = response.data.user;
+//          if (user && accessToken) {
+//            useAuthStore.getState().setAuth(user, accessToken);
+//            sessionStorage.setItem("accessToken", accessToken);
+//          } else {
+//            throw new Error("User or access token is missing.");
+//          }
+
+//       } else {
+//         response = await OwnerAuthService.googlesigninOwner({
+//           fullName: session.user.name ?? "",
+//           email: session.user.email ?? "",
+//           profileImage: session.user.image ?? "",
+//           provider: "google",
+//           role: "carOwner",
+//         });
+
+//         let accessTokenOwner = response.data.ownerAccessToken;
+//         let user = response.data.user;
+//         if (user && accessTokenOwner) {
+//           useAuthStoreOwner.getState().setAuthOwner(user, accessTokenOwner);
+//           sessionStorage.setItem("accessToken", accessTokenOwner);
+//         } else {
+//           throw new Error("User or access token is missing.");
+//         }
+//       }
+//       // let accessToken = response?.data?.accessToken;
+//       // let user = response?.data?.user;
+//       // if (!accessToken || !user) {
+//       //   throw new Error("User or access token is missing.");
+//       // }
+
+//       // if (storedRole === "customer") {
+//       //   useAuthStore.getState().setAuth(user, accessToken);
+//       // } else {
+//       //   useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
+//       // }
+//       // if (rememberMe) {
+//       //   localStorage.setItem("accessToken", accessToken);
+//       //   localStorage.setItem("isLoggedIn", "true");
+//       //   localStorage.setItem("userRole", storedRole);
+//       // } else {
+//       //   sessionStorage.setItem("accessToken", accessToken);
+//         sessionStorage.setItem("isLoggedIn", "true");
+//         sessionStorage.setItem("userRole", storedRole);
+//       // }
+
+//       sessionStorage.setItem("provider", "google");
+//       sessionStorage.setItem("userEmail", session.user.email ?? "");
+
+//       toast.success("Google Login Successful!");
+//       router.push(storedRole === "customer" ? "/customer/home" : "/carOwner/home");
+//       sessionStorage.removeItem("googleLoginRole");
+//     } catch (error: any) {
+//       console.error("Google Login Error:", error.response?.data || error.message);
+//       toast.error(error.response?.data?.message || "Google login failed.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (status === "authenticated" && session?.user) {
+//       handleGoogleSignIn();
+//     }
+//   }, [status, session]);
+
   return (
     <div className="flex min-h-screen">
-      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-600 to-orange-500 flex-col justify-center items-center p-12 relative">
+      <div className=" hidden md:flex md:w-1/2 bg-gradient-to-br from-red-600 to-orange-500 flex-col justify-center items-center p-12 relative">
         <div className="text-center text-white">
           <h1 className="text-5xl font-bold mb-6">Vroom</h1>
           <p className="text-xl max-w-md">
@@ -210,7 +389,7 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
             {formData.role === "customer" ? "rentals" : "listings"}.
           </p>
           <div>
-            <Image src="/images/car-convertible.png" alt="Car Image" width={500} height={300} />
+            <Image src="/images/car-convertible.png" alt="Car Image" width={500} height={300} priority layout="responsive" />
           </div>
         </div>
         <div className="absolute bottom-8 text-white opacity-80">
@@ -307,7 +486,7 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
               />
             </div>
 
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <input
                 id="remember-me"
                 name="remember-me"
@@ -319,7 +498,7 @@ const LoginComponent = ({ defaultRole = "customer", onLoginSuccess }: LoginCompo
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                 Remember me
               </label>
-            </div>
+            </div> */}
 
             <button
               type="submit"

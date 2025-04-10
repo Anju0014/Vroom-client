@@ -1,8 +1,10 @@
 
-import axiosInstance from "@/config/axiosInstance";
-import { SignupData, GoogleSignInData,Address, CarFormData } from "@/types/authTypes";
 
-const carOwnerApi = axiosInstance("carOwner");
+import axiosInstanceOwner from "@/config/axiosInstanceOwner";
+import { SignupData, GoogleSignInData,Address,ChangePasswordData, CarFormData, RegistrationCarOwner } from "@/types/authTypes";
+
+// const carOwnerApi = axiosInstance("carOwner");
+const carOwnerApi = axiosInstanceOwner();
 
 export const OwnerAuthService = {
   registerCarOwner: async (userData: SignupData ) => {
@@ -47,17 +49,37 @@ updateOwnerIdProof: async ({idProof}:{idProof:string}) => {
 },
 
 addCar: async(data:CarFormData)=>{
-  return await carOwnerApi.post("owner/carupload",data)
+  return await carOwnerApi.post("car/carupload",data)
+},
+
+changePassword: async (data: ChangePasswordData) => {
+  const response = await carOwnerApi.post("owner/changepassword",data)
+  return response.data;
 },
 
 getCars: async () => {
   try {
-    const response = await carOwnerApi.get("/owner/getcars"); 
+    const response = await carOwnerApi.get("/car/getcars"); 
     return response.data; // Assuming the backend returns { cars: [] }
   } catch (error) {
     console.error("Error fetching cars:", error);
     throw error;
   }
 },
+completeRegistration:async(data:RegistrationCarOwner)=>{
+      const response = await carOwnerApi.post("/owner/completeregistration", data);
+      return response.data;
+},
 
-};
+
+updateCar: async (carId: string, carData: CarFormData) => {
+  const response = await carOwnerApi.put(`/car/updatecars/${carId}`, carData);
+  return response.data;
+},
+
+deleteCar: async (carId: string) => {
+  const response = await carOwnerApi.delete(`/car/deletecars/${carId}`);
+  return response.data;
+}
+
+}

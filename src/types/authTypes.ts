@@ -25,7 +25,7 @@ export interface SignupData {
     profileImage?: string;
     createdAt?: string;
     updatedAt?: string;
-    status?:number;
+    blockStatus?:number;
     address?:[],
   }
   
@@ -70,6 +70,10 @@ export interface SignupData {
     role?: "customer" | "carOwner";
   }
 
+  export interface ChangePasswordData {
+    oldPassword: string;
+    newPassword: string;
+  }
 
 
   // export interface Car {
@@ -165,4 +169,24 @@ export interface SignupData {
   }
   
 
+  export interface RegistrationCarOwner{
+    phoneNumber: string;
+    altPhoneNumber?: string;
+    idProof: string;
+    address: {
+      addressLine1: string;
+      city: string;
+      state?: string;
+      postalCode?: string;
+      country: string;
+    };
+  }
+
+
+  export interface verifyData{
+    userId: string, 
+    status: number, 
+    userType: "customer" | "owner",
+    reason?:string
+  }
   

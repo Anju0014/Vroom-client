@@ -17,16 +17,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
  
   const [loading, setLoading] = useState(true);
 
-  const { user, accessToken, setAuthOwner,logout } = useAuthStoreOwner();
+  const { user, accessTokenOwner, setAuthOwner,logout } = useAuthStoreOwner();
   console.log("check user",user);
-  console.log("check access", accessToken)
+  console.log("check access", accessTokenOwner)
    const router = useRouter();
 
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!accessToken) {
-        toast.error("No access token available");
+      if (!accessTokenOwner) {
+        console.log("No access token available");
         setLoading(false);
         return;
       }
@@ -36,13 +36,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         console.log("userData", userData);
 
      
-        if (userData?.carOwner?.status === -2) {
+        if (userData?.carOwner?.blockStatus === 1) {
           logout();
           toast.error("You have been blocked by the admin.");
           router.push("/login");
           return;
         }
-        setAuthOwner(userData.carOwner, accessToken);
+        setAuthOwner(userData.carOwner, accessTokenOwner);
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
@@ -52,7 +52,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   
     if (!user) {
       fetchUser();
-    } if (user?.status === -2) {
+    } if (user?.blockStatus === 1) {
       logout();
       toast.error("You have been blocked by the admin.");
       router.push("/login");
@@ -65,7 +65,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [user, accessToken, setAuthOwner, logout, router]);
+  }, [user, accessTokenOwner, setAuthOwner, logout, router]);
   
 
   if (loading) {

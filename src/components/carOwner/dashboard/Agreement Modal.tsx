@@ -13,7 +13,7 @@ const AgreementModal: React.FC<AgreementModalProps> = ({ isOpen, onClose, onAgre
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center z-20 bg-gray-900 bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg">
         {/* <h2 className="text-xl font-semibold mb-4">Car Rental Agreement</h2> */}
         <h2 className="text-xl font-semibold mb-4">Agreement & Terms</h2>

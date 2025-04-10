@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useRef } from "react";
@@ -10,6 +9,7 @@ interface FileUploadProps {
   accept?: string;
   multiple?: boolean;
   maxFiles?: number;
+  children?: React.ReactNode;
 }
 
 export default function FileUpload({
@@ -23,10 +23,9 @@ export default function FileUpload({
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
   const [progress, setProgress] = useState<number[]>([]);
-  const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Get File Type Message
+ 
   const getFileTypeMessage = () => {
     if (!accept) return "No files allowed";
     
@@ -50,7 +49,7 @@ export default function FileUpload({
       : `Supports: ${message} (1 file only)`;
   };
 
-  // Check if file type is allowed
+
   const isFileTypeAllowed = (file: File): boolean => {
     if (!accept) return false;
     
@@ -58,7 +57,7 @@ export default function FileUpload({
     
     return acceptTypes.some(type => {
       if (type.endsWith("/*")) {
-        // Handle wildcards like image/* or video/*
+   
         const generalType = type.split("/")[0];
         const fileGeneralType = file.type.split("/")[0];
         return generalType === fileGeneralType;
@@ -67,14 +66,14 @@ export default function FileUpload({
     });
   };
 
-  // Handle File Selection & Generate Previews
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement> | { target: { files: FileList } }) => {
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     let newFiles = Array.from(files);
     
-    // Filter files based on accept attribute
+
     const validFiles: File[] = [];
     const invalidFiles: File[] = [];
     
@@ -95,30 +94,30 @@ export default function FileUpload({
       return;
     }
 
-    // Check if we're exceeding the max files limit
+ 
     if (selectedFiles.length + validFiles.length > maxFiles) {
       alert(`You can only upload up to ${maxFiles} files.`);
       return;
     }
 
-    // Create preview URLs for valid files
+ 
     const newPreviews = validFiles.map(file => URL.createObjectURL(file));
 
     setSelectedFiles([...selectedFiles, ...validFiles]);
     setPreviewUrls([...previewUrls, ...newPreviews]);
     
-    // Reset file input
+   
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  // Remove Selected File Before Upload
+ 
   const removeFile = (index: number) => {
     const updatedFiles = [...selectedFiles];
     const updatedPreviews = [...previewUrls];
 
-    // Revoke object URL to prevent memory leaks
+  
     URL.revokeObjectURL(previewUrls[index]);
     
     updatedFiles.splice(index, 1);
@@ -143,32 +142,31 @@ export default function FileUpload({
     try {
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
-        
-        // 1. Get Presigned URL
+     
         const { url, key } = await S3Service.getPresignedUrl(file);
 
-        // 2. Upload File to S3
+    
         await S3Service.uploadToS3(url, file);
 
-        // 3. Store Public URL
+     
         const uploadedUrl = S3Service.getPublicUrl(key);
         urls.push(uploadedUrl);
 
-        // 4. Update Progress
+        
         progressArray[i] = 100;
         setProgress([...progressArray]);
       }
 
       setUploadedUrls(urls);
       
-      // Call the callback with the correct format
+    
       if (multiple) {
         onUploadComplete(urls);
       } else {
         onUploadComplete(urls[0]);
       }
       
-      // Clear files after successful upload
+     
       setSelectedFiles([]);
       setPreviewUrls([]);
       
@@ -180,28 +178,7 @@ export default function FileUpload({
     }
   };
 
-  // Drag and Drop Handlers
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setDragOver(false);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setDragOver(false);
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFileChange({ target: { files } });
-    }
-  };
-
-  // Get file type icon
   const getFileTypeIcon = (file: File) => {
     const fileType = file.type.split('/')[0];
     
@@ -217,7 +194,7 @@ export default function FileUpload({
     }
   };
 
-  // Get appropriate preview component based on file type
+
   const renderFilePreview = (file: File, previewUrl: string, index: number) => {
     const fileType = file.type.split('/')[0];
     
@@ -274,13 +251,7 @@ export default function FileUpload({
   };
 
   return (
-    <div 
-      className={`border-2 ${dragOver ? 'border-blue-500 bg-blue-50' : 'border-dashed border-gray-300'} 
-      rounded-lg p-4 text-center transition-all duration-300 ease-in-out`}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
+    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
       {uploading ? (
         <div className="flex items-center justify-center space-x-2 text-blue-600">
           <Loader2 className="animate-spin" />
@@ -291,10 +262,10 @@ export default function FileUpload({
           <div className="flex flex-col items-center space-y-3">
             <Upload className="w-10 h-10 text-blue-500" />
             <p className="text-gray-600">
-              Drag and drop your files here, or{" "}
               <label htmlFor={`fileInput-${accept}`} className="text-blue-600 cursor-pointer hover:underline">
-                browse
+                Click to browse
               </label>
+              {" "}for files
             </p>
             <p className="text-xs text-gray-500">{getFileTypeMessage()}</p>
           </div>
@@ -329,3 +300,9 @@ export default function FileUpload({
     </div>
   );
 }
+
+
+
+
+
+

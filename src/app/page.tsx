@@ -23,15 +23,15 @@ export default function Home() {
       
       <div className="relative h-[500px] w-full">
         
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/desert-background.png" 
-            alt="Desert with SUV" 
-            layout="fill"
-            objectFit="cover"
-            priority
-          />
-        </div>
+      <div className="absolute inset-0 z-0">
+  <Image 
+    src="/images/desert-background.png" 
+    alt="Desert with SUV" 
+    fill 
+    style={{ objectFit: 'cover' }} 
+    priority
+  />
+</div>
         
         
         <div className="absolute inset-0 z-10 flex flex-col justify-center px-8 md:px-16 bg-black/20">

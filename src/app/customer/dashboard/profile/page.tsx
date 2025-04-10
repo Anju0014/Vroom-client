@@ -1,6 +1,5 @@
 
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { AuthService } from "@/services/customer/authService";
 import EditProfileModal from "@/components/customer/dashboard/EditProfileModal";
@@ -8,6 +7,7 @@ import { toast } from "react-hot-toast";
 import Image from "next/image";
 import { FileText, FileUp,Eye } from 'lucide-react';
 import FileUpload from "@/components/FileUpload";
+import ChangePasswordModal from "@/components/Changepassword";
 
 interface Address {
     addressLine1: string;
@@ -32,6 +32,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [idProof, setIdProof] = useState<string | null>(null);
+  const [isChange, setIsChange] = useState(false);
 
   
   useEffect(() => {
@@ -161,6 +162,7 @@ const ProfilePage = () => {
         >
           Edit Profile
         </button>
+        <button onClick={() => setIsChange(true)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"> Change Password</button>
 
         {isEditing && (
           <EditProfileModal
@@ -174,6 +176,10 @@ const ProfilePage = () => {
         )}
       </div>
 
+      {/* <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg flex justify-end">
+     
+     </div> */}
+ <ChangePasswordModal isOpen={isChange} onClose={() => setIsChange(false)} role="customer" />
      
       <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
         <div className="flex items-center justify-between mb-6">

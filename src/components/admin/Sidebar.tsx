@@ -15,6 +15,7 @@ import {
   Users,
   Home,
   LogOut,
+  CheckCircleIcon,
   CreditCard
 } from "lucide-react";
 
@@ -53,6 +54,16 @@ const Sidebar: React.FC = () => {
       icon: <User size={18} /> 
     },
     { 
+      name: "Car Owner Verification ", 
+      path: "/admin/dashboard/ownerVerification", 
+      icon: <CheckCircleIcon size={18} /> 
+    },
+    { 
+      name: "Car Verification ", 
+      path: "/admin/dashboard/carVerification", 
+      icon: <CheckCircleIcon size={18} /> 
+    },
+    { 
       name: "Cars", 
       path: "/admin/cars", 
       icon: <Car size={18} /> 
@@ -61,6 +72,11 @@ const Sidebar: React.FC = () => {
       name: "Revenue", 
       path: "/admin/revenue", 
       icon: <DollarSign size={18} /> 
+    },
+    { 
+      name: "Bookings", 
+      path: "/admin/dashboard/bookings", 
+      icon: <CreditCard size={18} /> 
     },
     { 
       name: "Sales", 

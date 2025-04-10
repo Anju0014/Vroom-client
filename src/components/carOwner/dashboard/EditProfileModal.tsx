@@ -30,7 +30,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       country: "",
     }
   );
-  const { accessToken, user, setAuthOwner } = useAuthStoreOwner();
+  const { accessTokenOwner, user, setAuthOwner } = useAuthStoreOwner();
   const [profileImage, setProfileImage] = useState(currentProfileImage);
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +42,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   };
   
 
-   console.log("Zustand Access Token:", accessToken);
+   console.log("Zustand Access Token:", accessTokenOwner);
    console.log("Zustand User:", user);
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,7 +59,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             toast.error(errorMessages);
             return;
           }
-    if (!accessToken) {
+    if (!accessTokenOwner) {
       console.error("No access token available");
       toast.error("No access token available. Please log in again.");
       setLoading(false);
@@ -81,7 +81,7 @@ const partialUser: IUser = {
   profileImage: updatedOwner.profileImage ?? "/images/user.png",
 };
       console.log("Partial User Before Zustand:", partialUser);
-      setAuthOwner(partialUser,accessToken);
+      setAuthOwner(partialUser,accessTokenOwner);
     
       toast.success("Profile updated successfully");
       

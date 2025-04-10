@@ -1,12 +1,13 @@
 
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/customer/authStore";
 import { AuthService } from "@/services/customer/authService";
+import { signOut,useSession } from "next-auth/react";
 import { 
   User, 
   Car, 
@@ -24,15 +25,25 @@ import toast from "react-hot-toast";
 
 const Sidebar: React.FC = () => {
     const {user,logout} =useAuthStore();
-    console.log("user",user)
+    console.log("user",user);
+     const [isGoogleUser, setIsGoogleUser] = useState(false);
   const pathname = usePathname();
+      useEffect(() => {
+        // setHydrated(true);
+        setIsGoogleUser(sessionStorage.getItem("provider") === "google");
+      }, []);
    const handleLogout= async ()=>{
       try{
         const response=await AuthService.logoutCustomer();
+
         if(!response){
           throw new Error("Logout Failed")
         }
+         if (isGoogleUser) {
+                  await signOut({ callbackUrl: "/" });
+                 }
         logout();
+
       }catch(error){
         toast.error("Logout Failed.Please try Again")
       }

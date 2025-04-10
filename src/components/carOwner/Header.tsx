@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 const Header = () => {
     const router=useRouter()
-      const { user, logout, accessToken } = useAuthStoreOwner();
+      const { user, logout, accessTokenOwner } = useAuthStoreOwner();
      const handlelogout= async()=>{
         try {
           await OwnerAuthService.logoutOwner();
@@ -40,7 +40,7 @@ const Header = () => {
             <a href="#" className="text-gray-700 hover:text-gray-900">Contact Us</a>
           </nav>
           <div className="flex items-center space-x-4">
-          {accessToken ? (
+          {accessTokenOwner ? (
               <>
                <Link href="/carOwner/dashboard/profile" className="text-sm font-medium text-gray-500 hover:text-gray-700">
               My DashBoard

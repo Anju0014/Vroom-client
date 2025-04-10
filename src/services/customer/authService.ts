@@ -1,7 +1,7 @@
 import axiosInstance from "@/config/axiosInstance";
-import { SignupData, GoogleSignInData,Address } from "@/types/authTypes";
+import { SignupData, GoogleSignInData,Address,ChangePasswordData } from "@/types/authTypes";
 
-const customerApi=axiosInstance('customer')
+const customerApi=axiosInstance()
 
 export const AuthService = {
   registerCustomer: async (userData: SignupData) => {
@@ -41,6 +41,11 @@ export const AuthService = {
   updateCustomerIdProof: async ({idProof}:{idProof:string}) => {
     const response = await customerApi.put("/updateProfileIdProof", {idProof});
     console.log(response.data)
+    return response.data;
+  },
+  
+  changePassword: async (data: ChangePasswordData) => {
+    const response = await customerApi.post("/changepassword",data)
     return response.data;
   },
 

@@ -11,9 +11,9 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
  
-  const { user, accessToken, setAuthAdmin } = useAuthStoreAdmin();
+  const { user, accessTokenAdmin, setAuthAdmin } = useAuthStoreAdmin();
   console.log("check user",user);
-  console.log("check access", accessToken)
+  console.log("check access", accessTokenAdmin)
 
   if (!user) {
     return (

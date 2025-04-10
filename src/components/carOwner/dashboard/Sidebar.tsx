@@ -62,6 +62,7 @@ const Sidebar: React.FC = () => {
             width={80}
             height={80}
             style={{ objectFit: "cover" }}
+            priority
           />
         </div>
 

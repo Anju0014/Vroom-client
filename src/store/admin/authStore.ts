@@ -6,7 +6,7 @@ import { IUser } from "../../types/authTypes";
 
 interface AuthStateAdmin {
   user: IUser | null;
-  accessToken: string | null;
+  accessTokenAdmin: string | null;
   setAuthAdmin: (user: IUser, accessToken: string) => void;
   logout: () => void;
 }
@@ -15,15 +15,15 @@ export const useAuthStoreAdmin = create<AuthStateAdmin>()(
   persist(
     (set) => ({
       user: null,
-      accessToken: null,
+      accessTokenAdmin: null,
 
     
-      setAuthAdmin: (user, accessToken) => {
-        set({ user, accessToken });
+      setAuthAdmin: (user, accessTokenAdmin) => {
+        set({ user, accessTokenAdmin });
       },
 
       logout: () => {
-        set({ user: null, accessToken: null });
+        set({ user: null, accessTokenAdmin: null });
         localStorage.removeItem("authStoreAdmin");
         sessionStorage.removeItem("provider");
         sessionStorage.removeItem("userEmail");

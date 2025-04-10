@@ -91,9 +91,57 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
   };
 
  
+  // useEffect(() => {
+  //   if (!isHydrated || !session?.user) return;
+
+  //   const handleGoogleResponse = async () => {
+  //     try {
+  //       const payload = {
+  //         fullName: session.user.name ?? "",
+  //         email: session.user.email ?? "",
+  //         profileImage: session.user.image ?? "",
+  //         provider: "google",
+  //       };
+
+  //       const response = role === "customer"
+  //         ? await AuthService.googlesigninCustomer(payload)
+  //         : await OwnerAuthService.googlesigninOwner(payload);
+
+           
+  //       const { accessToken, user } = response.data;
+  //       if (user && accessToken) {
+  //         if (role === "customer") {
+  //           setAuth(user, accessToken);
+  //         } else {
+  //           setAuthOwner(user, accessToken);
+  //         }
+
+        
+  //         setStorageItem(localStorage, "accessToken", accessToken);
+  //         setStorageItem(sessionStorage, "provider", "google");
+  //         setStorageItem(sessionStorage, "userEmail", session.user.email ?? "");
+  //         setStorageItem(sessionStorage, "role", role);
+
+  //         toast.success("Google Signup Successful!");
+
+       
+  //         const redirectPath = role === "customer" ? "/customer/home" : "/carOwner/home";
+  //         router.push(redirectPath);
+  //       } else {
+  //         throw new Error("User or access token is missing.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Google Signup Failed:", error);
+  //       toast.error("Google Signup Failed");
+  //     }
+  //   };
+
+  //   handleGoogleResponse();
+  // }, [session, role, router, setAuth, setAuthOwner, isHydrated]);
+
   useEffect(() => {
     if (!isHydrated || !session?.user) return;
-
+  
     const handleGoogleResponse = async () => {
       try {
         const payload = {
@@ -102,28 +150,40 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
           profileImage: session.user.image ?? "",
           provider: "google",
         };
-
-        const response = role === "customer"
-          ? await AuthService.googlesigninCustomer(payload)
-          : await OwnerAuthService.googlesigninOwner(payload);
-
-        const { accessToken, user } = response.data;
-        if (user && accessToken) {
-          if (role === "customer") {
+  
+        const response =
+          role === "customer"
+            ? await AuthService.googlesigninCustomer(payload)
+            : await OwnerAuthService.googlesigninOwner(payload);
+  
+        let accessToken, user, accessTokenOwner;
+  
+        // Destructuring response.data based on the role
+        if (role === "customer") {
+          ({ accessToken, user } = response.data);
+        } else {
+          ({ accessTokenOwner, user } = response.data);
+        }
+  
+        // Check if the user exists and if either token is available
+        if (user) {
+          if (role === "customer" && accessToken) {
             setAuth(user, accessToken);
+            setStorageItem(localStorage, "accessToken", accessToken);
+          } else if (accessTokenOwner) {
+            setAuthOwner(user, accessTokenOwner);
+            setStorageItem(localStorage, "accessTokenOwner", accessTokenOwner);
           } else {
-            setAuthOwner(user, accessToken);
+            throw new Error("No valid access token found.");
           }
-
-        
-          setStorageItem(localStorage, "accessToken", accessToken);
+  
+          // Store session-related data in sessionStorage
           setStorageItem(sessionStorage, "provider", "google");
           setStorageItem(sessionStorage, "userEmail", session.user.email ?? "");
           setStorageItem(sessionStorage, "role", role);
-
+  
           toast.success("Google Signup Successful!");
-
-       
+  
           const redirectPath = role === "customer" ? "/customer/home" : "/carOwner/home";
           router.push(redirectPath);
         } else {
@@ -134,10 +194,10 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
         toast.error("Google Signup Failed");
       }
     };
-
+  
     handleGoogleResponse();
   }, [session, role, router, setAuth, setAuthOwner, isHydrated]);
-
+  
   // Custom InputField component with hydration warning suppression
   const SafeInputField = ({ label, name, type, required }: {
     label: string;

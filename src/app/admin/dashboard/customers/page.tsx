@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import UserManagementPage from '@/components/UserManagementPage'
+import UserManagementPage from '@/components/admin/UserManagementPage'
 
 const CarOwnerPage = () => {
   return (

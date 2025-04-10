@@ -1,6 +1,7 @@
 import axiosInstance from "@/config/axiosInstance";
+import axiosInstanceAdmin from "@/config/axiosInstanceAdmin";
 
-const adminApi=axiosInstance('admin');
+const adminApi=axiosInstanceAdmin();
 export const AdminAuthService = {
 
   loginAdmin: async ({ email, password }: { email: string; password: string }) => {
@@ -22,6 +23,11 @@ getAllCustomers:async()=>{
 },
 getAllCarOwners:async()=>{
   const response=await adminApi.get('/admin/owners');
+  return response.data
+},
+
+getAllOwnerVerify:async()=>{
+  const response=await adminApi.get('/admin/ownerpending');
   return response.data
 },
 
@@ -50,7 +56,22 @@ toggleBlockOwner: async (ownerId: string, newStatus: boolean) => {
   }
 },
 
+updateBlockStatus: async (userId: string, status: number, userType: "customer" | "owner") => {
+  try {
+    const endpoint = userType === "customer"
+      ? `/admin/customers/updateblockstatus/${userId}`
+      : `/admin/owners/updateblockstatus/${userId}`;
 
+      console.log(status)
+    const response = await adminApi.patch(endpoint, { status }); 
+
+    console.log(response)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user status:", error);
+    throw new Error("Failed to update user status");
+  }
+},
 
 updateUserStatus: async (userId: string, status: number, userType: "customer" | "owner") => {
   try {
@@ -68,6 +89,47 @@ updateUserStatus: async (userId: string, status: number, userType: "customer" | 
     throw new Error("Failed to update user status");
   }
 },
+updateVerifyStatus: async (userId: string, status: number, userType: "customer" | "owner",reason?:string) => {
+  try {
+    const endpoint = userType === "customer"
+      ? `/admin/customers/updateverifystatus/${userId}`
+      : `/admin/owners/updateverifystatus/${userId}`;
 
+      console.log(status)
+    const response = await adminApi.patch(endpoint, { status , reason}); 
+    console.log(response)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user status:", error);
+    throw new Error("Failed to update user status");
+  }
+},
+
+// Add these methods to your existing AdminAuthService
+
+// Get all cars that need verification
+ getAllCars:async()=> {
+  try {
+    const response = await adminApi.get('/admin/cars');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching pending cars:', error);
+    throw error;
+  }
+},
+
+// Update car verification status
+updateCarVerificationStatus:async(carId: string, isVerified: boolean, reason?: string) =>{
+  try {
+    const response = await adminApi.put(`/admin/cars/${carId}/verify`, {
+      isVerified,
+      reason,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating car verification status:', error);
+    throw error;
+  }
+}
 
 };

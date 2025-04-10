@@ -23,17 +23,17 @@ export default function AdminLogin() {
     try {
       const response = await  AdminAuthService.loginAdmin({email:email,
         password:password})
-      const accessToken = response.data.accessToken;
+      const accessTokenAdmin = response.data.adminAccessToken;
       const user = response.data.user;
-        if (user && accessToken) {
-          useAuthStoreAdmin.getState().setAuthAdmin(user,accessToken)
+        if (user && accessTokenAdmin) {
+          useAuthStoreAdmin.getState().setAuthAdmin(user,accessTokenAdmin)
         } 
      
-      if (accessToken) {
+      if (accessTokenAdmin) {
         if (rememberMe) {
-          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("accessTokenAdmin", accessTokenAdmin);
         } else {
-          sessionStorage.setItem("accessToken", accessToken);
+          sessionStorage.setItem("accessTokenAdmin", accessTokenAdmin);
         }
       }
       if (rememberMe) {
