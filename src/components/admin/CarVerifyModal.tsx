@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X, Check, X as Cross } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface Car {
   id: string;
@@ -9,10 +10,17 @@ interface Car {
   fuelType?: string;
   rcBookNo?: string;
   expectedWage: string;
-  location: string;
+  location: {
+    coordinates: {
+        lat: number;
+        lng: number;
+      };
+      address: string;
+      landmark?: string;
+  };
   make?: string;
   carModel?: string;
-  isVerified: boolean;
+  verifyStatus: number;
   images: string[];
   videos?: string[];
   owner: string;
@@ -47,6 +55,10 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
   const handleReject = async () => {
     try {
       setProcessing(true);
+      if (!rejectReason.trim()) {
+        toast.error("Please provide a rejection reason.");
+        return;
+      }
       await onVerifyCar(car.id, rejectReason);
     } finally {
       setProcessing(false);
@@ -102,7 +114,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
               </div>
               <div>
                 <p className="text-sm text-gray-500">Location</p>
-                <p className="font-medium">{car.location}</p>
+                <p className="font-medium">{car.location.address}</p>
               </div>
             </div>
           </div>

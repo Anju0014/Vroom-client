@@ -1,11 +1,243 @@
 
+// "use client";
+// import React, { useEffect, useState } from "react";
+// import { AuthService } from "@/services/customer/authService";
+// import EditProfileModal from "@/components/customer/dashboard/EditProfileModal";
+// import { toast } from "react-hot-toast";
+// import Image from "next/image";
+// import { FileText, FileUp,Eye } from 'lucide-react';
+// import FileUpload from "@/components/FileUpload";
+// import ChangePasswordModal from "@/components/Changepassword";
+
+// interface Address {
+//     addressLine1: string;
+//     addressLine2?: string;
+//     city: string;
+//     state: string;
+//     postalCode: string;
+//     country: string;
+// }
+
+// interface Customer{
+//   id: string;
+//   fullName: string;
+//   email: string;
+//   phoneNumber?: string;
+//   profileImage?: string;
+//   address?:Address;
+// }
+
+// const ProfilePage = () => {
+//   const [customerDetails, setCustomerDetails] = useState<Customer | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [isEditing, setIsEditing] = useState(false);
+//   const [idProof, setIdProof] = useState<string | null>(null);
+//   const [isChange, setIsChange] = useState(false);
+
+  
+//   useEffect(() => {
+//     const fetchProfile = async () => {
+//       try {
+//         const data = await AuthService.getCustomerProfile();
+//         console.log("data",data)
+//         console.log("customer",data.customer)
+//         setCustomerDetails(data.customer);
+//         console.log(data.customer)
+//         console.log("idProof",data.customer.idProof);
+//         setIdProof(data.customer.idProof || null);
+     
+//       } catch (error) {
+//         console.error("Failed to fetch profile:", error);
+//         toast.error("Failed to load profile");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchProfile();
+//   }, []); 
+
+
+
+//   const handleProfileUpdated = (newPhoneNumber: string, newAddress: Address, newProfileImage?: string) => {
+//     if (customerDetails) {
+//       setCustomerDetails({ 
+//         ...customerDetails, 
+//         phoneNumber: newPhoneNumber, 
+//         address: newAddress, 
+//         profileImage: newProfileImage || customerDetails.profileImage 
+//       });
+//     }
+//   };
+
+//   const handleUploadComplete = async (uploadedUrl: string|string[]) => {
+//     try {
+    
+//       if (typeof uploadedUrl === "string") {
+//       await AuthService.updateCustomerIdProof({ idProof: uploadedUrl });
+//       setIdProof(uploadedUrl);
+//       toast.success("ID Proof uploaded successfully!");}
+//     } catch (error) {
+//       console.error("Failed to update profile with ID Proof:", error);
+//       toast.error("Failed to update ID Proof");
+//     }
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen">
+//         <p className="text-lg">Loading...</p>
+//       </div>
+//     );
+//   }
+
+//   if (!customerDetails) {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen">
+//         <p className="text-red-500 text-lg">Failed to load profile.</p>
+//       </div>
+//     );
+//   }
+
+//   const { address} = customerDetails;
+  
+  
+//   return (
+//     <div>
+//       <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+//         <h1 className="text-2xl font-bold mb-6">Customer Profile</h1>
+    
+//         <div className="flex items-center space-x-4 mb-6">
+//           <Image
+//             src={customerDetails.profileImage || "/images/user.png"}
+//             alt="customerImage"
+//             width={80}
+//             height={80}
+//             className="rounded-full border"
+//           />
+//           <div>
+//             <h2 className="text-xl font-semibold">{customerDetails.fullName}</h2>
+//             <p className="text-gray-500">{customerDetails.email}</p>
+//           </div>
+//         </div>
+
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//           <div>
+//             <h3 className="text-sm font-medium text-gray-700">Full Name</h3>
+//             <p className="p-2 bg-gray-100 rounded-md">{customerDetails.fullName}</p>
+//           </div>
+
+//           <div>
+//             <h3 className="text-sm font-medium text-gray-700">Email</h3>
+//             <p className="p-2 bg-gray-100 rounded-md">{customerDetails.email}</p>
+//           </div>
+
+//           <div>
+//             <h3 className="text-sm font-medium text-gray-700">Phone Number</h3>
+//             <p className="p-2 bg-gray-100 rounded-md">
+//               {customerDetails.phoneNumber || "N/A"}
+//             </p>
+//           </div>
+
+//           <div className="md:col-span-2">
+//             <h3 className="text-sm font-medium text-gray-700">Address</h3>
+//             {address ? (
+//               <div className="p-4 bg-gray-100 rounded-md space-y-1">
+//                 <p>{address.addressLine1}</p>
+//                 {address.addressLine2 && <p>{address.addressLine2}</p>}
+//                 <p>
+//                   {address.city}, {address.state} - {address.postalCode}
+//                 </p>
+//                 <p>{address.country}</p>
+//               </div>
+//             ) : (
+//               <p className="p-2 bg-gray-100 rounded-md">No address added.</p>
+//             )}
+//           </div>
+//         </div>
+
+//         <button 
+//           onClick={() => setIsEditing(true)} 
+//           className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+//         >
+//           Edit Profile
+//         </button>
+//         <button onClick={() => setIsChange(true)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"> Change Password</button>
+
+//         {isEditing && (
+//           <EditProfileModal
+          
+//             currentProfileImage={customerDetails?.profileImage}
+//             currentPhoneNumber={customerDetails?.phoneNumber}
+//             currentAddress={customerDetails?.address}
+//             onClose={() => setIsEditing(false)}
+//             onProfileUpdated={handleProfileUpdated}
+//           />
+//         )}
+//       </div>
+
+//       {/* <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg flex justify-end">
+     
+//      </div> */}
+//  <ChangePasswordModal isOpen={isChange} onClose={() => setIsChange(false)} role="customer" />
+     
+//       <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+//         <div className="flex items-center justify-between mb-6">
+//           <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+//             <FileText className="mr-2 text-blue-500" />
+//             ID Proof Document (Driving License)
+//           </h2>
+//           {idProof && (
+//             <a
+//               href={idProof}
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               className="text-blue-600 hover:underline flex items-center"
+//             >
+//               <Eye className="mr-1" size={18} />
+//               View Document
+//             </a>
+//           )}
+//         </div>
+
+//         {idProof ? (
+//           <div className="bg-green-50 p-4 rounded-lg flex items-center justify-between">
+//             <div className="flex items-center space-x-3">
+//               <FileText className="text-green-600" />
+//               <p className="text-green-700">ID Proof uploaded successfully</p>
+//             </div>
+//             {/* <button 
+//               onClick={() => setIdProof(null)} 
+//               className="text-red-500 hover:text-red-700"
+//             >
+//               Remove
+//             </button> */}
+//           </div>
+//         ) : (
+//           <FileUpload
+//             accept="image/*,application/pdf"
+//             multiple={false}
+//             onUploadComplete={handleUploadComplete}
+//           />
+//         )}
+//       </div>
+//     </div>
+
+
+   
+    
+//   );
+// };
+
+// export default ProfilePage;
+
 "use client";
 import React, { useEffect, useState } from "react";
 import { AuthService } from "@/services/customer/authService";
 import EditProfileModal from "@/components/customer/dashboard/EditProfileModal";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
-import { FileText, FileUp,Eye } from 'lucide-react';
+import { FileText, Eye, Edit, Lock } from 'lucide-react';
 import FileUpload from "@/components/FileUpload";
 import ChangePasswordModal from "@/components/Changepassword";
 
@@ -33,19 +265,13 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [idProof, setIdProof] = useState<string | null>(null);
   const [isChange, setIsChange] = useState(false);
-
   
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const data = await AuthService.getCustomerProfile();
-        console.log("data",data)
-        console.log("customer",data.customer)
         setCustomerDetails(data.customer);
-        console.log(data.customer)
-        console.log("idProof",data.customer.idProof);
         setIdProof(data.customer.idProof || null);
-     
       } catch (error) {
         console.error("Failed to fetch profile:", error);
         toast.error("Failed to load profile");
@@ -56,8 +282,6 @@ const ProfilePage = () => {
 
     fetchProfile();
   }, []); 
-
-
 
   const handleProfileUpdated = (newPhoneNumber: string, newAddress: Address, newProfileImage?: string) => {
     if (customerDetails) {
@@ -72,11 +296,11 @@ const ProfilePage = () => {
 
   const handleUploadComplete = async (uploadedUrl: string|string[]) => {
     try {
-    
       if (typeof uploadedUrl === "string") {
-      await AuthService.updateCustomerIdProof({ idProof: uploadedUrl });
-      setIdProof(uploadedUrl);
-      toast.success("ID Proof uploaded successfully!");}
+        await AuthService.updateCustomerIdProof({ idProof: uploadedUrl });
+        setIdProof(uploadedUrl);
+        toast.success("ID Proof uploaded successfully!");
+      }
     } catch (error) {
       console.error("Failed to update profile with ID Proof:", error);
       toast.error("Failed to update ID Proof");
@@ -99,74 +323,84 @@ const ProfilePage = () => {
     );
   }
 
-  const { address} = customerDetails;
-  
-  
   return (
-    <div>
-      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold mb-6">Customer Profile</h1>
-    
-        <div className="flex items-center space-x-4 mb-6">
-          <Image
-            src={customerDetails.profileImage || "/images/user.png"}
-            alt="customerImage"
-            width={80}
-            height={80}
-            className="rounded-full border"
-          />
-          <div>
-            <h2 className="text-xl font-semibold">{customerDetails.fullName}</h2>
-            <p className="text-gray-500">{customerDetails.email}</p>
+    <div className="bg-gray-50 min-h-screen py-8">
+      <div className="max-w-4xl mx-auto mt-6 p-6 bg-white shadow-lg rounded-lg">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Customer Profile</h1>
+          <div className="flex space-x-3">
+            <button 
+              onClick={() => setIsEditing(true)} 
+              className="px-2 py-1 bg-blue-300 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center"
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              Edit Profile
+            </button>
+            <button 
+              onClick={() => setIsChange(true)} 
+              className="px-2 py-1 bg-green-300 text-white rounded-md hover:bg-green-600 transition-colors flex items-center"
+            >
+              <Lock className="mr-2 h-4 w-4" />
+              Change Password
+            </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6 mb-8 pb-6 border-b border-gray-200">
+          <div className="relative">
+            <Image
+              src={customerDetails.profileImage || "/images/user.png"}
+              alt="Profile"
+              width={100}
+              height={100}
+              className="rounded-full border-4 border-gray-100 shadow"
+            />
+          </div>
           <div>
-            <h3 className="text-sm font-medium text-gray-700">Full Name</h3>
-            <p className="p-2 bg-gray-100 rounded-md">{customerDetails.fullName}</p>
+            <h2 className="text-2xl font-semibold text-gray-800">{customerDetails.fullName}</h2>
+            <p className="text-gray-500">{customerDetails.email}</p>
+            <p className="text-gray-500 mt-1">{customerDetails.phoneNumber || "No phone number added"}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-sm font-medium text-gray-500 uppercase mb-2">Personal Details</h3>
+            <div className="space-y-3">
+              <div>
+                <span className="block text-xs text-gray-500">Full Name</span>
+                <span className="block font-medium">{customerDetails.fullName}</span>
+              </div>
+              <div>
+                <span className="block text-xs text-gray-500">Email Address</span>
+                <span className="block font-medium">{customerDetails.email}</span>
+              </div>
+              <div>
+                <span className="block text-xs text-gray-500">Phone Number</span>
+                <span className="block font-medium">{customerDetails.phoneNumber || "Not provided"}</span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h3 className="text-sm font-medium text-gray-700">Email</h3>
-            <p className="p-2 bg-gray-100 rounded-md">{customerDetails.email}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-gray-700">Phone Number</h3>
-            <p className="p-2 bg-gray-100 rounded-md">
-              {customerDetails.phoneNumber || "N/A"}
-            </p>
-          </div>
-
-          <div className="md:col-span-2">
-            <h3 className="text-sm font-medium text-gray-700">Address</h3>
-            {address ? (
-              <div className="p-4 bg-gray-100 rounded-md space-y-1">
-                <p>{address.addressLine1}</p>
-                {address.addressLine2 && <p>{address.addressLine2}</p>}
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-sm font-medium text-gray-500 uppercase mb-2">Address</h3>
+            {customerDetails.address ? (
+              <div className="space-y-1">
+                <p className="font-medium">{customerDetails.address.addressLine1}</p>
+                {customerDetails.address.addressLine2 && <p>{customerDetails.address.addressLine2}</p>}
                 <p>
-                  {address.city}, {address.state} - {address.postalCode}
+                  {customerDetails.address.city}, {customerDetails.address.state} - {customerDetails.address.postalCode}
                 </p>
-                <p>{address.country}</p>
+                <p>{customerDetails.address.country}</p>
               </div>
             ) : (
-              <p className="p-2 bg-gray-100 rounded-md">No address added.</p>
+              <p className="text-gray-500 italic">No address information available</p>
             )}
           </div>
         </div>
 
-        <button 
-          onClick={() => setIsEditing(true)} 
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Edit Profile
-        </button>
-        <button onClick={() => setIsChange(true)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"> Change Password</button>
-
         {isEditing && (
           <EditProfileModal
-          
             currentProfileImage={customerDetails?.profileImage}
             currentPhoneNumber={customerDetails?.phoneNumber}
             currentAddress={customerDetails?.address}
@@ -176,12 +410,9 @@ const ProfilePage = () => {
         )}
       </div>
 
-      {/* <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg flex justify-end">
+      <ChangePasswordModal isOpen={isChange} onClose={() => setIsChange(false)} role="customer" />
      
-     </div> */}
- <ChangePasswordModal isOpen={isChange} onClose={() => setIsChange(false)} role="customer" />
-     
-      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+      <div className="max-w-4xl mx-auto mt-6 p-6 bg-white shadow-lg rounded-lg">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-800 flex items-center">
             <FileText className="mr-2 text-blue-500" />
@@ -192,7 +423,7 @@ const ProfilePage = () => {
               href={idProof}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline flex items-center"
+              className="text-blue-600 hover:text-blue-800 transition-colors flex items-center"
             >
               <Eye className="mr-1" size={18} />
               View Document
@@ -201,33 +432,22 @@ const ProfilePage = () => {
         </div>
 
         {idProof ? (
-          <div className="bg-green-50 p-4 rounded-lg flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <FileText className="text-green-600" />
-              <p className="text-green-700">ID Proof uploaded successfully</p>
-            </div>
-            {/* <button 
-              onClick={() => setIdProof(null)} 
-              className="text-red-500 hover:text-red-700"
-            >
-              Remove
-            </button> */}
+          <div className="bg-green-50 p-4 rounded-lg flex items-center">
+            <FileText className="text-green-600 mr-3" />
+            <p className="text-green-700">ID Proof uploaded successfully</p>
           </div>
         ) : (
-          <FileUpload
-            accept="image/*,application/pdf"
-            multiple={false}
-            onUploadComplete={handleUploadComplete}
-          />
+          <div className="border-2 border-dashed border-gray-300 p-6 rounded-lg">
+            <FileUpload
+              accept="image/*,application/pdf"
+              multiple={false}
+              onUploadComplete={handleUploadComplete}
+            />
+          </div>
         )}
       </div>
     </div>
-
-
-   
-    
   );
 };
 
 export default ProfilePage;
-

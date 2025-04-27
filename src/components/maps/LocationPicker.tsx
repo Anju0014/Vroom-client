@@ -1,22 +1,175 @@
+// "use client";
+
+// import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+// import { useState } from "react";
+// import L from "leaflet";
+
+// interface LocationPickerProps {
+//   onSelectLocation: (lat: number, lng: number) => void;
+// }
+
+// const LocationPicker: React.FC<LocationPickerProps> = ({ onSelectLocation }) => {
+//   const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+
+//   const LocationMarker = () => {
+//     useMapEvents({
+//       click(e) {
+//         const { lat, lng } = e.latlng;
+//         setPosition({ lat, lng });
+//         onSelectLocation(lat, lng);
+//       },
+//     });
+
+//     return position ? (
+//       <Marker
+//         position={position}
+//         icon={L.icon({
+//           iconUrl: "/marker-icon.png", // make sure to copy this icon to public folder
+//           iconSize: [25, 41],
+//           iconAnchor: [12, 41],
+//         })}
+//       />
+//     ) : null;
+//   };
+
+//   return (
+//     <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: "400px", width: "100%" }}>
+//       <TileLayer
+//         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+//         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//       />
+//       <LocationMarker />
+//     </MapContainer>
+//   );
+// };
+
+// export default LocationPicker;
+
+
+
+// "use client";
+
+// import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+// import { useState } from "react";
+// import L from "leaflet";
+// import { getReverseGeocode } from "@/services/common/mapService";
+
+// interface LocationPickerProps {
+//   onSelectLocation: (
+//     lat: number,
+//     lng: number,
+//     address?: string,
+//     landmark?: string
+//   ) => void;
+//   initialCoordinates?: { lat: number; lng: number };
+// }
+
+// const LocationPicker: React.FC<LocationPickerProps> = ({ onSelectLocation,initialCoordinates }) => {
+//   const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+
+//   const reverseGeocode = async (lat: number, lng: number) => {
+//     try {
+//       const data = await getReverseGeocode(lat, lng);
+//       const place = data.features[0];
+//       const address = place?.place_name || "";
+//       const landmark = place?.text || "";
+  
+//       onSelectLocation(lat, lng, address, landmark);
+//     } catch (err) {
+//       console.error("Reverse geocoding failed", err);
+//       onSelectLocation(lat, lng);
+//     }
+//   };
+
+//   const LocationMarker = () => {
+//     useMapEvents({
+//       click(e) {
+//         const { lat, lng } = e.latlng;
+//         setPosition({ lat, lng });
+//         reverseGeocode(lat, lng);
+//       },
+//     });
+
+//     return position ? (
+//       <Marker
+//         position={position}
+//         icon={L.icon({
+//           iconUrl: "/marker-icon.png",
+//           iconSize: [25, 41],
+//           iconAnchor: [12, 41],
+//         })}
+//       />
+//     ) : null;
+//   };
+
+//   return (
+//     <MapContainer
+//       center={[20.5937, 78.9629]}
+//       zoom={5}
+//       style={{ height: "400px", width: "100%" }}
+//     >
+//       <TileLayer
+//         url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}`}
+//         attribution='&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+//       />
+//       <LocationMarker />
+//     </MapContainer>
+//   );
+// };
+
+// export default LocationPicker;
+
 "use client";
 
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import { useState } from "react";
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+import { useEffect, useState } from "react";
 import L from "leaflet";
+import { getReverseGeocode } from "@/services/common/mapService";
 
 interface LocationPickerProps {
-  onSelectLocation: (lat: number, lng: number) => void;
+  onSelectLocation: (
+    lat: number,
+    lng: number,
+    address?: string,
+    landmark?: string
+  ) => void;
+  initialCoordinates?: { lat: number; lng: number };
 }
 
-const LocationPicker: React.FC<LocationPickerProps> = ({ onSelectLocation }) => {
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+const LocationPicker: React.FC<LocationPickerProps> = ({
+  onSelectLocation,
+  initialCoordinates,
+}) => {
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
+    initialCoordinates || null
+  );
+
+  const reverseGeocode = async (lat: number, lng: number) => {
+    try {
+      const data = await getReverseGeocode(lat, lng);
+      const place = data.features[0];
+      const address = place?.place_name || "";
+      const landmark = place?.text || "";
+
+      onSelectLocation(lat, lng, address, landmark);
+    } catch (err) {
+      console.error("Reverse geocoding failed", err);
+      onSelectLocation(lat, lng);
+    }
+  };
+
+  useEffect(() => {
+    if (initialCoordinates) {
+      reverseGeocode(initialCoordinates.lat, initialCoordinates.lng);
+    }
+  }, [initialCoordinates]);
 
   const LocationMarker = () => {
     useMapEvents({
       click(e) {
         const { lat, lng } = e.latlng;
         setPosition({ lat, lng });
-        onSelectLocation(lat, lng);
+        reverseGeocode(lat, lng);
       },
     });
 
@@ -24,7 +177,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ onSelectLocation }) => 
       <Marker
         position={position}
         icon={L.icon({
-          iconUrl: "/marker-icon.png", // make sure to copy this icon to public folder
+          iconUrl: "/marker-icon.png",
           iconSize: [25, 41],
           iconAnchor: [12, 41],
         })}
@@ -32,12 +185,31 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ onSelectLocation }) => 
     ) : null;
   };
 
+  const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
+    const map = useMap();
+    useEffect(() => {
+      if (lat && lng) {
+        map.setView([lat, lng], 14); // zoom in a bit on edit
+      }
+    }, [lat, lng, map]);
+    return null;
+  };
+
   return (
-    <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: "400px", width: "100%" }}>
+    <MapContainer
+      center={
+        initialCoordinates
+          ? [initialCoordinates.lat, initialCoordinates.lng]
+          : [20.5937, 78.9629]
+      }
+      zoom={initialCoordinates ? 14 : 5}
+      style={{ height: "400px", width: "100%" }}
+    >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}`}
+        attribution='&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
       />
+      {position && <RecenterMap lat={position.lat} lng={position.lng} />}
       <LocationMarker />
     </MapContainer>
   );

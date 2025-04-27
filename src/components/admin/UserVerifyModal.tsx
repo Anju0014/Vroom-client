@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface UserVerifyModalProps {
   user: any;
@@ -30,7 +31,7 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
 
   const handleRejectSubmit = () => {
     if (!rejectReason.trim()) {
-      alert("Please provide a rejection reason.");
+      toast.error("Please provide a rejection reason.");
       return;
     }
     

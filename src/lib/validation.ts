@@ -120,7 +120,22 @@ const addressSchema = z.object({
       .string()
       .nonempty({ message: "Expected Wage is required" })
       .regex(/^\d+$/, { message: "Expected Wage must be a number" }),
-    location: z.string().nonempty({ message: "Location is required" }).trim(),
+  
+    location: z.object({
+      address: z.string().optional(),
+      landmark: z.string().optional(),
+      coordinates: z.object({
+        lat: z.number({
+          required_error: "Latitude is required",
+          invalid_type_error: "Latitude must be a number",
+        }),
+        lng: z.number({
+          required_error: "Longitude is required",
+          invalid_type_error: "Longitude must be a number",
+        }),
+      }),
+    }),
+  
     images: z
       .array(z.string().url({ message: "Invalid image URL" }))
       .min(1, { message: "At least one image is required" }),
@@ -128,7 +143,7 @@ const addressSchema = z.object({
       .array(z.string().url({ message: "Invalid video URL" }))
       .max(1, { message: "Only one video is allowed" }),
   });
-
+  
   export const ownerRegisterSchema = z.object({
     phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
     altPhoneNumber: z.string().optional(),

@@ -119,10 +119,10 @@ updateVerifyStatus: async (userId: string, status: number, userType: "customer" 
 },
 
 // Update car verification status
-updateCarVerificationStatus:async(carId: string, isVerified: boolean, reason?: string) =>{
+updateCarVerifyStatus:async(carId: string, status:number, reason?: string) =>{
   try {
-    const response = await adminApi.put(`/admin/cars/${carId}/verify`, {
-      isVerified,
+    const response = await adminApi.patch(`/admin/cars/updateverifystatus/${carId}`, {
+      status,
       reason,
     });
     return response.data;

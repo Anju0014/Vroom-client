@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/axiosInstance";
 import { SignupData, GoogleSignInData,Address,ChangePasswordData } from "@/types/authTypes";
-
+import { BookingData,CancelBookingResponse,BookingResponse,ConfirmBookingResponse } from "@/types/workTypes";
 const customerApi=axiosInstance()
 
 export const AuthService = {
@@ -31,7 +31,7 @@ export const AuthService = {
   getCustomerProfile:async()=>{
     const response = await customerApi.get("/getCustomerProfile");
     if (response.status !== 200) throw new Error("Failed to fetch profile");
-    return response.data.customer; 
+    return response.data; 
   },
   updateCustomerProfile: async (payload: { phoneNumber: string; address: Address,profileImage:string }) => {
     const response = await customerApi.put("/updateProfile", payload);
@@ -48,6 +48,119 @@ export const AuthService = {
     const response = await customerApi.post("/changepassword",data)
     return response.data;
   },
+
+  nearByCars:async(latitude:number,longitude:number) =>{
+    console.log("sending")
+
+    console.log(`/car/nearby?lat=${latitude}&lng=${longitude}&maxDistance=50`);
+
+    let response= await customerApi.get(`/car/nearby?lat=${latitude}&lng=${longitude}&maxDistance=50`);
+    console.log("have came back")
+    return response.data
+},
+
+
+
+
+  featuredCarList:async ()=>{
+    let response=await customerApi.get("/car/featured");
+    return response.data
+},
+findCarDetails:async(carId:string)=>{
+  let response=await customerApi.get(`/car/getCarDetails/${carId}`)
+  return response.data.data
+},
+findBookingDetails:async(carId:string)=>{
+  console.log("sending to enquire booking deatils");
+  let response=await customerApi.get(`/car/getBookingDetails/${carId}`)
+  return response.data
+  
+},
+
+findCustomerBookingDetails:async()=>{
+  console.log('sending request for user booking');
+  let response=await customerApi.get('/getCustomerBookingDetails')
+  return response.data
+},
+
+
+
+
+
+
+createPendingBooking:async (data: BookingData): Promise<BookingResponse> => {
+  try {
+    console.log('Sending booking data to:', `/bookings/create`, data);
+    const response = await customerApi.post<BookingResponse>('/bookings/create', data);
+    console.log('Booking created:', response.data);
+
+    if (!response.data.bookingId) {
+      throw new Error('Invalid response: bookingId not found');
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Booking API error:', error.response?.data || error.message);
+    throw new Error(`Failed to create booking: ${error.response?.data?.error || error.message}`);
+  }
+},
+
+confirmBooking:async (bookingId: string, paymentIntentId: string): Promise<ConfirmBookingResponse> => {
+  try {
+    console.log('Confirming booking:', { bookingId, paymentIntentId });
+    const response = await customerApi.patch<ConfirmBookingResponse>(
+      `/bookings/${bookingId}/confirm`,
+      { paymentIntentId }
+    );
+    console.log('Booking confirmed:', response.data);
+
+    if (!response.data.success || !response.data.bookingId) {
+      throw new Error('Invalid response: success or bookingId not found');
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Confirm booking API error:', error.response?.data || error.message);
+    throw new Error(`Failed to confirm booking: ${error.response?.data?.error || error.message}`);
+  }
+},
+
+
+failBooking:async (bookingId: string): Promise<CancelBookingResponse> => {
+  try {
+    console.log('Cancelling booking:', bookingId);
+    const response = await customerApi.patch<CancelBookingResponse>(`/bookings/${bookingId}/fail`);
+    console.log('Booking cancelled:', response.data);
+
+    if (!response.data.success) {
+      throw new Error('Invalid response: success not found');
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Cancel booking API error:', error.response?.data || error.message);
+    throw new Error(`Failed to cancel booking: ${error.response?.data?.error || error.message}`);
+  }
+},
+
+
+cancelBooking:async (bookingId: string): Promise<CancelBookingResponse> => {
+  try {
+    console.log('Cancelling booking:', bookingId);
+    const response = await customerApi.patch<CancelBookingResponse>(`/bookings/${bookingId}/cancel`);
+    console.log('Booking cancelled:', response.data);
+
+    if (!response.data.success) {
+      throw new Error('Invalid response: success not found');
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Cancel booking API error:', error.response?.data || error.message);
+    throw new Error(`Failed to cancel booking: ${error.response?.data?.error || error.message}`);
+  }
+}
+  
 
 };
 

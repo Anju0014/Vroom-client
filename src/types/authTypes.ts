@@ -27,6 +27,7 @@ export interface SignupData {
     updatedAt?: string;
     blockStatus?:number;
     address?:[],
+    status?:number;
   }
   
 
@@ -103,10 +104,17 @@ export interface SignupData {
     fuelType?: string;
     rcBookNo?: string;
     expectedWage: string;
-    location: string;
+    location: {
+      address: string,
+      landmark:string,
+      coordinates: {
+        lat: number|null,
+        lng: number|null
+      }
+    },
     make?: string;
     model?: string;
-    isVerified?: boolean;
+    verifyStatus:number;
     images: string[];  
     videos?: string[]; 
    }
@@ -119,7 +127,15 @@ export interface SignupData {
     fuelType: string;
     rcBookNo: string;
     expectedWage: string;
-    location: string;
+    // location: string;
+    location: {
+      address: string,
+      landmark:string,
+      coordinates: {
+        lat: number|null,
+        lng: number|null
+      }
+    },
     images: string[];  
     videos:  string[];
   }

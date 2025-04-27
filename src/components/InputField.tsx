@@ -26,11 +26,12 @@ interface InputProps {
   label: string;
   name: string;
   type: string;
-  value?: string; // Add value prop to the interface
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   suppressHydrationWarning?: boolean;
   disabled?:boolean
+  placeholder?:string;
 }
 const InputField: React.FC<InputProps> = ({ 
   label, 
@@ -40,26 +41,26 @@ const InputField: React.FC<InputProps> = ({
   onChange, 
   required,
   suppressHydrationWarning,
-  disabled 
+  disabled=false, 
+  placeholder
 }) => {
   return (
     <div className="mb-2">
       <label className="block text-sm font-medium">{label}</label>
       <input 
-        className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed" 
-        type={type} 
+        className={`w-full p-2 border rounded bg-gray-100 ${disabled ? 'cursor-not-allowed' : 'cursor-text'}`} 
+        type={type}
         name={name}
         value={value}
         onChange={onChange}
         required={required}
         suppressHydrationWarning={suppressHydrationWarning}
         disabled={disabled} 
+        placeholder={placeholder}
       />
     </div>
   );
 };
-
-
 
 export default InputField;
 

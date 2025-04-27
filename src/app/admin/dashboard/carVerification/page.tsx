@@ -15,10 +15,17 @@ interface Car {
   fuelType?: string;
   rcBookNo?: string;
   expectedWage: string;
-  location: string;
+  location: {
+    coordinates: {
+        lat: number;
+        lng: number;
+      };
+      address: string;
+      landmark?: string;
+  };
   make?: string;
   carModel?: string;
-  isVerified: boolean;
+  verifyStatus: number;
   images: string[];
   videos?: string[];
   owner: string;
@@ -52,7 +59,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
       if (!response || !response.data) throw new Error("Failed to fetch cars");
 
       const filteredCars = response.data
-        .filter((car: any) => car.isVerified === false && !car.isDeleted)
+        .filter((car: any) => car.verifyStatus === 0 && !car.isDeleted)
         .map((car: any) => ({
           id: car._id,
           carName: car.carName,
@@ -64,7 +71,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
           location: car.location,
           make: car.make,
           carModel: car.carModel,
-          isVerified: car.isVerified || false,
+          verifyStatus: car.verifyStatus,
           images: car.images,
           videos: car.videos || [],
           owner: car.owner,
@@ -87,17 +94,19 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
       
       // If reason is provided, we're rejecting the car
       // Otherwise, we're verifying the car
-      const isVerified = !reason;
-      
+    //   const isVerified = !reason;
+      const status=reason? -1:1
+      console.log("reason:", status)
       // Assuming you'll implement this method in your AdminAuthService
-      const response = await AdminAuthService.updateCarVerificationStatus(
+      const response = await AdminAuthService.updateCarVerifyStatus(
         carId, 
-        isVerified,
+        status,
         reason
       );
       
       if (response) {
         // Update local state to reflect the change
+
         setCars((prevCars) => 
           prevCars.filter((car) => car.id !== carId)
         );
@@ -108,7 +117,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
         }
         
         toast.success(
-          isVerified 
+          status===1 
             ? "Car verified successfully" 
             : "Car rejected successfully"
         );
@@ -124,8 +133,8 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     }
   };
 
-  const getStatusBadge = (isVerified: boolean) => {
-    if (isVerified) {
+  const getStatusBadge = (verifyStatus: number) => {
+    if (verifyStatus===1) {
       return <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Verified</span>;
     } else {
       return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Pending</span>;
@@ -154,13 +163,13 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
       sortable: true,
     },
     {
-      header: "Location",
-      accessor: "location" as keyof Car,
-      sortable: true,
+        header: "Location",
+        accessor: (car: Car) => car.location.address ?? "No address",
+        sortable: true,
     },
     {
       header: "Status",
-      accessor: (car: Car) => getStatusBadge(car.isVerified),
+      accessor: (car: Car) => getStatusBadge(car.verifyStatus),
       className: "whitespace-nowrap",
     },
     {

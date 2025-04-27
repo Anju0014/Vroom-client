@@ -49,7 +49,7 @@ updateOwnerIdProof: async ({idProof}:{idProof:string}) => {
 },
 
 addCar: async(data:CarFormData)=>{
-  return await carOwnerApi.post("car/carupload",data)
+  return await carOwnerApi.post("owner/carupload",data)
 },
 
 changePassword: async (data: ChangePasswordData) => {
@@ -59,7 +59,7 @@ changePassword: async (data: ChangePasswordData) => {
 
 getCars: async () => {
   try {
-    const response = await carOwnerApi.get("/car/getcars"); 
+    const response = await carOwnerApi.get("/owner/getcars"); 
     return response.data; // Assuming the backend returns { cars: [] }
   } catch (error) {
     console.error("Error fetching cars:", error);
@@ -73,12 +73,12 @@ completeRegistration:async(data:RegistrationCarOwner)=>{
 
 
 updateCar: async (carId: string, carData: CarFormData) => {
-  const response = await carOwnerApi.put(`/car/updatecars/${carId}`, carData);
+  const response = await carOwnerApi.put(`/owner/updatecars/${carId}`, carData);
   return response.data;
 },
 
 deleteCar: async (carId: string) => {
-  const response = await carOwnerApi.delete(`/car/deletecars/${carId}`);
+  const response = await carOwnerApi.delete(`/owner/deletecars/${carId}`);
   return response.data;
 }
 

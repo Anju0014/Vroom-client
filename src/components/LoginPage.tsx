@@ -77,7 +77,7 @@ const LoginComponent = ({ defaultRole = "customer" }: LoginComponentProps) => {
           password: formData.password,
         });
         accessToken = response.data.ownerAccessToken;
-        user = response.data.user;
+         user = response.data.user;
       }
 
       if (user && accessToken) {

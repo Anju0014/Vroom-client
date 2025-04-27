@@ -50,19 +50,19 @@ const Sidebar: React.FC = () => {
     }
 
   const navItems = [
-    { name: "DashBoard", path: "/carOwner/dashboard/documents", icon: <CreditCard size={18} /> },
-    { name: "Personal Details", path: "/carOwner/dashboard/profile", icon: <User size={18} /> },
+    { name: "DashBoard", path: "/customer/dashboard/documents", icon: <CreditCard size={18} /> },
+    { name: "Personal Details", path: "/customer/dashboard/profile", icon: <User size={18} /> },
     // { name: "Your Cars", path: "/dashboard/cars", icon: <Car size={18} /> },
-    { name: "Bookings", path: "/dashboard/bookings", icon: <Calendar size={18} /> },
-    { name: "Report & Complaint", path: "/dashboard/complaints", icon: <AlertTriangle size={18} /> },
+    { name: "Bookings", path: "/customer/dashboard/bookings", icon: <Calendar size={18} /> },
+    { name: "Report & Complaint", path: "/customer/dashboard/complaints", icon: <AlertTriangle size={18} /> },
     // { name: "Revenue", path: "/dashboard/revenue", icon: <DollarSign size={18} /> },
-    { name: "Chat", path: "/dashboard/chat", icon: <MessageSquare size={18} /> },
+    { name: "Chat", path: "/customer/dashboard/chat", icon: <MessageSquare size={18} /> },
     // { name: "Settings", path: "/dashboard/settings", icon: <Settings size={18} /> },
     
   ];
 
   return (
-    <div className="w-64 min-h-screen bg-purple-200 text-gray-800 p-4">
+    <div className="w-64 min-h-screen bg-blue-200 text-gray-800 p-4">
   
       <div className="flex flex-col items-center mb-8 pt-4">
         <div className="w-20 h-20 rounded-full overflow-hidden mb-3 relative">

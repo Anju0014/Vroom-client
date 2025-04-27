@@ -18,7 +18,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      console.log('accessToken old', useAuthStore.getState().accessToken)
       if (!accessToken) {
+        
         toast.error("No access token available");
         setLoading(false);
         return;

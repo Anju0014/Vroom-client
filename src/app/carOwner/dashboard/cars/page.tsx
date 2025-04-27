@@ -195,6 +195,7 @@ import { Car, CarFormData } from '@/types/authTypes';
 import { OwnerAuthService } from '@/services/carOwner/authService';
 import DeleteCarModal from '@/components/cars/deletecar';
 import EditCarModal from '@/components/cars/editcar';
+import { transformGeoCoordinates } from '@/utils/transformGeoCoordinates';
 
 const YourCarsPage: React.FC = () => {
   
@@ -210,7 +211,11 @@ const YourCarsPage: React.FC = () => {
     const fetchCars = async () => {
       try {
         const data = await OwnerAuthService.getCars();
-        setCars(data.cars || []);
+        console.log(data)
+        // setCars(data.cars || []);
+        const formattedCars = (data.cars || []).map(transformGeoCoordinates);
+        console.log(formattedCars)
+        setCars(formattedCars);
       } catch (error) {
         console.error('Error fetching cars:', error);
       } finally {
@@ -319,7 +324,6 @@ const YourCarsPage: React.FC = () => {
               {cars.length > 0 ? (
                 cars.map((car) => {
                   // Simulate some cars being verified and some not
-                  const isVerified = false;
                   const carId = car._id || car.id;
                   
                   return (
@@ -327,7 +331,7 @@ const YourCarsPage: React.FC = () => {
                       <div className="h-48 bg-gray-200 relative">
                         {/* Verification badge */}
                         <div className="absolute top-2 left-2 z-10">
-                          {isVerified ? (
+                          {car.verifyStatus===1 ? (
                             <span className="bg-green-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
                               <FaCheckCircle className="mr-1" /> Verified
                             </span>
@@ -382,7 +386,7 @@ const YourCarsPage: React.FC = () => {
                           <span className="text-sm">{car.fuelType}</span>
                           <span className="font-medium">₹{car.expectedWage}/day</span>
                         </div>
-                        <p className="text-sm text-gray-500 mt-1">{car.location}</p>
+                        <p className="text-sm text-gray-500 mt-1">{car.location.address}</p>
                       </div>
                     </div>
                   );

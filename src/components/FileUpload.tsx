@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { S3Service } from "@/services/s3Service";
+import { S3Service } from "@/services/common/s3Service";
 import { Upload, FileText, Video, Image, Loader2, XCircle } from "lucide-react";
 
 interface FileUploadProps {

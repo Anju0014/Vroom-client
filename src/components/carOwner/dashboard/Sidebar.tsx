@@ -43,11 +43,11 @@ const Sidebar: React.FC = () => {
     { name: "DashBoard", path: "/carOwner/dashboard/documents", icon: <CreditCard size={18} /> },
     { name: "Personal Details", path: "/carOwner/dashboard/profile", icon: <User size={18} /> },
     { name: "Your Cars", path: "/carOwner/dashboard/cars", icon: <Car size={18} /> },
-    { name: "Bookings", path: "/dashboard/bookings", icon: <Calendar size={18} /> },
-    { name: "Report & Complaint", path: "/dashboard/complaints", icon: <AlertTriangle size={18} /> },
-    { name: "Revenue", path: "/dashboard/revenue", icon: <DollarSign size={18} /> },
-    { name: "Chat", path: "/dashboard/chat", icon: <MessageSquare size={18} /> },
-    { name: "Settings", path: "/dashboard/settings", icon: <Settings size={18} /> },
+    { name: "Bookings", path: "/carOwner/dashboard/bookings", icon: <Calendar size={18} /> },
+    { name: "Report & Complaint", path: "/carOwner/dashboard/complaints", icon: <AlertTriangle size={18} /> },
+    { name: "Revenue", path: "/carOwner/dashboard/revenue", icon: <DollarSign size={18} /> },
+    { name: "Chat", path: "/carOwner/dashboard/chat", icon: <MessageSquare size={18} /> },
+    { name: "Settings", path: "/carOwner/dashboard/settings", icon: <Settings size={18} /> },
     // { name: "Logout", path: "/logout", icon: <LogOut size={18} /> },
   ];
 
