@@ -1,202 +1,213 @@
+'use client';
+
+import React, { useEffect, useState } from "react";
+import { DataTable, Column } from "@/components/admin/UserTable";
+import { AdminAuthService } from "@/services/admin/adminService";
+import { Eye} from "lucide-react";
+import BookingDetailsModal from "@/components/admin/BookingDetailsModal";
+import { format } from "date-fns";
+import { IBooking } from "@/types/bookTypes";
 
 
 
+const BookingsPage: React.FC = () => {
+  const [bookings, setBookings] = useState<IBooking[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const bookingsData = await AdminAuthService.getAllBookings();
+        console.log("Bookings from backend", bookingsData);
+        
+        if (bookingsData && bookingsData.length > 0) {
+          setBookings(bookingsData);
+        } else {
+          setError('No booking data found');
+        }
+        
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
+        setError('Failed to fetch data. Please try again later.');
+        setIsLoading(false);
+      }
+    };
 
-// app/car/[id]/page.tsx
-// 'use client';
+    fetchData();
+  }, []);
 
-// import React, { useState } from 'react';
-// import Image from 'next/image';
-// import { CarGallery } from '@/components/Trycheck';
-// import { BookingCalendar } from '@/components/Calender';
-
-// interface Car {
-//   id: string;
-//   name: string;
-//   model: string;
-//   fuelType: string;
-//   price: number;
-//   features: string[];
-//   images: string[];
-//   videoUrl?: string;
-//   availability: { [date: string]: boolean };
-//   owner: {
-//     name: string;
-//     id: string;
-//   };
-// }
-
-// const dummyCar: Car = {
-//   id: '1',
-//   name: 'Tata Curvv EV',
-//   model: 'EV s2',
-//   fuelType: 'EV',
-//   price: 1500,
-//   features: [
-//     'Digital Instrument Cluster',
-//     'Parking Sensors',
-//     'Panoramic SunRoof'
-//   ],
-//   images: [
-//     '/car1.png',
-//     '/car2.png',
-//     '/car3.png',
-//     '/car4.png'
-//   ],
-//   videoUrl: '/car-video.mp4',
-//   availability: {
-//     '2025-07-10': true,
-//     '2025-07-11': true,
-//     '2025-07-12': false
-//   },
-//   owner: {
-//     name: 'Alasha Sharma',
-//     id: 'owner1'
-//   }
-// };
-
-// export default function CarDetailsPage() {
-//   const [showCalendar, setShowCalendar] = useState(false);
-//   const [selectedDates, setSelectedDates] = useState<string[]>([]);
-
-//   const handleBooking = () => {
-//     alert(`Car booked for: ${selectedDates.join(', ')}`);
-//   };
-
-//   return (
-//     <div className="grid md:grid-cols-3 gap-6 p-4">
-//       {/* Left Section - Gallery */}
-//       <div className="col-span-1 space-y-4">
-//         <CarGallery images={dummyCar.images} videoUrl={dummyCar.videoUrl} />
-
-//         <button
-//           onClick={() => setShowCalendar(!showCalendar)}
-//           className="bg-yellow-400 text-black px-4 py-2 rounded shadow hover:bg-yellow-500"
-//         >
-//           Check Availability
-//         </button>
-
-//         {showCalendar && (
-//           <BookingCalendar
-//             car={dummyCar}
-//             selectedDates={selectedDates}
-//             setSelectedDates={setSelectedDates}
-//           />
-//         )}
-//       </div>
-
-//       {/* Right Section - Car Info */}
-//       <div className="col-span-2">
-//         <div className="rounded-3xl bg-gradient-to-br from-yellow-100 to-indigo-100 p-6 shadow-xl space-y-4">
-//           <h2 className="text-2xl font-bold">{dummyCar.name}</h2>
-//           <p className="text-lg font-semibold">₹ {dummyCar.price}/Day</p>
-
-//           <p><strong>Model:</strong> {dummyCar.model}</p>
-//           <p><strong>Fuel Type:</strong> {dummyCar.fuelType}</p>
-
-//           <div>
-//             <p className="font-semibold">Features:</p>
-//             <ul className="list-disc list-inside">
-//               {dummyCar.features.map((feature, idx) => (
-//                 <li key={idx}>{feature}</li>
-//               ))}
-//             </ul>
-//           </div>
-
-//           <div className="bg-pink-100 p-4 rounded-xl">
-//             <p className="font-semibold">Owner Details</p>
-//             <div className="flex items-center justify-between">
-//               <p>👤 {dummyCar.owner.name}</p>
-//               <button className="bg-black text-white px-4 py-1 rounded-full">CHAT</button>
-//             </div>
-//           </div>
-
-//           {selectedDates.length > 0 && (
-//             <button
-//               onClick={handleBooking}
-//               className="bg-black text-white px-6 py-2 rounded-full mt-4"
-//             >
-//               Book Now
-//             </button>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "use client"
-// import CarGallery from '@/components/Trycheck';
-// import Calender from '@/components/calender';
-
-// export default function TestGalleryPage() {
-//   const dummyImages = [
-//     "https://vroom-car-images.s3.eu-north-1.amazonaws.com/car-images/1744181731042-pexels-anas-ahmed-1606053043-27575852.jpg",
-//     "https://images.unsplash.com/photo-1517948430535-1e2460bcec0a",
-//     "https://images.unsplash.com/photo-1503376780353-7e6692767b70"
-//   ];
-
-//   const dummyVideoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ";
-
-//   const dummyCar = {
-//     id: 'car-001',
-//     name: 'Tesla',
-//     model: 'Model 3',
-//     year: 2023,
-//     transmission: 'Automatic',
-//     seats: 5,
-//     price: 100,
-//     engine: 'Electric Motor',
-//     fuelEfficiency: '131 MPGe',
-//     images: dummyImages,
-//     videoUrl: dummyVideoUrl,
-//     features: {
-//       interior: ['Heated Seats', 'Premium Audio', 'Glass Roof', 'Touchscreen Display'],
-//       safety: ['Autopilot', 'Emergency Braking', 'Lane Departure Warning'],
-//       additional: ['Supercharger Access', 'Premium Connectivity']
-//     },
-//     availability: {
-//       '2025-04-10': true,
-//       '2025-04-11': true,
-//       '2025-04-12': true,
-//       '2025-04-13': false,
-//       '2025-04-14': false,
-//       '2025-04-15': true,
-//       '2025-04-16': true,
-//     }
-//   }
-    
   
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM d, yyyy');
+    } catch (e) {
+      return "Invalid date";
+    }
+  };
 
-//   const handleBookingComplete = (bookingDetails: any) => {
-//     console.log('Booking complete!', bookingDetails);
-//   };
+  
+  const getBookingTimeStatus = (startDate: string, endDate: string) => {
+    const now = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
-//   return (
-//     <div className="p-4">
-//       <h1 className="text-xl font-bold mb-4">Test Car Gallery</h1>
-//       <CarGallery images={dummyImages} videoUrl={dummyVideoUrl} />
-//       <Calender car={dummyCar} onBookingComplete={handleBookingComplete} />
-//     </div>
-//   );
-// }
+    if (now < start) {
+      return 'upcoming';
+    } else if (now > end) {
+      return 'completed';
+    } else {
+      return 'ongoing';
+    }
+  };
+
+  
+  const getStatusBadge = (status: string, startDate: string, endDate: string) => {
+    const timeStatus = getBookingTimeStatus(startDate, endDate);
+    
+    if (status.toLowerCase() === 'cancelled') {
+      return (
+        <span className="px-2 py-1 text-sm rounded font-medium text-red flex items-center">
+          Cancelled
+        </span>
+      );
+    }
+    
+    switch (timeStatus) {
+      case 'ongoing':
+        return (
+          <span className="px-2 py-1 text-sm rounded font-medium text-green-500  flex items-center">
+             Ongoing
+          </span>
+        );
+      case 'upcoming':
+        return (
+          <span className="px-2 py-1 text-sm rounded font-medium text-blue-500 flex items-center">
+            Upcoming
+          </span>
+        );
+      case 'completed':
+        return (
+          <span className="px-2 py-1 text-sm rounded font-medium text-gray-500 flex items-center">
+            Completed
+          </span>
+        );
+      default:
+        return (
+          <span className="px-2 py-1 text-sm rounded font-medium text-gray-500 ">
+            {status}
+          </span>
+        );
+    }
+  };
+
+  const columns: Column<IBooking>[] = [
+    {
+      header: "Booking ID",
+      accessor: "_id" as keyof IBooking,
+      sortable: true,
+      className: "max-w-[120px] truncate",
+    },
+    {
+      header: "Vroom BookingID",
+      accessor:(booking:IBooking)=>(
+        <div>
+        <div className="font-medium">{booking.bookingId}</div>
+      </div>
+      ),
+      sortable: true,
+    },
+    {
+      header: "Car",
+      accessor: (booking: IBooking) => (
+        <div>
+          <div className="font-medium">{booking.carId.carName}</div>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      header: "Customer",
+      accessor: (booking: IBooking) => (
+        <div>
+          <div className="font-medium">{booking.userId.fullName}</div>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      header: "Owner",
+      accessor: (booking: IBooking) => (
+        <div>
+          <div className="font-medium">{booking.carOwnerId.fullName}</div>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      header: "Amount",
+      accessor: (booking: IBooking) => (
+        <div className="font-medium text-green-600">₹{booking.totalPrice}</div>
+      ),
+      sortable: true,
+    },
+    {
+      header: "Status",
+      accessor: (booking: IBooking) => getStatusBadge(booking.status, booking.startDate, booking.endDate),
+      sortable: true,
+    },
+    {
+      header: "Actions",
+      accessor: (booking: IBooking) => (
+        <div className="flex space-x-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedBooking(booking);
+            }}
+            className="p-1 rounded text-blue-600 hover:bg-blue-100"
+            title="View Details"
+          >
+            <Eye size={18} />
+          </button>
+        </div>
+      ),
+      className: "w-24",
+    },
+  ];
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-6">
+        Bookings Management
+      </h1>
+
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+
+      <DataTable
+        data={bookings}
+        columns={columns}
+        keyExtractor={(booking) => booking._id}
+        onRowClick={setSelectedBooking}
+        pagination={true}
+        itemsPerPage={10}
+        searchable={true}
+        searchKeys={["_id", "carId.carName", "userId.fullName", "carOwnerId.fullName"] as Array<keyof IBooking >}
+        loading={isLoading}
+        emptyMessage="No bookings available"
+      />
+
+      {selectedBooking && (
+        <BookingDetailsModal
+          booking={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default BookingsPage;

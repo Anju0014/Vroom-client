@@ -44,7 +44,6 @@ const getBookingStatus = (startDate: string, endDate: string, status: string) =>
 // Function to check if booking can be cancelled (at least one day before start date)
 const canCancelBooking = (startDate: string, status: string) => {
   if (status !== "confirmed") return false;
-  
   const now = new Date();
   const start = new Date(startDate);
   
@@ -86,7 +85,7 @@ const BookingsPage = () => {
       try {
         setLoading(true);
         
-        // TODO: Replace this with your actual API call
+    
         const bookingDetails = await AuthService.findCustomerBookingDetails();
         console.log("bookingDetails",bookingDetails)
         setBookingData(bookingDetails);

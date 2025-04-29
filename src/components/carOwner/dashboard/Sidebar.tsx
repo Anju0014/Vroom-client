@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
 import { 
   User, 
@@ -24,20 +24,24 @@ import { OwnerAuthService } from "@/services/carOwner/authService";
 
 
 const Sidebar: React.FC = () => {
-    const {user,logout} =useAuthStoreOwner();
+
+  const router=useRouter()
+    const { user, logout, accessTokenOwner } = useAuthStoreOwner();
+
+ 
     console.log("user",user)
   const pathname = usePathname();
-   const handleLogout= async ()=>{
-        try{
-          const response=await OwnerAuthService.logoutOwner();
-          if(!response){
-            throw new Error("Logout Failed")
-          }
-          logout();
-        }catch(error){
-          toast.error("Logout Failed.Please try Again")
-        }
-      }
+  const handleLogout = async () => {
+    try {
+      await OwnerAuthService.logoutOwner();
+      logout(); // Clears state and cookies
+      router.replace('/login');
+    } catch (error) {
+      console.log('Logout failed:', error);
+      logout();
+      router.replace('/login');
+    }
+  };
 
   const navItems = [
     { name: "DashBoard", path: "/carOwner/dashboard/documents", icon: <CreditCard size={18} /> },
@@ -48,7 +52,7 @@ const Sidebar: React.FC = () => {
     { name: "Revenue", path: "/carOwner/dashboard/revenue", icon: <DollarSign size={18} /> },
     { name: "Chat", path: "/carOwner/dashboard/chat", icon: <MessageSquare size={18} /> },
     { name: "Settings", path: "/carOwner/dashboard/settings", icon: <Settings size={18} /> },
-    // { name: "Logout", path: "/logout", icon: <LogOut size={18} /> },
+    //  { name: "Logout", path: "/logout", icon: <LogOut size={18} /> },
   ];
 
   return (

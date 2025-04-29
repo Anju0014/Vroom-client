@@ -32,7 +32,12 @@ export interface SignupData {
   
 
 
-
+  export interface TokenPayload {
+    email: string;
+    role: string;
+    iat: number;
+    exp: number;
+  }
   
   export interface Booking {
     id: string;

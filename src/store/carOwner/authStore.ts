@@ -1,13 +1,15 @@
+
 // "use client";
 
 // import { create } from "zustand";
-// import { persist,createJSONStorage } from "zustand/middleware";
+// import { persist } from "zustand/middleware";
 // import { IUser } from "../../types/authTypes";
+// import { deleteCookie } from 'cookies-next';
 
 // interface AuthStateOwner {
 //   user: IUser | null;
-//   accessToken: string | null;
-//   setAuthOwner: (accessToken: string, user: IUser) => void;
+//   accessTokenOwner: string | null;
+//   setAuthOwner: (user: IUser, accessToken: string) => void;
 //   logout: () => void;
 // }
 
@@ -15,33 +17,32 @@
 //   persist(
 //     (set) => ({
 //       user: null,
-//       accessToken: null,
+//       accessTokenOwner: null,
 
-//       setAuthOwner: (user,accessToken) => {
-//         set({ user, accessToken });
+    
+//       setAuthOwner: (user, accessTokenOwner) => {
+//         set({ user, accessTokenOwner });
 //       },
 
 //       logout: () => {
-//         set({ user: null, accessToken: null });
+//         set({ user: null, accessTokenOwner: null });
 //         localStorage.removeItem("authStoreOwner");
-     
+//         sessionStorage.removeItem("provider");
+//         sessionStorage.removeItem("userEmail");
+//         sessionStorage.removeItem("role");
+//         deleteCookie('carOwnerAccessToken');
+//         window.location.href = "/login";
 //       },
 //     }),
-//     {
-//         name: "authStoreOwner",
-//         storage: createJSONStorage(() => localStorage),  // Ensures proper storage handling
-//         // onRehydrateStorage: () => (state) => {
-//         //   console.log("Rehydrating Zustand Store:", state);
-//         // }
-//     }
+//     { name: "authStoreOwner" }
 //   )
 // );
+'use client';
 
-"use client";
-
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { IUser } from "../../types/authTypes";
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { IUser } from '../../types/authTypes';
+// import { deleteCookie } from 'cookies-next';
 
 interface AuthStateOwner {
   user: IUser | null;
@@ -55,21 +56,24 @@ export const useAuthStoreOwner = create<AuthStateOwner>()(
     (set) => ({
       user: null,
       accessTokenOwner: null,
-
-    
       setAuthOwner: (user, accessTokenOwner) => {
         set({ user, accessTokenOwner });
       },
-
       logout: () => {
         set({ user: null, accessTokenOwner: null });
-        localStorage.removeItem("authStoreOwner");
-        sessionStorage.removeItem("provider");
-        sessionStorage.removeItem("userEmail");
-        sessionStorage.removeItem("role");
-        window.location.href = "/login";
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('userRole');
+        sessionStorage.removeItem('provider');
+        sessionStorage.removeItem('userEmail');
+        sessionStorage.removeItem('googleLoginRole');
+        // deleteCookie('carOwnerAccessToken');
+        console.log('Logged out, cookies and sessionStorage cleared');
       },
     }),
-    { name: "authStoreOwner" }
+    {
+      name: 'authStoreOwner',
+      storage: createJSONStorage(() => sessionStorage),
+    }
   )
 );

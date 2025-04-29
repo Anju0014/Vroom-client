@@ -13,13 +13,13 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
+  
   
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+
     try {
       const response = await  AdminAuthService.loginAdmin({email:email,
         password:password})
@@ -30,19 +30,13 @@ export default function AdminLogin() {
         } 
      
       if (accessTokenAdmin) {
-        if (rememberMe) {
+   
           localStorage.setItem("accessTokenAdmin", accessTokenAdmin);
-        } else {
+   
           sessionStorage.setItem("accessTokenAdmin", accessTokenAdmin);
-        }
+        
       }
-      if (rememberMe) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userRole", "admin");
-      } else {
-        sessionStorage.setItem("isLoggedIn", "true");
-        sessionStorage.setItem("userRole", "admin");
-      }
+     
        toast.success(`Login successful as Admin`)
       
        setTimeout(() => router.push('/admin/dashboard'), 1500);
@@ -66,12 +60,7 @@ export default function AdminLogin() {
           <h1 className="text-3xl font-bold text-gray-900">Vroom Admin</h1>
           <p className="mt-2 text-sm text-gray-600">Please sign in to your admin account</p>
         </div>
-        
-        {/* {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-            <p className="text-red-700">{error}</p>
-          </div>
-        )} */}
+    
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -109,7 +98,7 @@ export default function AdminLogin() {
           </div>
           
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <input
                 id="remember_me"
                 name="remember_me"
@@ -121,7 +110,7 @@ export default function AdminLogin() {
               <label htmlFor="remember_me" className="ml-2 block text-sm text-gray-900">
                 Remember me
               </label>
-            </div>
+            </div> */}
             
             <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-500">
               Forgot your password?

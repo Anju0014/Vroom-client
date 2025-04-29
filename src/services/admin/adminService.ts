@@ -118,6 +118,15 @@ updateVerifyStatus: async (userId: string, status: number, userType: "customer" 
   }
 },
 
+getAllBookings:async()=> {
+  try {
+    const response = await adminApi.get('/admin/bookings');
+    return response.data.data
+  } catch (error) {
+    console.error('Error fetching booking cars:', error);
+    throw error;
+  }
+},
 // Update car verification status
 updateCarVerifyStatus:async(carId: string, status:number, reason?: string) =>{
   try {

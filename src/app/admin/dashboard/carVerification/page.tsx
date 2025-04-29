@@ -6,36 +6,9 @@ import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import CarVerifyModal from "@/components/admin/CarVerifyModal";
 import { Eye } from "lucide-react";
+import {Car,CarVerifyProps} from '@/types/carTypes'
 
-interface Car {
-  id: string;
-  carName: string;
-  brand: string;
-  year?: string;
-  fuelType?: string;
-  rcBookNo?: string;
-  expectedWage: string;
-  location: {
-    coordinates: {
-        lat: number;
-        lng: number;
-      };
-      address: string;
-      landmark?: string;
-  };
-  make?: string;
-  carModel?: string;
-  verifyStatus: number;
-  images: string[];
-  videos?: string[];
-  owner: string;
-  available?: boolean;
-  createdAt: Date;
-}
 
-interface CarVerifyProps {
-  carType?: string;
-}
 
 const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -52,7 +25,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     try {
       setLoading(true);
       
-      // Assuming you'll have a method to get all pending cars in your AdminAuthService
+    
       const response = await AdminAuthService.getAllCars();
 
       console.log("response back")
@@ -92,12 +65,10 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     try {
       setIsProcessing((prev) => ({ ...prev, [carId]: true }));
       
-      // If reason is provided, we're rejecting the car
-      // Otherwise, we're verifying the car
-    //   const isVerified = !reason;
+   
       const status=reason? -1:1
       console.log("reason:", status)
-      // Assuming you'll implement this method in your AdminAuthService
+    
       const response = await AdminAuthService.updateCarVerifyStatus(
         carId, 
         status,
@@ -105,13 +76,13 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
       );
       
       if (response) {
-        // Update local state to reflect the change
+     
 
         setCars((prevCars) => 
           prevCars.filter((car) => car.id !== carId)
         );
         
-        // Close modal if the updated car was selected
+  
         if (selectedCar && selectedCar.id === carId) {
           setSelectedCar(null);
         }
@@ -122,7 +93,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
             : "Car rejected successfully"
         );
         
-        // Refresh the car list
+
         fetchCars();
       }
     } catch (err) {
@@ -141,7 +112,6 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     }
   };
 
-  // Format date to readable string
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
@@ -150,7 +120,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     }).format(date);
   };
 
-  // Table columns definition
+
   const columns: Column<Car>[] = [
     {
       header: "Car Name",

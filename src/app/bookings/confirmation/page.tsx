@@ -7,11 +7,10 @@ const ConfirmationPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Optionally verify payment status with the backend
-    // For now, just show a success message
+  
     const timer = setTimeout(() => {
       router.push('/customer/dashboard/bookings/');
-    }, 5000); // Redirect to bookings after 5 seconds
+}, 5000);
     return () => clearTimeout(timer);
   }, [router]);
 

@@ -563,10 +563,10 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onAddC
       //   await onAddCar(formData);
       // }
 
-      // Show success toast
+  
       toast.success('Car added successfully!');
     
-      // Reset form
+   
       setFormData({
         carName: '',
         brand: '',
@@ -586,11 +586,11 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onAddC
         videos: [],
       });
       
-      // Reset upload states
+  
       setImagesUploaded(false);
       setVideoUploaded(false);
       
-      // Close modal
+
       onClose();
     } catch (error) {
       console.error('Error adding new car:', error);
@@ -621,13 +621,13 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onAddC
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white p-5 rounded-lg shadow-sm">
-          {/* Car details section */}
+ 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <InputField label="Car Name" name="carName" type="text" onChange={handleChange} />
               <InputField label="Manufacturing Year" name="year" type="number" onChange={handleChange} />
               
-              {/* Fuel Type Dropdown */}
+
               <div className="mb-4">
                 <label htmlFor="fuelType" className="block text-sm font-medium text-gray-700 mb-1">
                   Fuel Type

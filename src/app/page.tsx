@@ -8,6 +8,8 @@ import VroomFooter from '@/components/Footer';
 import { getReverseGeocode } from "@/services/common/mapService";
 import { useRouter } from 'next/navigation';
 import { AuthService } from '@/services/customer/authService';
+import { useAuthStore } from '@/store/customer/authStore';
+import { useAuthStoreOwner } from '@/store/carOwner/authStore';
 
 
 interface Coordinates {
@@ -52,8 +54,24 @@ const LandingPage = () => {
   const [nearbyCars, setNearbyCars] = useState<Car[]>([]);
   const [loadingFeaturedCars, setLoadingFeaturedCars] = useState(true);
   const [loadingNearbyCars, setLoadingNearbyCars] = useState(false);
+  const { user: customerUser, accessToken: customerToken } = useAuthStore();
+  const { user: ownerUser, accessTokenOwner: ownerToken } = useAuthStoreOwner();
 
-  // Function to calculate distance between two coordinates (in km)
+  useEffect(() => {
+    if (customerUser && customerToken) {
+      console.log('Authenticated customer, redirecting to /customer/home');
+      window.history.replaceState(null, '', '/customer/home');
+      router.replace('/customer/home');
+    } else if (ownerUser && ownerToken) {
+      console.log('Authenticated car owner, redirecting to /carOwner/home');
+      window.history.replaceState(null, '', '/carOwner/home');
+      router.replace('/carOwner/home');
+    } else {
+      console.log('Unauthenticated user, staying on common page');
+    }
+  }, [customerUser, customerToken, ownerUser, ownerToken, router]);
+
+
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 6371; // Earth's radius in km
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -68,12 +86,13 @@ const LandingPage = () => {
 
  
   useEffect(() => {
+
     const fetchFeaturedCars = async () => {
       try {
         setLoadingFeaturedCars(true);
        
-        const data = await AuthService.featuredCarList();
-       
+        let response  = await AuthService.featuredCarList();
+        let data=response.data
         const verifiedCars = data.filter((car: Car) => 
           car.verifyStatus === 1 && !car.isDeleted
         );
@@ -126,7 +145,8 @@ const LandingPage = () => {
       setLoadingNearbyCars(true);
       
     
-      const data = await AuthService.nearByCars(latitude, longitude);
+      const response = await AuthService.nearByCars(latitude, longitude);
+      let data=response.data
       console.log("data", data)
       
      
@@ -137,8 +157,8 @@ const LandingPage = () => {
           const distance = calculateDistance(
             latitude, 
             longitude, 
-            carCoords[1], // latitude is second in your coordinate array
-            carCoords[0]  // longitude is first in your coordinate array
+            carCoords[1], 
+            carCoords[0] 
           );
           return { ...car, distance };
         })

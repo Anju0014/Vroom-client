@@ -10,33 +10,8 @@ import { AuthService } from '@/services/customer/authService';
 import { format, isWithinInterval, differenceInCalendarDays, addDays, isSameDay } from 'date-fns';
 import { CarFront } from 'lucide-react';
 import { useAuthStore } from '@/store/customer/authStore';
+import { Location,Car,Booking, DateRange } from '@/types/bookTypes';
 
-interface Location {
-  address?: string;
-  city?: string;
-  state?: string;
-  coordinates?: [number, number];
-}
-
-interface Car {
-  _id: string;
-  carName: string;
-  brand: string;
-  expectedWage: string;
-  location: Location;
-}
-
-interface Booking {
-  _id?: string;
-  carId: string;
-  startDate: Date;
-  endDate: Date;
-}
-
-interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
 
 const Stepper = ({ steps, currentStep }: { steps: string[]; currentStep: number }) => {
   return (
@@ -164,7 +139,7 @@ const DateSelectionPage = () => {
   console.log(isAuthenticated)
 
 if (!isAuthenticated) {
-  setShowLoginModal(true); // block if no user at all
+  setShowLoginModal(true); 
   return;
 }
 }

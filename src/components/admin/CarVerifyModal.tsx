@@ -1,32 +1,7 @@
 import React, { useState } from "react";
 import { X, Check, X as Cross } from "lucide-react";
 import toast from "react-hot-toast";
-
-interface Car {
-  id: string;
-  carName: string;
-  brand: string;
-  year?: string;
-  fuelType?: string;
-  rcBookNo?: string;
-  expectedWage: string;
-  location: {
-    coordinates: {
-        lat: number;
-        lng: number;
-      };
-      address: string;
-      landmark?: string;
-  };
-  make?: string;
-  carModel?: string;
-  verifyStatus: number;
-  images: string[];
-  videos?: string[];
-  owner: string;
-  available?: boolean;
-  createdAt: Date;
-}
+import { Car } from "@/types/carTypes";
 
 interface CarVerifyModalProps {
   car: Car;

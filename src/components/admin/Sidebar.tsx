@@ -65,7 +65,7 @@ const Sidebar: React.FC = () => {
     },
     { 
       name: "Cars", 
-      path: "/admin/cars", 
+      path: "/admin/dashboard/cars", 
       icon: <Car size={18} /> 
     },
     { 

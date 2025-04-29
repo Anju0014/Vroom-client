@@ -80,6 +80,11 @@ updateCar: async (carId: string, carData: CarFormData) => {
 deleteCar: async (carId: string) => {
   const response = await carOwnerApi.delete(`/owner/deletecars/${carId}`);
   return response.data;
+},
+
+getBookingList:async()=>{
+  const response=await carOwnerApi.get('/owner/bookings');
+  return response.data.data
 }
 
 }

@@ -106,7 +106,7 @@ const AgreementPage = () => {
 
         <div className="bg-white rounded-xl shadow-md p-6">
           <h2 className="text-2xl font-bold text-indigo-700 mb-6">Booking Agreement for {car.carName}</h2>
-          <div className="bg-indigo-50 p-6 rounded-lg mb-6">
+          {/* <div className="bg-indigo-50 p-6 rounded-lg mb-6">
             <p><strong>Car:</strong> {car.carName}</p>
             <p><strong>Brand:</strong> {car.brand}</p>
             <p><strong>Daily Rate:</strong> ₹{car.expectedWage}</p>
@@ -118,7 +118,7 @@ const AgreementPage = () => {
                 <p><strong>Total Price:</strong> ₹{totalPrice}</p>
               </>
             )}
-          </div>
+          </div> */}
 
           {showModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
