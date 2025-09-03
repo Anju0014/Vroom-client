@@ -100,7 +100,7 @@ const ForgotPassword = () => {
        <div className="bg-white p-6 rounded-xl shadow-md w-96">
          <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Enter Your OTP</h2>
          <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-      <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)}  />
       <button type="submit" className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center">Send Reset Link</button>
     </form>
 

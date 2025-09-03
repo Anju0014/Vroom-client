@@ -54,3 +54,14 @@ export interface IBooking {
   createdAt: string;
 }
   
+
+export interface BookingType {
+  id: string; // Unique identifier for the booking
+  carId: string; // Reference to the car being booked
+  userId: string; // Reference to the user who made the booking
+  startDate: string; // ISO date string, e.g., "2025-08-20"
+  endDate: string; // ISO date string, e.g., "2025-08-22"
+  status: 'confirmed' | 'pending' | 'cancelled'; // Booking status
+  createdAt: string; // ISO date string for when booking was made
+  updatedAt?: string; // ISO date string for last update
+}

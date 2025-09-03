@@ -78,7 +78,7 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({ car, onClose }) => {
               <div className="space-y-3">
                 <div className="flex justify-between border-b pb-2">
                   <span className="text-gray-600">Name</span>
-                  <span className="font-medium">{car.owner?.name || 'N/A'}</span>
+                  <span className="font-medium">{car.owner?.fullName || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between border-b pb-2">
                   <span className="text-gray-600">Email</span>

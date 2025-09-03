@@ -61,6 +61,41 @@ export const AuthService = {
 
 
 
+  async getAllCars(page: number, limit: number, filters: {
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    carType?:string;
+     location?:string;
+    
+  }) {
+    try {
+      const response = await customerApi.get('/car/getAllCars', {
+        params: {
+          page,
+          limit,
+          search: filters.search,
+          minPrice: filters.minPrice,
+          maxPrice: filters.maxPrice,
+          carType:filters.carType,
+          location:filters.location,
+        },
+      });
+      console.log('getAllCars response:', response.data);
+      return response.data; 
+    } catch (error) {
+      console.error('Error fetching all cars:', error);
+      throw error;
+    }
+  },
+
+
+
+
+
+
+
+
 
   featuredCarList:async ()=>{
     let response=await customerApi.get("/car/featured");
@@ -77,10 +112,12 @@ findBookingDetails:async(carId:string)=>{
   
 },
 
-findCustomerBookingDetails:async()=>{
+findCustomerBookingDetails:async(page=1, limit=5)=>{
   console.log('sending request for user booking');
-  let response=await customerApi.get('/getCustomerBookingDetails')
-  return response.data
+  let response=await customerApi.get(`/getCustomerBookingDetails?page=${page}&limit=${limit}`)
+  console.log('getBookings response:', response.data);
+      return response.data;
+ 
 },
 
 

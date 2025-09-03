@@ -2,6 +2,7 @@
 
 import axiosInstanceOwner from "@/config/axiosInstanceOwner";
 import { SignupData, GoogleSignInData,Address,ChangePasswordData, CarFormData, RegistrationCarOwner } from "@/types/authTypes";
+import { Booking } from "@/types/carTypes";
 
 // const carOwnerApi = axiosInstance("carOwner");
 const carOwnerApi = axiosInstanceOwner();
@@ -49,7 +50,9 @@ updateOwnerIdProof: async ({idProof}:{idProof:string}) => {
 },
 
 addCar: async(data:CarFormData)=>{
-  return await carOwnerApi.post("owner/carupload",data)
+  // return await carOwnerApi.post("owner/carupload",data)
+  const response = await carOwnerApi.post("owner/carupload", data);
+  return response.data;
 },
 
 changePassword: async (data: ChangePasswordData) => {
@@ -57,15 +60,16 @@ changePassword: async (data: ChangePasswordData) => {
   return response.data;
 },
 
-getCars: async () => {
+getCars: async (page=1,limit=5) => {
   try {
-    const response = await carOwnerApi.get("/owner/getcars"); 
-    return response.data; // Assuming the backend returns { cars: [] }
+    const response = await carOwnerApi.get(`/owner/getcars?page=${page}&limit=${limit}`); 
+    return response.data; 
   } catch (error) {
     console.error("Error fetching cars:", error);
     throw error;
   }
 },
+
 completeRegistration:async(data:RegistrationCarOwner)=>{
       const response = await carOwnerApi.post("/owner/completeregistration", data);
       return response.data;
@@ -85,6 +89,48 @@ deleteCar: async (carId: string) => {
 getBookingList:async()=>{
   const response=await carOwnerApi.get('/owner/bookings');
   return response.data.data
+},
+
+
+getBookingsForCar: async (carId: string): Promise<{ data: Booking[] }> => {
+    const response = await carOwnerApi.get(`/owner/cars/${carId}/bookings`);
+      return {
+      data: response.data.data.map((booking: any) => ({
+        id: booking._id,
+        bookingId: booking.bookingId,
+        carId: booking.carId.toString(),
+        userId: booking.userId.toString(),
+        carOwnerId: booking.carOwnerId.toString(),
+        startDate: booking.startDate,
+        endDate: booking.endDate,
+        totalPrice: booking.totalPrice,
+        status: booking.status,
+        paymentIntentId: booking.paymentIntentId,
+        paymentMethod: booking.paymentMethod,
+        cancellationFee: booking.cancellationFee,
+        refundedAmount: booking.refundedAmount,
+        cancelledAt: booking.cancelledAt,
+        createdAt: booking.createdAt,
+        updatedAt: booking.updatedAt,
+      })),
+    };
+  },
+
+  updateCarAvailability: async (carId: string, data: { unavailableDates: string[] }): Promise<void> => {
+    console.log("unavailable",data)
+    await carOwnerApi.patch(`/owner/cars/${carId}/availability`, data);
+  },
+getActiveBookingForCar:async(carId:string):Promise<Booking>=>{
+  const response=await carOwnerApi.get(`/owner/activebooking/${carId}`)
+  console.log("bookingsfor today? ",response.data)
+  const bookingData = response.data.booking;
+
+  if (!bookingData) return bookingData;
+  return {
+    ...bookingData,
+    id: bookingData?._id, 
+  };
 }
+
 
 }

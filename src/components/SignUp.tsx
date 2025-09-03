@@ -2,31 +2,22 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignupData } from "@/types/authTypes";
-import InputField from "@/components/InputField";
-import { signupSchema } from "@/lib/validation";
+import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
-import { signIn, useSession } from "next-auth/react";
 import { AuthService } from "@/services/customer/authService";
 import { OwnerAuthService } from "@/services/carOwner/authService";
 import { useAuthStore } from "@/store/customer/authStore";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
+import RegistrationForm from "@/components/RegistrationForm";
 
 interface SignUpRoleProps {
   role: "customer" | "carOwner";
 }
 
+
 const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
   const router = useRouter();
-  const [formData, setFormData] = useState<SignupData>({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phoneNumber: "",
-  });
-  const [loading, setLoading] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const { data: session } = useSession();
   const { setAuth } = useAuthStore();
@@ -37,107 +28,16 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
     setIsHydrated(true);
   }, []);
 
-
+  
   const setStorageItem = (storage: Storage, key: string, value: string) => {
     if (typeof window !== "undefined") {
       storage.setItem(key, value);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleRegistrationSuccess = () => {
+    setTimeout(() => router.push("/otp"), 2000);
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const result = signupSchema.safeParse(formData);
-    if (!result.success) {
-      const errorMessages = result.error.errors.map((err) => err.message).join(", ");
-      toast.error(errorMessages);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      let response;
-      if (role === "customer") {
-        response = await AuthService.registerCustomer(formData);
-      } else {
-        response = await OwnerAuthService.registerCarOwner(formData);
-      }
-
-      toast.success("Signup Successful!");
-      setStorageItem(sessionStorage, "userEmail", response.data.email);
-      setStorageItem(sessionStorage, "role", role);
-      
- 
-      setTimeout(() => router.push("/otp"), 2000);
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Signup failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignup = async () => {
-    try {
-      await signIn("google", { redirect:false});
-    } catch (error) {
-      console.error("Google Signup Failed:", error);
-      toast.error("Google Signup Failed");
-    }
-  };
-
- 
-  // useEffect(() => {
-  //   if (!isHydrated || !session?.user) return;
-
-  //   const handleGoogleResponse = async () => {
-  //     try {
-  //       const payload = {
-  //         fullName: session.user.name ?? "",
-  //         email: session.user.email ?? "",
-  //         profileImage: session.user.image ?? "",
-  //         provider: "google",
-  //       };
-
-  //       const response = role === "customer"
-  //         ? await AuthService.googlesigninCustomer(payload)
-  //         : await OwnerAuthService.googlesigninOwner(payload);
-
-           
-  //       const { accessToken, user } = response.data;
-  //       if (user && accessToken) {
-  //         if (role === "customer") {
-  //           setAuth(user, accessToken);
-  //         } else {
-  //           setAuthOwner(user, accessToken);
-  //         }
-
-        
-  //         setStorageItem(localStorage, "accessToken", accessToken);
-  //         setStorageItem(sessionStorage, "provider", "google");
-  //         setStorageItem(sessionStorage, "userEmail", session.user.email ?? "");
-  //         setStorageItem(sessionStorage, "role", role);
-
-  //         toast.success("Google Signup Successful!");
-
-       
-  //         const redirectPath = role === "customer" ? "/customer/home" : "/carOwner/home";
-  //         router.push(redirectPath);
-  //       } else {
-  //         throw new Error("User or access token is missing.");
-  //       }
-  //     } catch (error) {
-  //       console.error("Google Signup Failed:", error);
-  //       toast.error("Google Signup Failed");
-  //     }
-  //   };
-
-  //   handleGoogleResponse();
-  // }, [session, role, router, setAuth, setAuthOwner, isHydrated]);
 
   useEffect(() => {
     if (!isHydrated || !session?.user) return;
@@ -158,7 +58,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
   
         let accessToken, user, accessTokenOwner;
   
-        // Destructuring response.data based on the role
+      
         if (role === "customer") {
           ({ accessToken, user } = response.data);
         } else {
@@ -197,29 +97,6 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
   
     handleGoogleResponse();
   }, [session, role, router, setAuth, setAuthOwner, isHydrated]);
-  
-  // Custom InputField component with hydration warning suppression
-  const SafeInputField = ({ label, name, type, required }: {
-    label: string;
-    name: string;
-    type: string;
-    required?: boolean;
-  }) => (
-    <div className="mb-4">
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        onChange={handleChange}
-        required={required}
-        className="w-full p-2 border rounded-md"
-        suppressHydrationWarning
-      />
-    </div>
-  );
 
   return (
     <div className="flex min-h-screen">
@@ -227,7 +104,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
         <div className="text-center text-white">
           <h1 className="text-5xl font-bold mb-6">Vroom</h1>
           <p className="text-xl max-w-md">Your journey starts here</p>
-          <div>
+          <div> 
             <Image 
               src="/images/car-convertible.png"
               alt="Car Image"
@@ -247,7 +124,6 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
           </ul>
         </div>
       </div>
-      
 
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
         <div className="max-w-md w-full space-y-8">
@@ -258,79 +134,12 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
             <p className="mt-2 text-gray-600">Join Vroom and start your journey today</p>
           </div>
           
-        
           {isHydrated && (
             <>
-              <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-                <InputField 
-                  label="Full Name" 
-                  name="fullName" 
-                  type="text" 
-                  onChange={handleChange} 
-                  required 
-                  suppressHydrationWarning
-                />
-                <InputField 
-                  label="Email" 
-                  name="email" 
-                  type="email" 
-                  onChange={handleChange} 
-                  required 
-                  suppressHydrationWarning
-                />
-                <InputField 
-                  label="Password" 
-                  name="password" 
-                  type="password" 
-                  onChange={handleChange} 
-                  required 
-                  suppressHydrationWarning
-                />
-                <InputField
-                  label="Confirm Password"
-                  name="confirmPassword"
-                  type="password"
-                  onChange={handleChange}
-                  required
-                  suppressHydrationWarning
-                />
-                <InputField 
-                  label="Phone Number" 
-                  name="phoneNumber" 
-                  type="text" 
-                  onChange={handleChange} 
-                  required 
-                  suppressHydrationWarning
-                />
-      
-                <button
-                  type="submit"
-                  className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
-                  disabled={loading}
-                  suppressHydrationWarning
-                >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Signing Up...
-                    </>
-                  ) : (
-                    "Sign Up"
-                  )}
-                </button>
-              </form>
-
-              <button
-                type="button"
-                onClick={handleGoogleSignup}
-                className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all"
-                suppressHydrationWarning
-              >
-                Sign up with Google
-              </button>
+              <RegistrationForm 
+                role={role}
+                onSuccess={handleRegistrationSuccess}
+              />
               
               <div className="text-center mt-4">
                 <p className="text-sm text-gray-600">

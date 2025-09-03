@@ -1,14 +1,13 @@
+
+
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { DataTable, Column } from "@/components/admin/UserTable";
+import { SimpleTable, TableColumn } from "@/components/admin/UserTable"; // Update import path
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import CarVerifyModal from "@/components/admin/CarVerifyModal";
-import { Eye } from "lucide-react";
-import {Car,CarVerifyProps} from '@/types/carTypes'
-
-
+import { Car, CarVerifyProps } from '@/types/carTypes';
 
 const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -25,10 +24,9 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     try {
       setLoading(true);
       
-    
       const response = await AdminAuthService.getAllCars();
 
-      console.log("response back")
+      console.log("response back");
       if (!response || !response.data) throw new Error("Failed to fetch cars");
 
       const filteredCars = response.data
@@ -47,9 +45,15 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
           verifyStatus: car.verifyStatus,
           images: car.images,
           videos: car.videos || [],
+          rcBookProof: car.rcBookProof,
+          insuranceProof: car.insuranceProof,
           owner: car.owner,
           available: car.available,
           createdAt: new Date(car.createdAt),
+          // Add formatted fields for table display
+          locationAddress: car.location?.address ?? "No address",
+          statusBadge: getStatusBadge(car.verifyStatus),
+          formattedDate: formatDate(new Date(car.createdAt)),
         }));
 
       setCars(filteredCars);
@@ -65,9 +69,8 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     try {
       setIsProcessing((prev) => ({ ...prev, [carId]: true }));
       
-   
-      const status=reason? -1:1
-      console.log("reason:", status)
+      const status = reason ? -1 : 1;
+      console.log("reason:", status);
     
       const response = await AdminAuthService.updateCarVerifyStatus(
         carId, 
@@ -76,24 +79,20 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
       );
       
       if (response) {
-     
-
         setCars((prevCars) => 
           prevCars.filter((car) => car.id !== carId)
         );
         
-  
         if (selectedCar && selectedCar.id === carId) {
           setSelectedCar(null);
         }
         
         toast.success(
-          status===1 
+          status === 1 
             ? "Car verified successfully" 
             : "Car rejected successfully"
         );
         
-
         fetchCars();
       }
     } catch (err) {
@@ -105,7 +104,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
   };
 
   const getStatusBadge = (verifyStatus: number) => {
-    if (verifyStatus===1) {
+    if (verifyStatus === 1) {
       return <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Verified</span>;
     } else {
       return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Pending</span>;
@@ -120,58 +119,29 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
     }).format(date);
   };
 
-
-  const columns: Column<Car>[] = [
-    {
-      header: "Car Name",
-      accessor: "carName" as keyof Car,
-      sortable: true,
-    },
-    {
-      header: "Brand",
-      accessor: "brand" as keyof Car,
-      sortable: true,
-    },
-    {
-        header: "Location",
-        accessor: (car: Car) => car.location.address ?? "No address",
-        sortable: true,
-    },
-    {
-      header: "Status",
-      accessor: (car: Car) => getStatusBadge(car.verifyStatus),
-      className: "whitespace-nowrap",
-    },
-    {
-      header: "Price/Day",
-      accessor: "expectedWage" as keyof Car,
-      sortable: true,
-    },
-    {
-      header: "Listed On",
-      accessor: (car: Car) => formatDate(car.createdAt),
-      sortable: true,
-    },
-    {
-      header: "Actions",
-      accessor: (car: Car) => (
-        <div className="flex space-x-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedCar(car);
-            }}
-            className="p-1 rounded text-blue-600 hover:bg-blue-100"
-            title="View Details"
-            disabled={isProcessing[car.id]}
-          >
-            <Eye size={18} />
-          </button>
-        </div>
-      ),
-      className: "w-24",
-    },
+ 
+  const columns: TableColumn[] = [
+    { header: "Car Name", key: "carName" },
+    { header: "Brand", key: "brand" },
+    { header: "Location", key: "locationAddress" },
+    { header: "Status", key: "statusBadge" },
+    { header: "Price/Day", key: "expectedWage" },
+    { header: "Listed On", key: "formattedDate" },
   ];
+
+  const handleViewCar = (car: Car) => {
+    setSelectedCar(car);
+  };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -179,19 +149,18 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
         Car Verification
       </h1>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
 
-      <DataTable
-        data={cars}
+      <SimpleTable
         columns={columns}
-        keyExtractor={(car) => car.id}
-        onRowClick={setSelectedCar}
-        pagination={true}
+        data={cars}
         itemsPerPage={10}
-        searchable={true}
-        searchKeys={["carName", "brand", "location"] as Array<keyof Car>}
-        loading={loading}
-        emptyMessage="No cars pending verification"
+        showViewButton={true}
+        onView={handleViewCar}
       />
 
       {selectedCar && (

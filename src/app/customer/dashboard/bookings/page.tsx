@@ -6,6 +6,7 @@ import { AuthService } from "@/services/customer/authService";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/customer/authStore";
+import Pagination from '@/components/pagination';
 
 interface Booking {
   _id?: string;
@@ -59,6 +60,9 @@ const BookingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [bookingData, setBookingData] = useState<Booking[]>([]);
   const [error, setError] = useState("");
+    const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalBookings, setTotalBookings] = useState<number>(0);
+  const itemsPerPage = 5;
 
   const handleCancelBooking = async (bookingId: string) => {
     try {
@@ -86,9 +90,13 @@ const BookingsPage = () => {
         setLoading(true);
         
     
-        const bookingDetails = await AuthService.findCustomerBookingDetails();
-        console.log("bookingDetails",bookingDetails)
-        setBookingData(bookingDetails);
+        // const bookingDetails = await AuthService.findCustomerBookingDetails(currentPage, itemsPerPage);
+        // console.log("bookingDetails",bookingDetails)
+        // setBookingData(bookingDetails);
+        const data = await AuthService.findCustomerBookingDetails(currentPage, itemsPerPage);
+        console.log('Bookings data:', data);
+        setBookingData(data.bookings || []);
+        setTotalBookings(data.total || 0);
       } catch (error) {
         console.error("Error fetching booking");
         setError("Failed to load booking data. Please try again later.");
@@ -99,7 +107,15 @@ const BookingsPage = () => {
     };
 
     fetchBookingData();
-  }, []);
+  }, [currentPage]);
+    const totalPages = Math.ceil(totalBookings / itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
 
   if (loading)
     return (
@@ -236,12 +252,18 @@ const BookingsPage = () => {
   )}
 </div>
 
+
                     </div>
                   </div>
                 </div>
               </div>
             );
           })}
+          <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
         </div>
       ) : (
         <div className="text-center p-8 bg-white rounded-lg shadow-md">
@@ -254,7 +276,10 @@ const BookingsPage = () => {
           </button>
         </div>
       )}
+
+
     </div>
+
   );
 };
 

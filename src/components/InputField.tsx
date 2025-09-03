@@ -28,7 +28,7 @@ interface InputProps {
   type: string;
   value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
+  // required?: boolean;
   suppressHydrationWarning?: boolean;
   disabled?:boolean
   placeholder?:string;
@@ -39,7 +39,7 @@ const InputField: React.FC<InputProps> = ({
   type, 
   value,
   onChange, 
-  required,
+  // required,
   suppressHydrationWarning,
   disabled=false, 
   placeholder
@@ -53,7 +53,7 @@ const InputField: React.FC<InputProps> = ({
         name={name}
         value={value}
         onChange={onChange}
-        required={required}
+        // required={required}
         suppressHydrationWarning={suppressHydrationWarning}
         disabled={disabled} 
         placeholder={placeholder}

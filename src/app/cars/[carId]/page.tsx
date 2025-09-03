@@ -193,7 +193,7 @@ const CarBookingPage = () => {
   if (!car) return <div className="text-center p-8 font-semibold">Car not found</div>;
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-yellow-100" style={{ '--brandorange--': '#f53e00' }}>
+    <div className="bg-gradient-to-b from-blue-100 to-yellow-100">
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
           <h1 className="text-4xl font-bold text-blue-600 mb-4">{car.carName}</h1>

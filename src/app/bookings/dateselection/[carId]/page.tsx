@@ -79,6 +79,7 @@ const DateSelectionPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1); // Start at Check Availability
+  const [unavailableDates,setUnAvailableDates]=useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,7 +98,8 @@ const DateSelectionPage = () => {
           return;
         }
         setCar(carData);
-
+        setUnAvailableDates(carData.unavailableDates)
+   
         const bookingData = await AuthService.findBookingDetails(carId);
         // if (!Array.isArray(bookingData) || !bookingData.length) {
         //   setExistingBookings([]);
@@ -211,36 +213,74 @@ if (!isAuthenticated) {
   };
 
   
-  const isDateRangeUnavailable = (startDate: Date, endDate: Date): boolean => {
-    if (!car) return true;
+  // const isDateRangeUnavailable = (startDate: Date, endDate: Date): boolean => {
+  //   if (!car) return true;
     
     
-    for (let currentDay = new Date(startDate); 
-         currentDay <= endDate; 
-         currentDay = addDays(currentDay, 1)) {
+  //   for (let currentDay = new Date(startDate); 
+  //        currentDay <= endDate; 
+  //        currentDay = addDays(currentDay, 1)) {
       
-      const isUnavailable = existingBookings.some(booking =>
-        isWithinInterval(currentDay, { 
-          start: booking.startDate, 
-          end: booking.endDate 
-        })
-      );
+  //     const isUnavailable = existingBookings.some(booking =>
+  //       isWithinInterval(currentDay, { 
+  //         start: booking.startDate, 
+  //         end: booking.endDate 
+  //       })
+  //     );
       
-      if (isUnavailable) {
-        return true;
-      }
-    }
+  //     if (isUnavailable) {
+  //       return true;
+  //     }
+  //   }
     
-    return false;
-  };
+  //   return false;
+  // };
+     const isDateRangeUnavailable = (startDate: Date, endDate: Date): boolean => {
+  if (!car) return true;
 
+  for (
+    let currentDay = new Date(startDate);
+    currentDay <= endDate;
+    currentDay = addDays(currentDay, 1)
+  ) {
   
-  const isDateUnavailable = (date: Date): boolean => {
-    if (!car) return true;
-    return existingBookings.some(booking =>
-      isWithinInterval(date, { start: booking.startDate, end: booking.endDate })
+    const booked = existingBookings.some(booking =>
+      isWithinInterval(currentDay, {
+        start: booking.startDate,
+        end: booking.endDate,
+      })
     );
-  };
+
+   
+    const blocked = unavailableDates.some(unavDate => isSameDay(unavDate, currentDay));
+
+    if (booked || blocked) {
+      return true;
+    }
+  }
+
+  return false;
+};
+  
+  // const isDateUnavailable = (date: Date): boolean => {
+  //   if (!car) return true;
+  //   return existingBookings.some(booking =>
+  //     isWithinInterval(date, { start: booking.startDate, end: booking.endDate })
+  //   );
+  // };
+
+//   const isDateUnavailable = (date: Date): boolean => {
+//   // Check bookings
+//   const booked = existingBookings.some(booking =>
+//     isWithinInterval(date, { start: booking.startDate, end: booking.endDate })
+//   );
+
+//   // Check owner-blocked
+//   const blocked = unavailableDates.some(unavDate => isSameDay(unavDate, date));
+
+//   return booked || blocked;
+// };
+
 
   const checkAvailability = () => {
     setValidationError(null);
@@ -276,6 +316,7 @@ if (!isAuthenticated) {
 
     
     if (isDateRangeUnavailable(dateRange.startDate, dateRange.endDate)) {
+      
       setValidationError('One or more selected dates are unavailable');
       return false;
     }
@@ -410,3 +451,5 @@ if (!isAuthenticated) {
 };
 
 export default DateSelectionPage;
+
+

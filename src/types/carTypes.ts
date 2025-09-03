@@ -23,12 +23,38 @@ export interface Car {
     fullName:string,
     id:string,
     email:string,
+    phoneNumber?:string,
   };
   available: boolean;
   createdAt: Date;
+  rcBookProof?:string;
+  insuranceProof?:string;
+  unavailableDates?:string[];
 }
 
 export interface CarVerifyProps {
   carType?: string;
 }
 
+export interface Booking {
+  id: string;
+  bookingId: string;
+  carId: string;
+  userId: string;
+  carOwnerId: string;
+  startDate: string; // ISO date string (e.g., "2025-08-20T00:00:00.000Z")
+  endDate: string; // ISO date string
+  totalPrice: number;
+  status: 'confirmed' | 'pending' | 'cancelled' | 'failed';
+  paymentIntentId?: string;
+  paymentMethod?: 'stripe' | 'wallet';
+  cancellationFee?: number;
+  refundedAmount?: number;
+  cancelledAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  currentLocation?:{
+    lat:number,
+    lng:number,
+  };
+}

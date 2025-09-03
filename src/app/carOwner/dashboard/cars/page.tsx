@@ -1,230 +1,70 @@
 
-// 2 success
-
-
-
-
-// "use client"
-
-// import React, { useState, useEffect } from 'react';
-// import Head from 'next/head';
-// import { FaPlus, FaPencilAlt, FaTrashAlt, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-// import Image from 'next/image';
-// import AddNewCarModal from '@/components/cars/addcar';
-// import AgreementModal from '@/components/carOwner/dashboard/Agreement Modal';
-// import { Car, CarFormData } from '@/types/authTypes';
-// import { OwnerAuthService } from '@/services/carOwner/authService';
-
-// const YourCarsPage: React.FC = () => {
-  
-//   const [cars, setCars] = useState<Car[]>([]);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [isAgreementOpen, setIsAgreementOpen] = useState<boolean>(false);
-//   const [isAddCarOpen, setIsAddCarOpen] = useState<boolean>(false);
-  
-//   useEffect(() => {
-   
-//     const fetchCars = async () => {
-//       try {
-//        const data = await OwnerAuthService.getCars();
-//         setCars(data.cars || []);
-//       } catch (error) {
-//         console.error('Error fetching cars:', error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-    
-//     fetchCars();
-//   }, []);
-
-//   const handleAddCarClick = () => {
-//     setIsAgreementOpen(true);
-//   };
-
-//   const handleAgree = () => {
-//     setIsAgreementOpen(false);
-//     setIsAddCarOpen(true);
-//   };
-
-//   const handleEditCar = (carId: string) => {
-//     console.log("Edit car:", carId);
-//     // Implement edit functionality
-//   };
-
-//   const handleDeleteCar = (carId: string) => {
-//     console.log("Delete car:", carId);
-//     // Implement delete functionality with confirmation
-//   };
-  
-//   return (
-//     <>
-//       <Head>
-//         <title>Your Cars | Car Management System</title>
-//         <meta name="description" content="Manage your car fleet" />
-//       </Head>
-      
-//       <div className="min-h-screen bg-gray-100">
-//         <div className="container mx-auto p-4">
-//           <div className="flex justify-between items-center mb-8">
-//             <h1 className="text-2xl font-semibold">Your Cars</h1>
-//             <div className="flex space-x-4">
-//               <button 
-//                 className="bg-gray-800 text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-700 transition-colors"
-//                 onClick={handleAddCarClick}
-//               >
-//                 <FaPlus className="mr-2" /> Add New Car
-//               </button>
-//             </div>
-//           </div>
-          
-//           {loading ? (
-//             <div className="text-center py-10">
-//               <p>Loading your cars...</p>
-//             </div>
-//           ) : (
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//               {cars.length > 0 ? (
-//                 cars.map((car, index) => {
-//                   // Simulate some cars being verified and some not
-//                   const isVerified = false;
-                  
-//                   return (
-//                     <div key={car._id || car.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-//                       <div className="h-48 bg-gray-200 relative">
-//                         {/* Verification badge */}
-//                         <div className="absolute top-2 left-2 z-10">
-//                           {isVerified ? (
-//                             <span className="bg-green-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
-//                               <FaCheckCircle className="mr-1" /> Verified
-//                             </span>
-//                           ) : (
-//                             <span className="bg-red-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
-//                               <FaTimesCircle className="mr-1" /> Not Verified
-//                             </span>
-//                           )}
-//                         </div>
-                        
-//                         {/* Action buttons */}
-//                         <div className="absolute top-2 right-2 z-10 flex space-x-2">
-//                           <button
-//                             onClick={() => handleEditCar(car._id || car.id|| null}
-//                             className="bg-white p-2 rounded-full shadow-md hover:bg-blue-50 transition-colors"
-//                             title="Edit"
-//                           >
-//                             <FaPencilAlt className="text-blue-600" size={14} />
-//                           </button>
-//                           <button
-//                             onClick={() => handleDeleteCar(car._id || car.id)}
-//                             className="bg-white p-2 rounded-full shadow-md hover:bg-red-50 transition-colors"
-//                             title="Delete"
-//                           >
-//                             <FaTrashAlt className="text-red-600" size={14} />
-//                           </button>
-//                         </div>
-                        
-//                         {car.images && car.images.length > 0 ? (
-//                           <Image 
-//                             src={car.images[0]} 
-//                             alt={car.carName}
-//                             fill
-//                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-//                             style={{ objectFit: 'cover' }}
-//                             priority
-//                           />
-//                         ) : (
-//                           <div className="flex items-center justify-center h-full text-gray-400">
-//                             No Image Available
-//                           </div>
-//                         )}
-//                       </div>
-//                       <div className="p-4">
-//                         <h3 className="font-semibold text-lg">{car.carName}</h3>
-//                         <p className="text-gray-600">{car.brand} • {car.year}</p>
-//                         <div className="mt-2 flex justify-between">
-//                           <span className="text-sm">{car.fuelType}</span>
-//                           <span className="font-medium">₹{car.expectedWage}/day</span>
-//                         </div>
-//                         <p className="text-sm text-gray-500 mt-1">{car.location}</p>
-//                       </div>
-//                     </div>
-//                   );
-//                 })
-//               ) : (
-//                 <div className="col-span-full text-center py-10 text-gray-500">
-//                   No cars added yet. Click "Add New Car" to get started.
-//                 </div>
-//               )}
-//             </div>
-//           )}
-//         </div>
-//       </div>
-      
-//       <AgreementModal
-//         isOpen={isAgreementOpen} 
-//         onClose={() => setIsAgreementOpen(false)} 
-//         onAgree={handleAgree} 
-//       />
-    
-//       <AddNewCarModal 
-//         isOpen={isAddCarOpen}
-//         onClose={() => setIsAddCarOpen(false)}
-     
-//       />
-//     </>
-//   );
-// };
-
-// export default YourCarsPage;
-
-
-
-
-
-
-
-"use client"
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { FaPlus, FaPencilAlt, FaTrashAlt, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { Calendar } from 'lucide-react';
 import Image from 'next/image';
 import AddNewCarModal from '@/components/cars/addcar';
 import AgreementModal from '@/components/carOwner/dashboard/Agreement Modal';
+import AvailabilityModal from '@/components/cars/AvailabilityModal';
 import { Car, CarFormData } from '@/types/authTypes';
+import { Booking } from '@/types/carTypes';
 import { OwnerAuthService } from '@/services/carOwner/authService';
 import DeleteCarModal from '@/components/cars/deletecar';
 import EditCarModal from '@/components/cars/editcar';
 import { transformGeoCoordinates } from '@/utils/transformGeoCoordinates';
+import Pagination from '@/components/pagination';
+import LiveLocationModal from '@/components/carOwner/dashboard/LiveLocationModal';
+import toast from 'react-hot-toast';
+
 
 const YourCarsPage: React.FC = () => {
-  
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [isAgreementOpen, setIsAgreementOpen] = useState<boolean>(false);
   const [isAddCarOpen, setIsAddCarOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
-  
+  const [bookings, setBookings] = useState<{ [carId: string]: Booking[] }>({});
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalCars, setTotalCars] = useState<number>(0);
+  const itemsPerPage = 5; // Adjust as needed, e.g., 9 for 3x3 grid
+  const [isLiveLocationOpen, setIsLiveLocationOpen] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
+  const [defLocation, setDefLocation] = useState<{ lat: number; lng: number } | null>(null);
+
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const data = await OwnerAuthService.getCars();
-        console.log(data)
-        // setCars(data.cars || []);
+        const data = await OwnerAuthService.getCars(currentPage, itemsPerPage);
         const formattedCars = (data.cars || []).map(transformGeoCoordinates);
-        console.log(formattedCars)
+        console.log('API response:', data); // Debug API response
+        console.log('totalCars:', data.total); // Debug total
         setCars(formattedCars);
+        setTotalCars(data.total || 0); // Assuming API returns { cars: [], total: number }
       } catch (error) {
         console.error('Error fetching cars:', error);
+        setError('Failed to load cars');
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchCars();
-  }, []);
+  }, [currentPage]);
+
+  const totalPages = Math.ceil(totalCars / itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   const handleAddCarClick = () => {
     setIsAgreementOpen(true);
@@ -250,63 +90,188 @@ const YourCarsPage: React.FC = () => {
       setIsDeleteModalOpen(true);
     }
   };
-  
+
   const handleConfirmDelete = async () => {
     if (selectedCar) {
       try {
-        // Call the delete API
-        await OwnerAuthService.deleteCar((selectedCar._id ?? selectedCar.id)!);
-        // Remove the car from the state
-        setCars(cars.filter(car => (car._id || car.id) !== (selectedCar._id || selectedCar.id)));
+        const carId = selectedCar._id ?? selectedCar.id;
+        if (!carId) throw new Error('Missing car ID');
+        await OwnerAuthService.deleteCar(carId);
+        setCars(cars.filter(car => (car._id || car.id) !== carId));
+        setTotalCars(prev => prev - 1); // Update total after delete
         setIsDeleteModalOpen(false);
+        setSelectedCar(null);
       } catch (error) {
         console.error('Error deleting car:', error);
+        setError('Failed to delete car');
       }
     }
   };
 
   const handleUpdateCar = async (updatedCarData: CarFormData) => {
-
-    console.log("reach here dsjdhuf")
     if (selectedCar) {
       try {
-        // Call the update API
-
         const carId = selectedCar._id ?? selectedCar.id;
-        if (!carId) {
-                 console.error("Missing car ID");
-             return;
-             }
-        console.log("upohdgcycae fadrs",updatedCarData)
+        if (!carId) throw new Error('Missing car ID');
         await OwnerAuthService.updateCar(carId, updatedCarData);
-        // await OwnerAuthService.updateCar(selectedCar._id || selectedCar.id, updatedCarData);
-        // Update the car in the state
         setCars(cars.map(car => {
-          if ((car._id || car.id) === (selectedCar._id || selectedCar.id)) {
-            return { ...car, ...updatedCarData };
+          if ((car._id || car.id) === carId) {
+            return { ...car, ...updatedCarData, unavailableDates: car.unavailableDates };
           }
           return car;
         }));
         setIsEditModalOpen(false);
+        setSelectedCar(null);
       } catch (error) {
         console.error('Error updating car:', error);
+        setError('Failed to update car');
       }
     }
   };
-  
+
+  // const handleAvailabilityClick = async (carId: string) => {
+  //   const car = cars.find(car => car._id === carId || car.id === carId);
+  //   if (car) {
+  //     try {
+  //       const bookingsResponse = await OwnerAuthService.getBookingsForCar(carId);
+  //       console.log("bookingsResponse", bookingsResponse)
+  //       setBookings(prev => ({
+  //         ...prev,
+  //         [carId]: bookingsResponse.data.map((booking: any) => ({
+  //           id: booking._id,
+  //           bookingId: booking.bookingId,
+  //           carId: booking.carId,
+  //           userId: booking.userId,
+  //           carOwnerId: booking.carOwnerId,
+  //           startDate: booking.startDate,
+  //           endDate: booking.endDate,
+  //           totalPrice: booking.totalPrice,
+  //           status: booking.status,
+  //           paymentIntentId: booking.paymentIntentId,
+  //           paymentMethod: booking.paymentMethod,
+  //           cancellationFee: booking.cancellationFee,
+  //           refundedAmount: booking.refundedAmount,
+  //           cancelledAt: booking.cancelledAt,
+  //           createdAt: booking.createdAt,
+  //           updatedAt: booking.updatedAt,
+  //         })),
+  //       }));
+  //       setSelectedCar(car);
+  //       setIsAvailabilityModalOpen(true);
+  //     } catch (error) {
+  //       console.error('Error fetching bookings:', error);
+  //       setError('Failed to load bookings');
+  //     }
+  //   }
+  // };
+
+  // const handleUpdateAvailability = async (carId: string | undefined, newUnavailableDates: string[]) => {
+  //   if (!carId) return;
+  //   try {
+  //     await OwnerAuthService.updateCarAvailability(carId, { unavailableDates: newUnavailableDates });
+  //     setCars(prevCars =>
+  //       prevCars.map(car =>
+  //         (car._id || car.id) === carId ? { ...car, unavailableDates: newUnavailableDates } : car
+  //       )
+  //     );
+  //     setIsAvailabilityModalOpen(false);
+  //     setSelectedCar(null);
+  //   } catch (error) {
+  //     console.error('Error updating availability:', error);
+  //     setError('Failed to update availability');
+  //   }
+  // };
+const handleUpdateAvailability = async (carId: string | undefined, newUnavailableDates: string[]) => {
+  if (!carId) return;
+  try {
+    // The dates coming from the modal are already in ISO format
+    await OwnerAuthService.updateCarAvailability(carId, { unavailableDates: newUnavailableDates });
+    
+    setCars(prevCars =>
+      prevCars.map(car =>
+        (car._id || car.id) === carId ? { ...car, unavailableDates: newUnavailableDates } : car
+      )
+    );
+    setIsAvailabilityModalOpen(false);
+    setSelectedCar(null);
+  } catch (error) {
+    console.error('Error updating availability:', error);
+    setError('Failed to update availability');
+  }
+};
+
+const handleViewLiveLocation = async (carId: string) => {
+  try {
+    
+    const activeBooking = await OwnerAuthService.getActiveBookingForCar(carId);
+    if (!activeBooking) {
+      toast.error("No active booking for this car right now.");
+      return;
+    }
+    console.log("active",activeBooking)
+    setSelectedBookingId(activeBooking.id);
+    if (activeBooking.currentLocation) {
+      setDefLocation(activeBooking.currentLocation); 
+    }
+    console.log(selectedBookingId)
+    setIsLiveLocationOpen(true);
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to fetch booking info.");
+  }
+};
+
+// Also update the booking mapping to ensure proper date handling:
+const handleAvailabilityClick = async (carId: string) => {
+  const car = cars.find(car => car._id === carId || car.id === carId);
+  if (car) {
+    try {
+      const bookingsResponse = await OwnerAuthService.getBookingsForCar(carId);
+      console.log("bookingsResponse", bookingsResponse)
+      
+      setBookings(prev => ({
+        ...prev,
+        [carId]: bookingsResponse.data.map((booking: any) => ({
+          id: booking._id,
+          bookingId: booking.bookingId,
+          carId: booking.carId,
+          userId: booking.userId,
+          carOwnerId: booking.carOwnerId,
+          // Ensure dates are in proper format
+          startDate: booking.startDate,
+          endDate: booking.endDate,
+          totalPrice: booking.totalPrice,
+          status: booking.status,
+          paymentIntentId: booking.paymentIntentId,
+          paymentMethod: booking.paymentMethod,
+          cancellationFee: booking.cancellationFee,
+          refundedAmount: booking.refundedAmount,
+          cancelledAt: booking.cancelledAt,
+          createdAt: booking.createdAt,
+          updatedAt: booking.updatedAt,
+        })),
+      }));
+      setSelectedCar(car);
+      setIsAvailabilityModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      setError('Failed to load bookings');
+    }
+  }
+};
   return (
     <>
       <Head>
         <title>Your Cars | Car Management System</title>
         <meta name="description" content="Manage your car fleet" />
       </Head>
-      
+
       <div className="min-h-screen bg-gray-100">
         <div className="container mx-auto p-4">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-semibold">Your Cars</h1>
             <div className="flex space-x-4">
-              <button 
+              <button
                 className="bg-gray-800 text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-700 transition-colors"
                 onClick={handleAddCarClick}
               >
@@ -314,123 +279,174 @@ const YourCarsPage: React.FC = () => {
               </button>
             </div>
           </div>
-          
+
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+
           {loading ? (
             <div className="text-center py-10">
               <p>Loading your cars...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {cars.length > 0 ? (
-                cars.map((car) => {
-                  // Simulate some cars being verified and some not
-                  const carId = car._id || car.id;
-                  
-                  return (
-                    <div key={carId} className="bg-white rounded-lg shadow-md overflow-hidden">
-                      <div className="h-48 bg-gray-200 relative">
-                        {/* Verification badge */}
-                        <div className="absolute top-2 left-2 z-10">
-                          {car.verifyStatus===1 ? (
-                            <span className="bg-green-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
-                              <FaCheckCircle className="mr-1" /> Verified
-                            </span>
-                          ) : (
-                            <span className="bg-red-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
-                              <FaTimesCircle className="mr-1" /> Not Verified
-                            </span>
-                          )}
-                        </div>
-                        
-                        {/* Action buttons */}
-                        <div className="absolute top-2 right-2 z-10 flex space-x-2">
-                        {(car._id ?? car.id) && (
-                          <>
-                          <button
-                            onClick={() => handleEditCar(car._id ?? car.id!)}
-                            className="bg-white p-2 rounded-full shadow-md hover:bg-blue-50 transition-colors"
-                            title="Edit"
-                          >
-                            <FaPencilAlt className="text-blue-600" size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteCar(car._id ?? car.id!)}
-                            className="bg-white p-2 rounded-full shadow-md hover:bg-red-50 transition-colors"
-                            title="Delete"
-                          >
-                            <FaTrashAlt className="text-red-600" size={14} />
-                          </button>
-                          </>
-                          )}
-                        </div>
-                        
-                        {car.images && car.images.length > 0 ? (
-                          <Image 
-                            src={car.images[0]} 
-                            alt={car.carName}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            style={{ objectFit: 'cover' }}
-                            priority
-                          />
-                        ) : (
-                          <div className="flex items-center justify-center h-full text-gray-400">
-                            No Image Available
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cars.length > 0 ? (
+                  cars.map((car) => {
+                    const carId = car._id || car.id;
+                    return (
+                      <div key={carId} className="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div className="h-48 bg-gray-200 relative">
+                          {/* Verification badge */}
+                          <div className="absolute top-2 left-2 z-10">
+                            {car.verifyStatus === 1 ? (
+                              <span className="bg-green-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
+                                <FaCheckCircle className="mr-1" /> Verified
+                              </span>
+                            ) : (
+                              <span className="bg-red-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
+                                <FaTimesCircle className="mr-1" /> Not Verified
+                              </span>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-semibold text-lg">{car.carName}</h3>
-                        <p className="text-gray-600">{car.brand} • {car.year}</p>
-                        <div className="mt-2 flex justify-between">
-                          <span className="text-sm">{car.fuelType}</span>
-                          <span className="font-medium">₹{car.expectedWage}/day</span>
+
+                          {/* Action buttons */}
+                          <div className="absolute top-2 right-2 z-10 flex space-x-2">
+                            {carId && (
+                              <>
+                                <button
+                                  onClick={() => handleEditCar(carId)}
+                                  className="bg-white p-2 rounded-full shadow-md hover:bg-blue-50 transition-colors"
+                                  title="Edit"
+                                >
+                                  <FaPencilAlt className="text-blue-600" size={14} />
+                                </button>
+                                <button
+                                  onClick={() => handleAvailabilityClick(carId)}
+                                  className="bg-white p-2 rounded-full shadow-md hover:bg-green-50 transition-colors"
+                                  title="Manage Availability"
+                                >
+                                  <Calendar className="text-green-600" size={14} />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteCar(carId)}
+                                  className="bg-white p-2 rounded-full shadow-md hover:bg-red-50 transition-colors"
+                                  title="Delete"
+                                >
+                                  <FaTrashAlt className="text-red-600" size={14} />
+                                </button>
+                              </>
+                            )}
+                          </div>
+
+                          {car.images && car.images.length > 0 ? (
+                            <Image
+                              src={car.images[0]}
+                              alt={car.carName}
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              style={{ objectFit: 'cover' }}
+                              priority
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full text-gray-400">
+                              No Image Available
+                            </div>
+                          )}
                         </div>
-                        <p className="text-sm text-gray-500 mt-1">{car.location.address}</p>
+                        <div className="p-4">
+                          <h3 className="font-semibold text-lg">{car.carName}</h3>
+                          <p className="text-gray-600">{car.brand} • {car.year}</p>
+                          <div className="mt-2 flex justify-between">
+                            <span className="text-sm">{car.fuelType}</span>
+                            <span className="font-medium">₹{car.expectedWage}/day</span>
+                          </div>
+                          <p className="text-sm text-gray-500 mt-1">{car.location.address}</p>
+      
+                          <button  onClick={() => handleViewLiveLocation(car._id!)}className="bg-white p-2 rounded-full 
+                          shadow-md hover:bg-blue-50 transition-colors" >View Live Location📍</button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="col-span-full text-center py-10 text-gray-500">
-                  No cars added yet. Click "Add New Car" to get started.
-                </div>
-              )}
-            </div>
+                    );
+                  })
+                ) : (
+                  <div className="col-span-full text-center py-10 text-gray-500">
+                    No cars added yet. Click "Add New Car" to get started.
+                  </div>
+                )}
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
           )}
         </div>
       </div>
-      
+
       <AgreementModal
-        isOpen={isAgreementOpen} 
-        onClose={() => setIsAgreementOpen(false)} 
-        onAgree={handleAgree} 
+        isOpen={isAgreementOpen}
+        onClose={() => setIsAgreementOpen(false)}
+        onAgree={handleAgree}
       />
-    
-      <AddNewCarModal 
+
+      <AddNewCarModal
         isOpen={isAddCarOpen}
         onClose={() => setIsAddCarOpen(false)}
+        onCarAdded={(newCar: Car) => {
+          setCars([newCar, ...cars]);
+          setTotalCars(prev => prev + 1); // Update total after add
+        }}
       />
+
+      {selectedBookingId && (
+  <LiveLocationModal
+    isOpen={isLiveLocationOpen}
+    onClose={() => setIsLiveLocationOpen(false)}
+    bookingId={selectedBookingId}
+    // initialLocation={defLocation}
+  />
+)}
 
       {selectedCar && (
         <>
           <DeleteCarModal
             isOpen={isDeleteModalOpen}
-            onClose={() => setIsDeleteModalOpen(false)}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setSelectedCar(null);
+            }}
             onConfirm={handleConfirmDelete}
             carName={selectedCar.carName}
           />
-          
           <EditCarModal
             isOpen={isEditModalOpen}
-            onClose={() => setIsEditModalOpen(false)}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setSelectedCar(null);
+            }}
             car={selectedCar}
             onUpdateCar={handleUpdateCar}
           />
+          <AvailabilityModal
+            isOpen={isAvailabilityModalOpen}
+            car={selectedCar}
+            bookings={bookings[selectedCar._id || selectedCar.id!] || []}
+            onClose={() => {
+              setIsAvailabilityModalOpen(false);
+              setSelectedCar(null);
+            }}
+            onUpdate={(newUnavailableDates) =>
+              handleUpdateAvailability(selectedCar._id || selectedCar.id, newUnavailableDates)
+            }
+          />
+
         </>
+
+        
       )}
     </>
   );
 };
 
 export default YourCarsPage;
+

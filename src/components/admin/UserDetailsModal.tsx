@@ -52,10 +52,10 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            {/* <div>
               <p className="text-sm text-gray-500">ID</p>
               <p className="font-medium truncate">{updatedUser.id}</p>
-            </div>
+            </div> */}
             <div>
               <p className="text-sm text-gray-500">Status</p>
               <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusText(updatedUser.verifyStatus).color}`}>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, Check, X as Cross } from "lucide-react";
 import toast from "react-hot-toast";
 import { Car } from "@/types/carTypes";
+import {Eye} from 'lucide-react'
 
 interface CarVerifyModalProps {
   car: Car;
@@ -131,6 +132,41 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
               </div>
             </div>
           )}
+
+          {car.insuranceProof && (
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-4"> Insurance Proof</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <a
+              href={car.insuranceProof}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 transition-colors flex items-center"
+            >
+              <Eye className="mr-1" size={18} />
+              View Document
+            </a>
+              </div>
+            </div>
+          )}
+
+{car.rcBookProof  && (
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-4">RCBook Proof</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <a
+              href={car.rcBookProof}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 transition-colors flex items-center"
+            >
+              <Eye className="mr-1" size={18} />
+              View Document
+            </a>
+              </div>
+            </div>
+          )}
+
 
           {/* Reject Form */}
           {showRejectForm && (

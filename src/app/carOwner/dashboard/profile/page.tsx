@@ -517,6 +517,11 @@ const ProfilePage = () => {
     }
   };
 
+  const handleRegistrationCompleted = () => {
+  setProcessStatus(2);   
+  setVerifyStatus(0);    
+};
+
   const handleUploadComplete = async (uploadedUrl: string | string[]) => {
     try {
       if (typeof uploadedUrl === "string") {
@@ -548,7 +553,7 @@ const ProfilePage = () => {
 
   // Show "Complete Your Registration" form if not verified
   if (verifyStatus === 0 && processStatus === 1) {
-    return <CompleteRegistrationForm ownerDetails={ownerDetails} />;
+    return <CompleteRegistrationForm ownerDetails={ownerDetails} onCompleted={handleRegistrationCompleted} />;
   }
 
   if (verifyStatus === 0 && processStatus === 2) {
@@ -577,7 +582,7 @@ const ProfilePage = () => {
             {rejectReason && <span className="block mt-2 font-semibold text-red-500">Reason: {rejectReason}</span>}
           </p>
           <div className="mt-4">
-            <CompleteRegistrationForm ownerDetails={ownerDetails} />
+            <CompleteRegistrationForm ownerDetails={ownerDetails}  onCompleted={handleRegistrationCompleted} />
           </div>
         </div>
       </div>

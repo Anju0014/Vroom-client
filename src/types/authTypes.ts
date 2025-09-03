@@ -28,6 +28,8 @@ export interface SignupData {
     blockStatus?:number;
     address?:[],
     status?:number;
+    verifyStatus?:number;
+    processStatus?:number;
   }
   
 
@@ -107,6 +109,7 @@ export interface SignupData {
     brand: string;
     year?: string;
     fuelType?: string;
+    carType?:string;
     rcBookNo?: string;
     expectedWage: string;
     location: {
@@ -122,6 +125,13 @@ export interface SignupData {
     verifyStatus:number;
     images: string[];  
     videos?: string[]; 
+    unavailableDates?: string[];
+    isDeleted?:boolean;
+    available?:boolean;
+    insuranceProof:string;
+    rcBookProof:string;
+  
+
    }
 
 
@@ -130,6 +140,7 @@ export interface SignupData {
     brand: string;
     year: string;
     fuelType: string;
+    carType?:string;
     rcBookNo: string;
     expectedWage: string;
     // location: string;
@@ -143,6 +154,11 @@ export interface SignupData {
     },
     images: string[];  
     videos:  string[];
+    insuranceProof:string,
+    rcBookProof:string;
+    available?:boolean;
+    unavailableDates?: string[];
+    isDeleted?: boolean;
   }
 
   export interface Address {

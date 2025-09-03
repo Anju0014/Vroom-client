@@ -633,7 +633,7 @@ const LoginComponent = ({ defaultRole = 'customer' }: LoginComponentProps) => {
                 name="email"
                 type="email"
                 autoComplete="email"
-                required
+                // required
                 value={formData.email}
                 onChange={handleChange}
                 className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
@@ -658,7 +658,7 @@ const LoginComponent = ({ defaultRole = 'customer' }: LoginComponentProps) => {
                 name="password"
                 type="password"
                 autoComplete="current-password"
-                required
+                // required
                 value={formData.password}
                 onChange={handleChange}
                 className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"

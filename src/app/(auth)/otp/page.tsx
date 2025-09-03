@@ -162,7 +162,6 @@ const OTPVerification = () => {
             maxLength={6}
             className="w-full px-4 py-2 border rounded-lg text-center text-xl tracking-widest"
             placeholder="123456"
-            required
           />
           <button
             type="submit"

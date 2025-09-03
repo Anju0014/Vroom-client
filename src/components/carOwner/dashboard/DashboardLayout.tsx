@@ -7,7 +7,7 @@ import Sidebar from "./Sidebar";
 import { OwnerAuthService } from "@/services/carOwner/authService";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { usePathname,useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -17,10 +17,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
  
   const [loading, setLoading] = useState(true);
 
+
   const { user, accessTokenOwner, setAuthOwner,logout } = useAuthStoreOwner();
   console.log("check user",user);
   console.log("check access", accessTokenOwner)
    const router = useRouter();
+   const pathname=usePathname();
 
 
   useEffect(() => {
@@ -82,6 +84,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         <p className="text-red-500">Failed to load user</p>
       </div>
     );
+  }
+
+  if ((user.verifyStatus !== 1 || user.processStatus !== 2) ) {
+    // If trying to access something else, push to profile
+    router.push("/carOwner/dashboard/profile");
+    return null; // Prevent rendering the restricted content
   }
 
   return (

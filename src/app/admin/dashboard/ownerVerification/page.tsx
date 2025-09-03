@@ -1,10 +1,8 @@
 
-
-
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { DataTable, Column } from "@/components/admin/UserTable";
+import { SimpleTable, TableColumn } from "@/components/admin/UserTable";
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import UserVerifyModal from "@/components/admin/UserVerifyModal";
@@ -34,10 +32,25 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<{ [key: string]: boolean }>({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   useEffect(() => {
     fetchUsers();
   }, [userType]);
+
+  // Filter users based on search term
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredUsers(users);
+    } else {
+      const filtered = users.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }
+  }, [users, searchTerm]);
 
   const fetchUsers = async () => {
     try {
@@ -88,12 +101,12 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
       );
       
       if (response) {
-        // Update local state to reflect the change
+      
         setUsers((prevUsers) => 
           prevUsers.filter((user) => user.id !== userId)
         );
         
-        // Close modal if the updated user was selected
+   
         if (selectedUser && selectedUser.id === userId) {
           setSelectedUser(null);
         }
@@ -104,7 +117,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
             : "User rejected successfully"
         );
         
-        // Refresh the user list
+     
         fetchUsers();
       }
     } catch (err) {
@@ -137,48 +150,52 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
     }).format(date);
   };
 
-  // Table columns definition
-  const columns: Column<User>[] = [
-    {
-      header: "Name",
-      accessor: "name" as keyof User,
-      sortable: true,
-    },
-    {
-      header: "Email",
-      accessor: "email" as keyof User,
-      sortable: true,
-    },
-    {
-      header: "Status",
-      accessor: (user: User) => getStatusBadge(user.verifyStatus),
-      className: "whitespace-nowrap",
-    },
-    {
-      header: "Joined",
-      accessor: (user: User) => formatDate(user.createdAt),
-      sortable: true,
-    },
-    {
-      header: "Actions",
-      accessor: (user: User) => (
-        <div className="flex space-x-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedUser(user);
-            }}
-            className="p-1 rounded text-blue-600 hover:bg-blue-100"
-            title="View Details"
-            disabled={isProcessing[user.id]}
-          >
-            <Eye size={18} />
-          </button>
-        </div>
-      ),
-      className: "w-24",
-    },
+ 
+  const tableData = filteredUsers.map(user => ({
+    name: user.name,
+    email: user.email,
+    status: getStatusBadge(user.verifyStatus),
+    joined: formatDate(user.createdAt),
+    actions: (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedUser(user);
+        }}
+        className="p-2 rounded text-blue-600 hover:bg-blue-100 flex items-center justify-center"
+        title="View Details"
+        disabled={isProcessing[user.id]}
+      >
+        <Eye size={18} />
+      </button>
+    ),
+    // Keep reference to original user for actions
+    _user: user
+  }));
+
+  // Define table columns
+  const columns: TableColumn[] = [
+    { header: "Name", key: "name" },
+    { header: "Email", key: "email" },
+    { header: "Status", key: "status" },
+    { header: "Joined", key: "joined" },
+    { header: "Actions", key: "actions" }
   ];
+
+  const handleRowView = (rowData: any) => {
+    setSelectedUser(rowData._user);
+  };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-6">Car Owner Verification</h1>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -186,20 +203,45 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
         Car Owner Verification
       </h1>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
 
-      <DataTable
-        data={users}
+      {/* Search Input */}
+      <div className="mb-6">
+        <div className="relative max-w-md">
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Summary */}
+      <div className="mb-4 text-sm text-gray-600">
+        {searchTerm ? (
+          <>Showing {filteredUsers.length} of {users.length} users</>
+        ) : (
+          <>Total users pending verification: {users.length}</>
+        )}
+      </div>
+
+      <SimpleTable
         columns={columns}
-        keyExtractor={(user) => user.id}
-        onRowClick={setSelectedUser}
-        pagination={true}
+        data={tableData}
         itemsPerPage={10}
-        searchable={true}
-        searchKeys={["name", "email"] as Array<keyof User>}
-        loading={loading}
-        emptyMessage="No users pending verification"
-        rowClassName={(user) => user.blockStatus ? 'bg-red-50' : ''}
+        onView={handleRowView}
+        showViewButton={false} // We're handling view action in the actions column
       />
 
       {selectedUser && (

@@ -69,8 +69,8 @@ export default function ResetPasswordPage() {
           </div>
           <div className="bg-white p-6 rounded-xl shadow-md w-96">
     <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-      <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
-      <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+      <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+      <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}  />
       <button type="submit" className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
             >Reset Password</button>
     </form>
