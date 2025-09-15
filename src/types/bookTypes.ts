@@ -31,17 +31,17 @@ export interface Location {
 export interface IBooking {
   _id: string;
   bookingId:string;
-  userId: {
+  customer: {
     _id: string;
     fullName: string;
     email: string;
   };
-  carOwnerId: {
+  carOwner: {
     _id: string;
     fullName: string;
     email: string;
   };
-  carId: {
+  car: {
     _id: string;
     carName: string;
     brand: string;
@@ -65,3 +65,22 @@ export interface BookingType {
   createdAt: string; // ISO date string for when booking was made
   updatedAt?: string; // ISO date string for last update
 }
+
+// export interface IBookingPopulated extends IBooking {
+//   customer?: {
+//     _id: string;
+//     fullName: string;
+//     email: string;
+//   };
+//   carOwner?: {
+//     _id: string;
+//     fullName: string;
+//     email: string;
+//   };
+//   car?: {
+//     _id: string;
+//     carName: string;
+//     brand: string;
+//     model: string;
+//   };
+// }

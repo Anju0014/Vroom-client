@@ -81,11 +81,11 @@ const Sidebar: React.FC = () => {
             <li key={item.name}>
               <Link
                 href={item.path}
-                className={`flex items-center py-2 px-3 rounded-md ${
+                className={`flex items-center py-2 px-3 rounded-md border-l-4 ${
                   pathname === item.path 
-                    ? "bg-blue-200" 
-                    : "hover:bg-red-200 transition-colors duration-200"
-                }`}
+                    ? "bg-blue-200  border-blue-600 text-blue-800 font-bold" 
+                    : "hover:bg-blue-200 border-transparent "
+                } transition-colors duration-200`}
               >
                 <span className="mr-3 text-blue-700">{item.icon}</span>
                 <span className="text-sm">{item.name}</span>
@@ -95,7 +95,7 @@ const Sidebar: React.FC = () => {
           <li>
            <button
                onClick={handleLogout}
-                className="w-full flex items-center py-2 px-3 rounded-md hover:bg-red-200 transition-colors duration-200 "
+                className="w-full flex items-center py-2 px-3 rounded-md hover:bg-blue-200 transition-colors duration-200 "
               >
               <LogOut size={18} className="mr-3 text-blue-700" />
               <span className="text-sm">Logout</span>

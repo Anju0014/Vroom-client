@@ -6,6 +6,8 @@ import { resetPasswordSchema} from '@/lib/validation';
 import { toast } from 'react-hot-toast';
 import { AuthService } from '@/services/customer/authService';
 import { OwnerAuthService } from '@/services/carOwner/authService';
+import InputField from '@/components/InputField';
+import AuthSideBanner from '@/components/AuthSideBanner';
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -45,36 +47,48 @@ export default function ResetPasswordPage() {
   };
   return (
      <div className="flex min-h-screen">
-          <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-600 to-orange-500 
-          flex-col justify-center items-center p-12 relative">
-            <div className="text-center text-white">
-              <h1 className="text-5xl font-bold mb-6">Vroom</h1>
-              <p className="text-xl max-w-md">Reset Your Password to  Log in to  your account.</p>
-              <div>
-                <Image 
-                  src="/images/car-convertible.png"
-                  alt="Car Image"
-                  width={500}
-                  height={300}
-                />
-              </div>
-            </div>
-          </div>
+          <AuthSideBanner
+  subText="Reset Your Password to  Log in to  your account."
+  bottomText="Secure your account — reset your password quickly and safely."
+/>
 
           <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
           <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
-            
-            <h2 className="mt-2 ">Password Reset</h2>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-md w-96">
+           <div className=" items-center  ">
+         <div className="bg-red-50 p-6 rounded-xl shadow-md w-96">
+        <h2 className="text-2xl font-bold mb-3 text-center text-gray-800">
+          Password Reset
+          </h2>
+         
+          
     <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-      <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-      <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}  />
+      <InputField 
+          label="Password" 
+          name="password" 
+          type="password" 
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          placeholder="Enter your New password"
+          // required 
+          suppressHydrationWarning
+        />
+        <InputField
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Re-enter your password"
+          // required
+          suppressHydrationWarning
+        />
+      {/* <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+      <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}  /> */}
       <button type="submit" className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
             >Reset Password</button>
     </form>
     </div>
+     </div>
     </div>
     </div>
     </div>

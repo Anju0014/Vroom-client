@@ -151,7 +151,7 @@ const ChangePasswordModal = ({
       
       const response = await service.changePassword({oldPassword:formData.oldPassword,newPassword:formData.newPassword});
        
-    console.log("esnding data")
+    console.log("sending data")
       if (response) {
         toast.success("Password Changed Successfully");
         onClose();
@@ -168,7 +168,7 @@ const ChangePasswordModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center bg-blue-200 bg-opacity-50 backdrop-blur-sm">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-xl font-semibold mb-4">Change Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -178,7 +178,9 @@ const ChangePasswordModal = ({
             name="oldPassword"
             value={formData.oldPassword}
             onChange={handleChange}
-            required
+            placeholder="Enter Your current Password"
+
+            // required
           />
 
           <InputField
@@ -187,7 +189,8 @@ const ChangePasswordModal = ({
             name="newPassword"
             value={formData.newPassword}
             onChange={handleChange}
-            required
+            placeholder="Enter Your New Password"
+            // required
           />
 
           <InputField
@@ -196,7 +199,8 @@ const ChangePasswordModal = ({
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            required
+            placeholder=" Re-enter Your New Password"
+            // required
           />
 
           <div className="flex justify-between pt-4">

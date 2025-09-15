@@ -1,11 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { SimpleTable, TableColumn } from "./UserTable";
+import React, { useCallback, useEffect, useState } from "react";
+import { UserTable, TableColumn } from "./UserTable";
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import UserDetailsModal from "@/components/admin/UserDetailsModal";
 import { Shield, ShieldOff, Eye } from "lucide-react";
+import Pagination from "../pagination";
+
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 interface User {
   id: string;
@@ -31,37 +48,27 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<{ [key: string]: boolean }>({});
+
+  // const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    fetchUsers();
-  }, [userType]);
-
+        const [currentPage, setCurrentPage] = useState(1);
+        const [totalUsers, setTotalUsers] = useState(0);
+        const itemsPerPage = 5;
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      setFilteredUsers(users);
-    } else {
-      const filtered = users.filter(user =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    }
-  }, [users, searchTerm]);
 
-  const fetchUsers = async () => {
+
+  const fetchUsers = useCallback(async (page: number, search: string) => {
     try {
       setLoading(true);
       const response = userType === "customer"
-        ? await AdminAuthService.getAllCustomers()
-        : await AdminAuthService.getAllCarOwners();
+        ? await AdminAuthService.getAllCustomers(page, itemsPerPage, { search: search.trim()})
+        : await AdminAuthService.getAllCarOwners(page, itemsPerPage, { search: search.trim()});
 
       if (!response || !response.data) throw new Error("Failed to fetch users");
 
       const filteredUsers = response.data
-        .filter((user: any) => user.processStatus > 1 && user.verifyStatus === 1)
+        // .filter((user: any) => user.processStatus > 1 && user.verifyStatus === 1)
         .map((user: any) => ({
           id: user._id,
           name: user.fullName,
@@ -76,12 +83,32 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
           address: user.address || undefined,
         }));
       setUsers(filteredUsers);
+      setTotalUsers(response.total || 0);
     } catch {
       setError("Error fetching users");
     } finally {
       setLoading(false);
     }
-  };
+  },[itemsPerPage]);
+
+  useEffect(() => {
+              setCurrentPage(1);
+            }, [debouncedSearchTerm]);
+       
+        useEffect(() => {
+          fetchUsers(currentPage, debouncedSearchTerm);
+        }, [currentPage, debouncedSearchTerm, fetchUsers]);
+  
+        const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= Math.ceil(totalUsers / itemsPerPage)) {
+          setCurrentPage(page);
+        }
+      };
+
+   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          setSearchTerm(e.target.value);
+        };
+        const totalPages = Math.ceil(totalUsers / itemsPerPage);
 
   const handleToggleBlock = async (user: User) => {
     try {
@@ -145,7 +172,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
   };
 
   
-  const tableData = filteredUsers.map(user => ({
+  const tableData = users.map(user => ({
     name: user.name,
     email: user.email,
     verifyStatus: getStatusBadge(user.verifyStatus),
@@ -238,23 +265,34 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
         </div>
       </div>
 
-      {/* Search Results Summary */}
-      <div className="mb-4 text-sm text-gray-600">
-        {searchTerm ? (
-          <>Showing {filteredUsers.length} of {users.length} users</>
-        ) : (
-          <>Total {userType === "customer" ? "customers" : "car owners"}: {users.length}</>
-        )}
+     <div className="mb-4 text-sm text-gray-600">
+        
+         <>
+            {searchTerm ? (
+              <>Showing {users.length} results{totalUsers > itemsPerPage && ` (page ${currentPage} of ${totalPages})`} for "{searchTerm}"</>
+            ) : (
+              <>Total Owners: {totalUsers}{totalUsers > itemsPerPage && ` (page ${currentPage} of ${totalPages})`}</>
+            )}
+          </>
       </div>
 
-      {/* SimpleTable Component */}
-      <SimpleTable
-        columns={columns}
-        data={tableData}
-        itemsPerPage={10}
-        onView={handleRowView}
-        showViewButton={false} // We're handling view action in the actions column
-      />
+      <UserTable
+                       columns={columns}
+                       data={tableData}
+                       showViewButton={true}
+                       onView={handleRowView}
+                       isLoading={loading}
+                     />
+
+     {totalPages > 1 && (
+        <div className="mt-6 flex justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}                 
 
       {selectedUser && (
         <UserDetailsModal

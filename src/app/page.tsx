@@ -357,7 +357,7 @@ const LandingPage = () => {
             <div className="text-center mt-8">
               <button 
                 className="px-6 py-2 bg-white text-gray-900 font-semibold rounded-md border border-gray-300 hover:bg-gray-50 transition-all"
-                onClick={() => router.push('/cars')}
+                onClick={() => router.push('/customer/cars')}
               >
                 View All Cars
               </button>

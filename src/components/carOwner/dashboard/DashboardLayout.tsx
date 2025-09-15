@@ -70,6 +70,21 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   }, [user, accessTokenOwner, setAuthOwner, logout, router]);
   
 
+  useEffect(() => {
+    if (user && (user.verifyStatus !== 1 || user.processStatus !== 2)) {
+      router.push("/carOwner/dashboard/profile");
+    }
+  }, [user, router]);
+//   useEffect(() => {
+//   if (
+//     user &&
+//     (user.verifyStatus !== 1 || user.processStatus !== 2) &&
+//     pathname !== "/carOwner/dashboard/profile"
+//   ) {
+//     router.replace("/carOwner/dashboard/profile");
+//   }
+// }, [user, pathname, router]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -86,11 +101,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     );
   }
 
-  if ((user.verifyStatus !== 1 || user.processStatus !== 2) ) {
-    // If trying to access something else, push to profile
-    router.push("/carOwner/dashboard/profile");
-    return null; // Prevent rendering the restricted content
-  }
+  // if ((user.verifyStatus !== 1 || user.processStatus !== 2) ) {
+  //   // If trying to access something else, push to profile
+  //   router.push("/carOwner/dashboard/profile");
+  //   return null; // Prevent rendering the restricted content
+  // }
 
   return (
     <div className="flex min-h-screen bg-gray-100">

@@ -79,12 +79,13 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+      <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <InputField 
           label="Full Name" 
           name="fullName" 
           type="text" 
           onChange={handleChange} 
+          placeholder="Enter your full name"
           // required 
           suppressHydrationWarning
         />
@@ -93,6 +94,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
           name="email" 
           type="email" 
           onChange={handleChange} 
+          placeholder="Enter your email"
           // required 
           suppressHydrationWarning
         />
@@ -101,6 +103,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
           name="password" 
           type="password" 
           onChange={handleChange} 
+          placeholder="Enter your password"
           // required 
           suppressHydrationWarning
         />
@@ -109,6 +112,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
           name="confirmPassword"
           type="password"
           onChange={handleChange}
+          placeholder="Re-enter your password"
           // required
           suppressHydrationWarning
         />
@@ -117,13 +121,14 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
           name="phoneNumber" 
           type="text" 
           onChange={handleChange} 
+          placeholder="Enter your phone number"
           // required 
           suppressHydrationWarning
         />
 
         <button
           type="submit"
-          className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
+          className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
           disabled={loading}
           suppressHydrationWarning
         >
@@ -144,7 +149,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
       <button
         type="button"
         onClick={handleGoogleSignup}
-        className="w-full py-3 mt-4 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all"
+        className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all"
         suppressHydrationWarning
       >
         Sign up with Google

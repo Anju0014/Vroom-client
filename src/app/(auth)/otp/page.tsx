@@ -6,6 +6,8 @@ import { toast } from "react-hot-toast";
 import { AuthService } from "@/services/customer/authService";
 import { OwnerAuthService } from "@/services/carOwner/authService";
 import Image from "next/image";
+import AuthSideBanner from "@/components/AuthSideBanner";
+import InputField from "@/components/InputField";
 
 
 const OTPVerification = () => {
@@ -112,42 +114,18 @@ const OTPVerification = () => {
     
 <div className="flex min-h-screen">
     
-       <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-500 to-orange-400 relative overflow-hidden">
-         <div className="absolute inset-0 flex flex-col justify-between p-12">          
-          <div>
-            <h1 className="text-4xl font-bold text-white">Vroom</h1>
-<p className="text-white text-xl mt-2">Your journey starts here</p>
-           </div>
-              
-          <div>
-                      <Image 
-                        src="/images/car-convertible.png"
-                        alt="Car Image"
-                        width={500}
-                        height={300}
-                      />
-                    </div>
-              
-              <div className="text-white opacity-80">
-                <p className="text-lg font-semibold mb-2">Why choose Vroom?</p>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Fast & convenient car rentals</li>
-                  <li>Wide selection of premium vehicles</li>
-                  <li>24/7 customer support</li>
-                  <li>No hidden fees, transparent pricing</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
+       <AuthSideBanner
+  subText="A quick OTP check, and you’re ready to explore the road with Vroom."
+  bottomText="if you didn’t receive the OTP, check your spam folder or request a new code."
+/>
         
           <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
             <div className="max-w-md w-full space-y-8">
              
-               <div className="flex justify-center items-center min-h-screen bg-gray-100">
-       <div className="bg-white p-6 rounded-xl shadow-md w-96">
-         <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Enter OTP</h2>
-         <p className="text-sm text-gray-500 text-center mb-4">
+              
+       <div className="bg-red-50 p-6 rounded-xl shadow-md w-96">
+         <h2 className="text-2xl font-bold mb-4 text-center ">Enter OTP</h2>
+         <p className="text-sm  text-center mb-4">
            We sent a 6-digit OTP to your email. Expires in:{" "}
            <span className={`font-semibold ${timeLeft < 60 ? "text-red-500" : "text-blue-500"}`}>
              {formatTime(timeLeft)}
@@ -155,12 +133,14 @@ const OTPVerification = () => {
          </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-         <input
+         <InputField
+            label=""
+            name="otp"
             type="text"
             value={otp}
             onChange={handleChange}
             maxLength={6}
-            className="w-full px-4 py-2 border rounded-lg text-center text-xl tracking-widest"
+            className="w-full px-4 py-2 border rounded-lg text-center text-xl  focus:ring-red-500 focus:border-red-500 tracking-widest"
             placeholder="123456"
           />
           <button
@@ -189,12 +169,12 @@ const OTPVerification = () => {
         </p>
       </div>
     </div>
-           </div>
-          </div>
+    </div>
+    </div>
     </div>
 
  
-    </div>
+    // </div>
   );
 };
 

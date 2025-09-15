@@ -9,11 +9,12 @@ export const signupSchema=z.object({
         .string()
         .nonempty({message:"Full name is required"})
         .trim()
-        .min(3,{message:"Name must be at least 3 characters"}),
+        .min(3,{message:"Name must be at least 3 characters"})
+        .regex(/^[a-zA-Z\s]+$/, { message: "Name can only contain letters and spaces" }),
    
     email:z
         .string()
-        .nonempty({message:"Email is requuired"})
+        .nonempty({message:"Email is required"})
         .trim()
         .email({message:"Invalid email format"}),
 
@@ -62,12 +63,15 @@ export const emailSchema = z.string().email({ message: "Invalid email format" })
 export const resetPasswordSchema = z.object({
     newPassword: z
       .string()
+      .nonempty({ message: "Password is required" })
       .min(6, { message: "Password must be at least 6 characters" })
       .regex(passwordRegex, {
         message: "Password must contain at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
       }),
     
-    confirmPassword: z.string(),
+    confirmPassword: z
+    .string()
+    .nonempty({ message: "Confirm Password is required" }),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
@@ -114,6 +118,7 @@ const addressSchema = z.object({
       .string()
       .nonempty({ message: "Year is required" })
       .regex(/^\d{4}$/, { message: "Year must be a 4-digit number" }),
+    carType: z.string().nonempty({ message: "Car Type is required" }).trim(),
     fuelType: z.string().nonempty({ message: "Fuel Type is required" }).trim(),
     rcBookNo: z.string().nonempty({ message: "RC Book No is required" }).trim(),
     expectedWage: z

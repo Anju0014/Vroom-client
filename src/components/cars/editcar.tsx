@@ -641,6 +641,8 @@ export default function EditCarModal({
                 type="text"
                 value={formData.carName}
                 onChange={handleChange}
+                className="focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter car name (e.g., Toyota Corolla)"
               />
 
               <InputField
@@ -649,6 +651,8 @@ export default function EditCarModal({
                 type="number"
                 value={formData.year}
                 onChange={handleChange}
+                className="focus:ring-blue-500 focus:border-blue-500"
+                placeholder="e.g., 2019"
               />
 
               <div className="mb-4">
@@ -659,7 +663,7 @@ export default function EditCarModal({
                   name="fuelType"
                   value={formData.fuelType}
                   onChange={handleChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="" disabled>
                     Select fuel type
@@ -680,7 +684,7 @@ export default function EditCarModal({
                   name="carType"
                   value={formData.carType}
                   onChange={handleChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="" disabled>
                     Select car type
@@ -701,6 +705,8 @@ export default function EditCarModal({
                 type="text"
                 value={formData.brand}
                 onChange={handleChange}
+                className="focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter car brand (e.g., Honda, BMW)"
               />
 
               <InputField
@@ -709,6 +715,8 @@ export default function EditCarModal({
                 type="text"
                 value={formData.rcBookNo}
                 onChange={handleChange}
+                className="focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter RC book number"
               />
 
               <InputField
@@ -717,6 +725,8 @@ export default function EditCarModal({
                 type="number"
                 value={formData.expectedWage}
                 onChange={handleChange}
+                className="focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter daily rent (e.g., 1500)"
               />
 
               <div className="mb-4">
@@ -727,7 +737,7 @@ export default function EditCarModal({
                   name="available"
                   value={formData.available?.toString()}
                   onChange={handleChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="true">Available</option>
                   <option value="false">Not Available</option>
@@ -778,7 +788,8 @@ export default function EditCarModal({
               type="text"
               value={formData.location.landmark}
               onChange={handleChange}
-              placeholder="Nearby landmark (e.g., opposite to mall)"
+              className="focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Nearby landmark (e.g., opposite City Mall)"
             />
           </div>
 

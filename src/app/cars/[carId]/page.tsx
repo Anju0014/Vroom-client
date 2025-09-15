@@ -60,6 +60,7 @@ const CarBookingPage = () => {
   const [existingBookings, setExistingBookings] = useState<Booking[]>([]);
  const [showLoginModal, setShowLoginModal] = useState(false);
   const { data: session, status } = useSession();
+  const [carUnavailableDates, setCarUnavailableDates] = useState<Date[]>([]);
 
   useEffect(() => {
     const fetchCarData = async () => {
@@ -72,6 +73,16 @@ const CarBookingPage = () => {
         }
         const carData = await AuthService.findCarDetails(carId);
         setCar(carData);
+
+        if (Array.isArray(carData.unavailableDates)) {
+        const normalized = carData.unavailableDates.map(
+          (d: string) => startOfDay(new Date(d))
+        );
+        setCarUnavailableDates(normalized);
+      } else {
+        setCarUnavailableDates([]);
+      }
+        console.log("unavailable",carData.unavailableDates)
         setLoading(false);
       } catch (err) {
         console.error('Error fetching car details:', err);
@@ -108,7 +119,7 @@ const CarBookingPage = () => {
       } catch (err) {
         console.error('Error fetching bookings:', err);
         setExistingBookings([]);
-      }
+      } 
     };
 
     fetchCarData();
@@ -119,6 +130,10 @@ const CarBookingPage = () => {
     if (!car || !car.available) return true;
 
     const normalizedDate = startOfDay(date);
+    
+    if (carUnavailableDates.some((d) => isSameDay(normalizedDate, d))) {
+    return true;
+  }
 
     return existingBookings.some(booking => {
       const start = startOfDay(booking.startDate);

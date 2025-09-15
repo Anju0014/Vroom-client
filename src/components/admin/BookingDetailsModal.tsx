@@ -61,7 +61,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
           <div className="flex justify-between items-start mb-6">
             <div>
               <p className="text-sm text-gray-500">Booking ID</p>
-              <p className="font-medium">{booking._id}</p>
+              <p className="font-medium">{booking.bookingId}</p>
             </div>
             <div>
               {booking.status.toLowerCase() === 'cancelled' ? (
@@ -82,8 +82,8 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
               <Car className="text-gray-400 mt-1" size={20} />
               <div>
                 <h3 className="font-semibold">Car Details</h3>
-                <p className="text-lg font-medium mt-1">{booking.carId.carName}</p>
-                <p className="text-gray-600">{booking.carId.brand} {booking.carId.model}</p>
+                <p className="text-lg font-medium mt-1">{booking.car.carName}</p>
+                <p className="text-gray-600">{booking.car.brand} {booking.car.model}</p>
                 <p className="text-sm text-gray-500 mt-1">ID: {booking.carId._id}</p>
               </div>
             </div>
@@ -96,9 +96,9 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
                 <User className="text-gray-400 mt-1" size={20} />
                 <div>
                   <h3 className="font-semibold">Customer</h3>
-                  <p className="font-medium mt-1">{booking.userId.fullName}</p>
-                  <p className="text-gray-600">{booking.userId.email}</p>
-                  <p className="text-sm text-gray-500 mt-1">ID: {booking.userId._id}</p>
+                  <p className="font-medium mt-1">{booking.customer.fullName}</p>
+                  <p className="text-gray-600">{booking.customer.email}</p>
+                  <p className="text-sm text-gray-500 mt-1">ID: {booking.customer._id}</p>
                 </div>
               </div>
             </div>
@@ -108,9 +108,9 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
                 <User className="text-gray-400 mt-1" size={20} />
                 <div>
                   <h3 className="font-semibold">Car Owner</h3>
-                  <p className="font-medium mt-1">{booking.carOwnerId.fullName}</p>
-                  <p className="text-gray-600">{booking.carOwnerId.email}</p>
-                  <p className="text-sm text-gray-500 mt-1">ID: {booking.carOwnerId._id}</p>
+                  <p className="font-medium mt-1">{booking.carOwner.fullName}</p>
+                  <p className="text-gray-600">{booking.carOwner.email}</p>
+                  <p className="text-sm text-gray-500 mt-1">ID: {booking.carOwner._id}</p>
                 </div>
               </div>
             </div>

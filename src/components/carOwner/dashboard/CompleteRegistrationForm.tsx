@@ -82,21 +82,21 @@ const CompleteRegistrationForm: React.FC<CompleteRegistrationFormProps> = ({ own
       {error && <p className="text-red-500 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <InputField label="Phone Number *" name="phoneNumber" type="text" value={formData.phoneNumber} onChange={handleChange}  />
-        <InputField label="Alternate Phone Number" name="altPhoneNumber" type="text" value={formData.altPhoneNumber} onChange={handleChange} />
+        <InputField label="Phone Number *" name="phoneNumber" type="text" value={formData.phoneNumber} onChange={handleChange} placeholder="Enter your primary phone number"   className="focus:ring-blue-500 focus:border-blue-500"/>
+        <InputField label="Alternate Phone Number" name="altPhoneNumber" type="text" value={formData.altPhoneNumber} onChange={handleChange}  placeholder="Enter an alternate phone number (optional)"  className="focus:ring-blue-500 focus:border-blue-500"  />
 
         <div>
-          <label className="block text-gray-700">Upload ID Proof *</label>
+          <label className="block font-semibold text-gray-700">Upload ID Proof *</label>
           <FileUpload accept="image/*,application/pdf" multiple={false} onUploadComplete={handleFileUpload} />
           {formData.idProof && <p className="text-green-600 mt-1">File uploaded successfully.</p>}
         </div>
 
         <h2 className="text-lg font-semibold mt-4">Address</h2>
-        <InputField label="Address Line 1 *" name="address.addressLine1" type="text" value={formData.address.addressLine1} onChange={handleChange}  />
-        <InputField label="City *" name="address.city" type="text" value={formData.address.city} onChange={handleChange} />
-        <InputField label="State" name="address.state" type="text" value={formData.address.state} onChange={handleChange} />
-        <InputField label="Postal Code" name="address.postalCode" type="text" value={formData.address.postalCode} onChange={handleChange} />
-        <InputField label="Country *" name="address.country" type="text" value={formData.address.country} onChange={handleChange}  />
+        <InputField label="Address Line 1 *" name="address.addressLine1" type="text" value={formData.address.addressLine1} onChange={handleChange}  placeholder="House number, street name" className="focus:ring-blue-500 focus:border-blue-500"/>
+        <InputField label="City *" name="address.city" type="text" value={formData.address.city} onChange={handleChange} placeholder="Enter your city" className="focus:ring-blue-500 focus:border-blue-500"/>
+        <InputField label="State" name="address.state" type="text" value={formData.address.state} onChange={handleChange} placeholder="Enter your state" className="focus:ring-blue-500 focus:border-blue-500"/>
+        <InputField label="Postal Code" name="address.postalCode" type="text" value={formData.address.postalCode} onChange={handleChange} placeholder="e.g., 123456" className="focus:ring-blue-500 focus:border-blue-500"/>
+        <InputField label="Country *" name="address.country" type="text" value={formData.address.country} onChange={handleChange} placeholder="Enter your country" className="focus:ring-blue-500 focus:border-blue-500"/>
 
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition" disabled={loading}>
           {loading ? "Submitting..." : "Complete Registration"}

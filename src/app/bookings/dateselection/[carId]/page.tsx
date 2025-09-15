@@ -11,6 +11,7 @@ import { format, isWithinInterval, differenceInCalendarDays, addDays, isSameDay 
 import { CarFront } from 'lucide-react';
 import { useAuthStore } from '@/store/customer/authStore';
 import { Location,Car,Booking, DateRange } from '@/types/bookTypes';
+import InputField from '@/components/InputField';
 
 
 const Stepper = ({ steps, currentStep }: { steps: string[]; currentStep: number }) => {
@@ -368,10 +369,12 @@ if (!isAuthenticated) {
             <div>
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">Start Date</label>
-                  <input
+                  {/* <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">Start Date</label> */}
+                  <InputField
+                  label="Start Date"
                     type="date"
-                    id="startDate"
+                    name="startDate"
+                    // id="startDate"
                     value={formatDateForInput(dateRange.startDate)}
                     onChange={(e) => handleDateChange('startDate', e.target.value)}
                     min={formatDateForInput(getTomorrow())}
@@ -380,10 +383,11 @@ if (!isAuthenticated) {
                   <p className="text-xs text-gray-500 mt-1">Select a date after today</p>
                 </div>
                 <div>
-                  <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">End Date</label>
-                  <input
+                  {/* <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">End Date</label> */}
+                  <InputField
+                    label="End Date"
                     type="date"
-                    id="endDate"
+                    name="endDate"
                     value={formatDateForInput(dateRange.endDate)}
                     onChange={(e) => handleDateChange('endDate', e.target.value)}
                     min={dateRange.startDate ? formatDateForInput(dateRange.startDate) : formatDateForInput(getTomorrow())}

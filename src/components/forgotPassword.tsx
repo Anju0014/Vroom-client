@@ -8,6 +8,8 @@ import { AuthService } from "@/services/customer/authService";
 import { OwnerAuthService } from "@/services/carOwner/authService";
 import { emailSchema } from '@/lib/validation';
 import Image from 'next/image';
+import InputField from "./InputField";
+import AuthSideBanner from "./AuthSideBanner";
 
 
 const ForgotPassword = () => {
@@ -59,48 +61,33 @@ const ForgotPassword = () => {
         }
       }, []);
   return (
-    <div>
-<div className="flex min-h-screen">
     
-       <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-600 to-orange-500 relative overflow-hidden">
-         <div className="absolute inset-0 flex flex-col justify-between p-12">          <div>
-            <h1 className="text-4xl font-bold text-white">Vroom</h1>
-<p className="text-white text-xl mt-2">Your journey starts here</p>
-           </div>
-              
-          {/* <div className="relative w-full h-64 mb-8"> */}
-                <div>
-                      <Image 
-                        src="/images/car-convertible.png"
-                        alt="Car Image"
-                        width={500}
-                        height={300}
-                      />
-                    </div>
-          
-              {/* </div> */}
-              
-              <div className="text-white opacity-80">
-                <p className="text-lg font-semibold mb-2">Why choose Vroom?</p>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Fast & convenient car rentals</li>
-                  <li>Wide selection of premium vehicles</li>
-                  <li>24/7 customer support</li>
-                  <li>No hidden fees, transparent pricing</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-        
-          <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
+         <div className="flex min-h-screen"> 
+                 <AuthSideBanner
+  subText="From booking to driving, we make it smooth."
+  bottomText="A fresh start is just one reset away."
+/>
+
+          <div className="w-full  md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
             <div className="max-w-md w-full space-y-8">
-             
-               <div className="flex justify-center items-center min-h-screen ">
-       <div className="bg-white p-6 rounded-xl shadow-md w-96">
-         <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Enter Your OTP</h2>
+               <div className="flex justify-center items-center ">
+       <div className="bg-red-50 p-6 rounded-xl shadow-md w-96">
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+      Forgot Your Password?
+    </h2>
+    <p className="text-sm text-gray-600 mb-5 text-center">
+      Enter the email associated with your account and we’ll send you a reset link.
+    </p>
+         
          <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-      <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)}  />
+       <InputField
+              label="Email Address"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} 
+              placeholder="your.email@example.com"
+            />
       <button type="submit" className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center">Send Reset Link</button>
     </form>
 
@@ -112,7 +99,7 @@ const ForgotPassword = () => {
     </div>
 
  
-    </div>
+
   );
 }
 

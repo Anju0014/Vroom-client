@@ -10,6 +10,7 @@ import { OwnerAuthService } from "@/services/carOwner/authService";
 import { useAuthStore } from "@/store/customer/authStore";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
 import RegistrationForm from "@/components/RegistrationForm";
+import AuthSideBanner from "./AuthSideBanner";
 
 interface SignUpRoleProps {
   role: "customer" | "carOwner";
@@ -100,38 +101,18 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
 
   return (
     <div className="flex min-h-screen">
-      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-red-600 to-orange-500 flex-col justify-center items-center p-12 relative">
-        <div className="text-center text-white">
-          <h1 className="text-5xl font-bold mb-6">Vroom</h1>
-          <p className="text-xl max-w-md">Your journey starts here</p>
-          <div> 
-            <Image 
-              src="/images/car-convertible.png"
-              alt="Car Image"
-              width={500}
-              height={300}
-              priority
-            />
-          </div>
-        </div>
-        <div className="text-white opacity-80">
-          <p className="text-lg font-semibold mb-2">Why choose Vroom?</p>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Fast & convenient car rentals</li>
-            <li>Wide selection of premium vehicles</li>
-            <li>24/7 customer support</li>
-            <li>No hidden fees, transparent pricing</li>
-          </ul>
-        </div>
-      </div>
+  
+        <AuthSideBanner
+  subText="Create your account to start your journey with Vroom"
+  bottomText="• Fast rentals • Premium cars • 24/7 support • No hidden fees"
+/>
 
       <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-gray-800">
               Create an account for {role === "customer" ? "Customer" : "Car Owner"}
             </h2>
-            <p className="mt-2 text-gray-600">Join Vroom and start your journey today</p>
           </div>
           
           {isHydrated && (
@@ -141,7 +122,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
                 onSuccess={handleRegistrationSuccess}
               />
               
-              <div className="text-center mt-4">
+              <div className="text-center ">
                 <p className="text-sm text-gray-600">
                   Already have an account?{" "}
                   <button
@@ -150,7 +131,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
                     className="text-red-600 hover:text-red-800 font-medium"
                     suppressHydrationWarning
                   >
-                    Sign In
+                    Sign In as {role === "customer" ? "Customer" : "Car Owner"}
                   </button>
                 </p>
               </div>

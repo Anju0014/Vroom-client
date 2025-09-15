@@ -1,12 +1,29 @@
 
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { SimpleTable, TableColumn } from "@/components/admin/UserTable";
+import React, { useCallback, useEffect, useState } from "react";
+import { UserTable, TableColumn } from "@/components/admin/UserTable";
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import UserVerifyModal from "@/components/admin/UserVerifyModal";
 import { Eye } from "lucide-react";
+import Pagination from "@/components/pagination";
+
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 interface User {
   id: string;
@@ -32,36 +49,29 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<{ [key: string]: boolean }>({});
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  // const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [userType]);
+    const [searchTerm, setSearchTerm] = useState('');
+        const [currentPage, setCurrentPage] = useState(1);
+        const [totalOwners, setTotalOwners] = useState(0);
+        const itemsPerPage = 5;
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  // Filter users based on search term
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      setFilteredUsers(users);
-    } else {
-      const filtered = users.filter(user =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    }
-  }, [users, searchTerm]);
 
-  const fetchUsers = async () => {
+
+  const fetchUnVerifiedOwners = useCallback(async (page: number, search: string) => {
     try {
       setLoading(true);
       
-      const response = await AdminAuthService.getAllCarOwners();
+      const response = await AdminAuthService.getAllOwnerforVerify(page, 
+        itemsPerPage, 
+        { search: search.trim()});
 
       if (!response || !response.data) throw new Error("Failed to fetch users");
 
+       setTotalOwners(response.total || 0);
+       console.log(response.data)
       const filteredUsers = response.data
-        .filter((user: any) => user.processStatus > 0 && user.verifyStatus === 0)
         .map((user: any) => ({
           id: user._id,
           name: user.fullName,
@@ -76,15 +86,36 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
           address: user.address || undefined,
         }));
 
+        console.log("filter",filteredUsers)
       setUsers(filteredUsers);
+      
     } catch (err) {
       setError("Error fetching users");
       console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  },[itemsPerPage]);
 
+    useEffect(() => {
+            setCurrentPage(1);
+          }, [debouncedSearchTerm]);
+     
+      useEffect(() => {
+        fetchUnVerifiedOwners(currentPage, debouncedSearchTerm);
+      }, [currentPage, debouncedSearchTerm, fetchUnVerifiedOwners]);
+
+ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+      };
+      const totalPages = Math.ceil(totalOwners / itemsPerPage);
+    
+      const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= Math.ceil(totalOwners / itemsPerPage)) {
+          setCurrentPage(page);
+        }
+      };
+    
   const handleVerifyUser = async (userId: string, reason?: string) => {
     try {
       setIsProcessing((prev) => ({ ...prev, [userId]: true }));
@@ -118,7 +149,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
         );
         
      
-        fetchUsers();
+        fetchUnVerifiedOwners(currentPage, debouncedSearchTerm);
       }
     } catch (err) {
       setError(reason ? "Failed to reject user" : "Failed to verify user");
@@ -141,7 +172,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
     }
   };
 
-  // Format date to readable string
+
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
@@ -151,7 +182,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   };
 
  
-  const tableData = filteredUsers.map(user => ({
+  const tableData = users.map(user => ({
     name: user.name,
     email: user.email,
     status: getStatusBadge(user.verifyStatus),
@@ -169,11 +200,10 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
         <Eye size={18} />
       </button>
     ),
-    // Keep reference to original user for actions
     _user: user
   }));
 
-  // Define table columns
+
   const columns: TableColumn[] = [
     { header: "Name", key: "name" },
     { header: "Email", key: "email" },
@@ -209,14 +239,14 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
         </div>
       )}
 
-      {/* Search Input */}
+   
       <div className="mb-6">
         <div className="relative max-w-md">
           <input
             type="text"
             placeholder="Search by name or email..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -227,23 +257,35 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
         </div>
       </div>
 
-      {/* Results Summary */}
       <div className="mb-4 text-sm text-gray-600">
-        {searchTerm ? (
-          <>Showing {filteredUsers.length} of {users.length} users</>
-        ) : (
-          <>Total users pending verification: {users.length}</>
-        )}
+        
+         <>
+            {searchTerm ? (
+              <>Showing {users.length} results{totalOwners > itemsPerPage && ` (page ${currentPage} of ${totalPages})`} for "{searchTerm}"</>
+            ) : (
+              <>Total Owners: {totalOwners}{totalOwners > itemsPerPage && ` (page ${currentPage} of ${totalPages})`}</>
+            )}
+          </>
       </div>
 
-      <SimpleTable
-        columns={columns}
-        data={tableData}
-        itemsPerPage={10}
-        onView={handleRowView}
-        showViewButton={false} // We're handling view action in the actions column
-      />
+       <UserTable
+                    columns={columns}
+                    data={tableData}
+                    showViewButton={true}
+                    onView={handleRowView}
+                    isLoading={loading}
+                  />
 
+ {totalPages > 1 && (
+        <div className="mt-6 flex justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )} 
+      
       {selectedUser && (
         <UserVerifyModal
           user={selectedUser}

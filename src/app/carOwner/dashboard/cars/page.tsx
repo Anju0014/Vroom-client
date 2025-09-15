@@ -184,7 +184,7 @@ const YourCarsPage: React.FC = () => {
 const handleUpdateAvailability = async (carId: string | undefined, newUnavailableDates: string[]) => {
   if (!carId) return;
   try {
-    // The dates coming from the modal are already in ISO format
+    
     await OwnerAuthService.updateCarAvailability(carId, { unavailableDates: newUnavailableDates });
     
     setCars(prevCars =>
@@ -221,7 +221,7 @@ const handleViewLiveLocation = async (carId: string) => {
   }
 };
 
-// Also update the booking mapping to ensure proper date handling:
+
 const handleAvailabilityClick = async (carId: string) => {
   const car = cars.find(car => car._id === carId || car.id === carId);
   if (car) {
@@ -237,7 +237,6 @@ const handleAvailabilityClick = async (carId: string) => {
           carId: booking.carId,
           userId: booking.userId,
           carOwnerId: booking.carOwnerId,
-          // Ensure dates are in proper format
           startDate: booking.startDate,
           endDate: booking.endDate,
           totalPrice: booking.totalPrice,
@@ -394,7 +393,7 @@ const handleAvailabilityClick = async (carId: string) => {
         onClose={() => setIsAddCarOpen(false)}
         onCarAdded={(newCar: Car) => {
           setCars([newCar, ...cars]);
-          setTotalCars(prev => prev + 1); // Update total after add
+          setTotalCars(prev => prev + 1); 
         }}
       />
 

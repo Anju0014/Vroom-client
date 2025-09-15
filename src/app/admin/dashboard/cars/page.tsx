@@ -1,46 +1,68 @@
 
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { SimpleTable, TableColumn } from "@/components/admin/UserTable"; // Update import path
+import React, { useCallback, useEffect, useState } from "react";
+import { UserTable, TableColumn } from "@/components/admin/UserTable"; // Update import path
 import { AdminAuthService } from "@/services/admin/adminService";
 import CarDetailsModal from "@/components/admin/CarDetailsModal";
 import { Car } from '@/types/carTypes';
+import Pagination from "@/components/pagination";
+
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 const VerifiedCarsPage: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // const [filteredCars, setFilteredCars] = useState<Car[]>([]);
+ 
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredCars, setFilteredCars] = useState<Car[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCars, setTotalCars] = useState(0);
+    const itemsPerPage = 5;
+  
+    const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  useEffect(() => {
-    fetchVerifiedCars();
-  }, []);
+   
+ 
+  // useEffect(() => {
+  //   if (!searchTerm.trim()) {
+  //     setFilteredCars(cars);
+  //   } else {
+  //     const filtered = cars.filter(car =>
+  //       car.carName.toLowerCase().includes(searchTerm.toLowerCase())
+  //     );
+  //     setFilteredCars(filtered);
+  //   }
+  // }, [cars, searchTerm]);
 
-  // Filter cars based on search term
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      setFilteredCars(cars);
-    } else {
-      const filtered = cars.filter(car =>
-        car.carName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredCars(filtered);
-    }
-  }, [cars, searchTerm]);
-
-  const fetchVerifiedCars = async () => {
+  const fetchVerifiedCars =useCallback(async (page: number, search: string) => {
     try {
       setLoading(true);
       
-      const response = await AdminAuthService.getAllCars();
+      const response = await AdminAuthService.getAllVerifiedCars( page, 
+        itemsPerPage, 
+        { search: search.trim()});
       
       if (!response || !response.data) throw new Error("Failed to fetch cars");
-      
+      setTotalCars(response.total || 0);
       const verifiedCars = response.data
-        .filter((car: any) => car.verifyStatus === 1 && !car.isDeleted)
+        // .filter((car: any) => car.verifyStatus === 1 && !car.isDeleted)
         .map((car: any) => ({
           id: car._id,
           carName: car.carName,
@@ -64,11 +86,32 @@ const VerifiedCarsPage: React.FC = () => {
         }));
       
       setCars(verifiedCars);
+      setTotalCars(response.total || 0);
     } catch (err) {
       setError("Error fetching verified cars");
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  },[itemsPerPage]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+      }, [debouncedSearchTerm]);
+
+
+    useEffect(() => {
+    fetchVerifiedCars(currentPage, debouncedSearchTerm);
+  }, [currentPage, debouncedSearchTerm, fetchVerifiedCars]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+  const totalPages = Math.ceil(totalCars / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= Math.ceil(totalCars / itemsPerPage)) {
+      setCurrentPage(page);
     }
   };
 
@@ -89,12 +132,11 @@ const VerifiedCarsPage: React.FC = () => {
   };
 
   // Transform filtered cars data for the SimpleTable
-  const tableData = filteredCars.map(car => ({
+  const tableData = cars.map(car => ({
     carName: car.carName,
     brand: car.brand,
     ownerName: car.owner?.fullName || "Unknown",
     locationAddress: car.location?.address ?? "No address",
-    // availabilityText: car.available ? "Available" : "Not Available",
     availabilityText: getAvailabilityBadge(car.available),
     expectedWage: `₹${car.expectedWage}`,
     formattedDate: formatDate(new Date(car.createdAt)),
@@ -148,7 +190,7 @@ const VerifiedCarsPage: React.FC = () => {
             type="text"
             placeholder="Search by car name"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+             onChange={handleSearchChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -159,23 +201,36 @@ const VerifiedCarsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Search Results Summary */}
+     
       <div className="mb-4 text-sm text-gray-600">
-        {searchTerm ? (
-          <>Showing {filteredCars.length} of {cars.length} cars</>
-        ) : (
-          <>Total verified cars: {cars.length}</>
-        )}
+         <>
+            {searchTerm ? (
+              <>Showing {cars.length} results{totalCars > itemsPerPage && ` (page ${currentPage} of ${totalPages})`} for "{searchTerm}"</>
+            ) : (
+              <>Total bookings: {totalCars}{totalCars > itemsPerPage && ` (page ${currentPage} of ${totalPages})`}</>
+            )}
+          </>
       </div>
 
-      <SimpleTable
-        columns={columns}
-        data={tableData}
-        itemsPerPage={5}
-        showViewButton={true}
-        onView={handleViewCar}
-      />
+     
 
+       <UserTable
+              columns={columns}
+              data={tableData}
+              showViewButton={true}
+              onView={handleViewCar}
+              isLoading={loading}
+            />
+
+ {totalPages > 1 && (
+        <div className="mt-6 flex justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
       {selectedCar && (
         <CarDetailsModal
           car={selectedCar}

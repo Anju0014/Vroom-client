@@ -676,8 +676,8 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
  
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <InputField label="Car Name" name="carName" type="text" onChange={handleChange} />
-              <InputField label="Manufacturing Year" name="year" type="number" onChange={handleChange} />
+              <InputField label="Car Name" name="carName" type="text" onChange={handleChange} className="focus:ring-blue-500 focus:border-blue-500" placeholder="Enter car name (e.g., Toyota Corolla)"/>
+              <InputField label="Manufacturing Year" name="year" type="number" onChange={handleChange} className="focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 2019"/>
               
 
               <div className="mb-4">
@@ -689,7 +689,7 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
                   name="fuelType"
                   value={formData.fuelType}
                   onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-transparent"
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 "
                   
                 >
                   <option value="" disabled>Select fuel type</option>
@@ -725,9 +725,9 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
             </div>
 
             <div>
-              <InputField label="Brand" name="brand" type="text" onChange={handleChange} />
-              <InputField label="RC Book No" name="rcBookNo" type="text" onChange={handleChange} />
-              <InputField label="Expected Wage Daily" name="expectedWage" type="number" onChange={handleChange} />
+              <InputField label="Brand" name="brand" type="text" onChange={handleChange} className="focus:ring-blue-500 focus:border-blue-500" placeholder="Enter car brand (e.g., Honda, BMW)"/>
+              <InputField label="RC Book No" name="rcBookNo" type="text" onChange={handleChange} className="focus:ring-blue-500 focus:border-blue-500" placeholder="Enter RC book number"/>
+              <InputField label="Expected Wage Daily" name="expectedWage" type="number" onChange={handleChange} className="focus:ring-blue-500 focus:border-blue-500" placeholder="Enter daily rent (e.g., 1500)"/>
             </div>
           </div>
 
@@ -798,7 +798,8 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
                 type="text" 
                 onChange={handleChange} 
                 value={formData.location.landmark}
-                placeholder="Nearby landmark (e.g., opposite to mall)"
+                className="focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Nearby landmark (e.g., opposite City Mall)"
               />
             )}
             </div>

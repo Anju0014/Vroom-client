@@ -1,51 +1,51 @@
 
-import { Car } from "@/types/workTypes";
+// import { Car } from "@/types/workTypes";
 
-interface Props {
-  car: Car;
-  onBook: () => void;
-}
+// interface Props {
+//   car: Car;
+//   onBook: () => void;
+// }
 
-export default function AvailabilityCalendar({ car, onBook }: Props) {
-  const today = new Date();
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
+// export default function AvailabilityCalendar({ car, onBook }: Props) {
+//   const today = new Date();
+//   const currentMonth = today.getMonth();
+//   const currentYear = today.getFullYear();
 
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+//   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-  const calendarDays = Array.from({ length: daysInMonth }, (_, i) => {
-    const day = i + 1;
-    const date = new Date(currentYear, currentMonth, day);
-    const dateStr = date.toISOString().split("T")[0];
-    const isAvailable = car.availability[dateStr] === true;
+//   const calendarDays = Array.from({ length: daysInMonth }, (_, i) => {
+//     const day = i + 1;
+//     const date = new Date(currentYear, currentMonth, day);
+//     const dateStr = date.toISOString().split("T")[0];
+//     const isAvailable = car.availability[dateStr] === true;
 
-    return { day, dateStr, isAvailable };
-  });
+//     return { day, dateStr, isAvailable };
+//   });
 
-  return (
-    <div className="mt-4 bg-white p-4 rounded shadow w-fit">
-      <h3 className="text-lg font-bold mb-2">Check Availability</h3>
-      <div className="grid grid-cols-7 gap-2">
-        {calendarDays.map(({ day, dateStr, isAvailable }) => (
-          <div
-            key={dateStr}
-            className={`p-2 text-center text-sm rounded ${
-              isAvailable ? "bg-green-300" : "bg-gray-200 text-gray-500"
-            }`}
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={onBook}
-        className="mt-4 w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600"
-      >
-        Book Now
-      </button>
-    </div>
-  );
-}
+//   return (
+//     <div className="mt-4 bg-white p-4 rounded shadow w-fit">
+//       <h3 className="text-lg font-bold mb-2">Check Availability</h3>
+//       <div className="grid grid-cols-7 gap-2">
+//         {calendarDays.map(({ day, dateStr, isAvailable }) => (
+//           <div
+//             key={dateStr}
+//             className={`p-2 text-center text-sm rounded ${
+//               isAvailable ? "bg-green-300" : "bg-gray-200 text-gray-500"
+//             }`}
+//           >
+//             {day}
+//           </div>
+//         ))}
+//       </div>
+//       <button
+//         onClick={onBook}
+//         className="mt-4 w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600"
+//       >
+//         Book Now
+//       </button>
+//     </div>
+//   );
+// }
 
 
 

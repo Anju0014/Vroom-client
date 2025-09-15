@@ -16,18 +16,37 @@ getAdminProfile:async()=>{
   if (response.status !== 200) throw new Error("Failed to fetch profile");
   return response.data.owner; 
 },
-getAllCustomers:async()=>{
-  const response=await adminApi.get('/admin/customers');
+getAllCustomers:async(page: number, limit: number, filters: { search: string })=>{
+  const response=await adminApi.get('/admin/customers',{
+      params: {
+        page,
+        limit,
+        search: filters.search || '',
+      },
+    });
   return response.data
 
 },
-getAllCarOwners:async()=>{
-  const response=await adminApi.get('/admin/owners');
+getAllCarOwners:async(page: number, limit: number, filters: { search: string })=>{
+  const response=await adminApi.get('/admin/owners',{
+      params: {
+        page,
+        limit,
+        search: filters.search || '',
+      },
+    });
   return response.data
 },
 
-getAllOwnerVerify:async()=>{
-  const response=await adminApi.get('/admin/ownerpending');
+getAllOwnerforVerify:async(page: number, limit: number, filters: { search: string })=>{
+  console.log("sending request")
+  const response=await adminApi.get('/admin/ownerpending', {
+      params: {
+        page,
+        limit,
+        search: filters.search || '',
+      },
+    });
   return response.data
 },
 
@@ -89,6 +108,7 @@ updateUserStatus: async (userId: string, status: number, userType: "customer" | 
     throw new Error("Failed to update user status");
   }
 },
+
 updateVerifyStatus: async (userId: string, status: number, userType: "customer" | "owner",reason?:string) => {
   try {
     const endpoint = userType === "customer"
@@ -105,12 +125,16 @@ updateVerifyStatus: async (userId: string, status: number, userType: "customer" 
   }
 },
 
-// Add these methods to your existing AdminAuthService
 
-// Get all cars that need verification
- getAllCars:async()=> {
+ getAllUnVerifiedCars:async(page: number, limit: number, filters: { search: string })=> {
   try {
-    const response = await adminApi.get('/admin/cars');
+    const response = await adminApi.get('/admin/pendingcars', {
+      params: {
+        page,
+        limit,
+        search: filters.search || '',
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching pending cars:', error);
@@ -118,10 +142,35 @@ updateVerifyStatus: async (userId: string, status: number, userType: "customer" 
   }
 },
 
-getAllBookings:async()=> {
+
+ getAllVerifiedCars:async(page: number, limit: number, filters: { search: string })=> {
   try {
-    const response = await adminApi.get('/admin/bookings');
-    return response.data.data
+    console.log("sending data")
+    const response = await adminApi.get('/admin/verifiedcars', {
+      params: {
+        page,
+        limit,
+        search: filters.search || '',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching pending cars:', error);
+    throw error;
+  }
+},
+
+getAllBookings:async(page: number, limit: number, filters: { search: string })=> {
+  try {
+  
+     const response = await adminApi.get('/admin/bookings', {
+      params: {
+        page,
+        limit,
+        search: filters.search || '',
+      },
+    });
+    return response.data
   } catch (error) {
     console.error('Error fetching booking cars:', error);
     throw error;

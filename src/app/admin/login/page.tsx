@@ -6,6 +6,7 @@ import { useAuthStoreAdmin } from '@/store/admin/authStore';
 import { AdminAuthService } from '@/services/admin/adminService';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import InputField from '@/components/InputField';
 
 export default function AdminLogin() {
   const router=useRouter()
@@ -64,22 +65,41 @@ export default function AdminLogin() {
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
+            {/* <div> */}
+            
+              <InputField
+        label="Email Address"
+        name="email"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="your.email@example.com"
+        className=" focus:ring-blue-500 focus:border-blue-500"
+      />
+              {/* <input */}
+                {/* id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" */}
+              {/* />  */}
+
+               <InputField
+                        label="Password" 
+                        name="password" 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter your password"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        // required 
+                        suppressHydrationWarning
+                      />
+            {/* </div> */}
             
-            <div>
+            {/* <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
@@ -92,7 +112,7 @@ export default function AdminLogin() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
-            </div>
+            </div> */}
           </div>
           
           <div className="flex items-center justify-between">
