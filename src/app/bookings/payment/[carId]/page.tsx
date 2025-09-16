@@ -43,72 +43,21 @@ const PaymentPage = () => {
   const isZustandUser = !!user && !!accessToken;
   const isAuthenticated = isNextAuthUser || isZustandUser;
 
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     router.push(`/bookings/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
-  //     return;
-  //   }
-
-  //   const initializeBooking = async () => {
-  //     try {
-  //       setLoading(true);
-
-  //       console.log("fetching car details")
-  //       // Fetch car details
-  //       const carData = await AuthService.findCarDetails(carId);
-  //       setCar(carData);
-  //       if (!startDate || !endDate) {
-  //         throw new Error('Start date or end date is missing');
-  //       }
-  //       if (!totalPrice || isNaN(parseInt(totalPrice))) {
-  //         throw new Error('Invalid or missing totalPrice');
-  //       }
-  //       if (!session?.user?.id && !user.id) {
-  //         throw new Error('User ID is missing');
-  //       }
-         
-  //       console.log("car data",carData)
-
-  
-  //       const bookingData = {
-  //         carId,
-  //         userId: session?.user?.id || user.id,
-  //         carOwnerId: carData.owner,
-  //         startDate,
-  //         endDate,
-  //         totalPrice: parseInt(totalPrice),
-  //       };
-
-  //       const bookingResponse = await AuthService.createPendingBooking(bookingData);
-  //       setBookingId(bookingResponse.bookingId);
-  //     } catch (err: any) {
-  //       console.error('Error initializing booking:', err);
-  //       setError('Failed to initialize booking. Please try again later.');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (carId && startDate && endDate && totalPrice && (session?.user?.email || user.email)) {
-  //     initializeBooking();
-  //   } else {
-  //     setError('Incomplete booking data or missing email');
-  //     setLoading(false);
-  //   }
-  // }, [carId, startDate, endDate, totalPrice, isAuthenticated, router, session, user]);
-
-
+    if (!user) {
+        return;
+    }
   useEffect(() => {
     if (!isAuthenticated) {
       router.push(`/bookings/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
       return;
     }
   
+
     let isMounted = true; 
     const initializeBooking = async () => {
       try {
         console.log("user",user);
-        console.log("user._id checking for token change?",user?._id)
+        // console.log("user._id checking for token change?",user?._id)
         console.log("user.id normal ",user.id)
         setLoading(true);
   

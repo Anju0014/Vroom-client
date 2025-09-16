@@ -30,7 +30,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         console.log("userData", userData);
 
     
-        if (userData?.customer?.status === -2) {
+        if (userData?.customer?.blockStatus===1) {
           logout();
           toast.error("You have been blocked by the admin.");
           router.push("/login");
@@ -47,11 +47,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
     if (!user) {
       fetchUser();
-    } else if (user?.status === -2) {
+    } else if (user?.blockStatus === 1) {
       logout();
       toast.error("You have been blocked by the admin.");
       router.push("/login");
-    } else {
+     } else {
       setLoading(false);
     }
 
@@ -71,11 +71,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   }
 
   if (!user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-red-500">Failed to load user</p>
-      </div>
-    );
+    return null
+      
+      // <div className="flex min-h-screen items-center justify-center">
+      //   <p className="text-red-500">Failed to load user</p>
+      // </div>
+    // );
   }
 
   return (

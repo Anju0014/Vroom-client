@@ -29,6 +29,7 @@ const VerifiedCarsPage: React.FC = () => {
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [clickLocked, setClickLocked] = useState(false);
   // const [filteredCars, setFilteredCars] = useState<Car[]>([]);
  
   const [searchTerm, setSearchTerm] = useState('');
@@ -155,7 +156,10 @@ const VerifiedCarsPage: React.FC = () => {
   ];
 
   const handleViewCar = (rowData: any) => {
+    if (clickLocked) return; // block extra clicks
+    setClickLocked(true);
     setSelectedCar(rowData._car);
+    setTimeout(() => setClickLocked(false), 500);
   };
 
   if (loading) {

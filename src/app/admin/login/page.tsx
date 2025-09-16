@@ -1,20 +1,25 @@
 
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useAuthStoreAdmin } from '@/store/admin/authStore';
 import { AdminAuthService } from '@/services/admin/adminService';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import InputField from '@/components/InputField';
+import { useHasHydrated } from "@/hooks/useHasHydrated";
 
 export default function AdminLogin() {
   const router=useRouter()
+  const hasHydrated = useHasHydrated();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
   
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
@@ -22,32 +27,32 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const response = await  AdminAuthService.loginAdmin({email:email,
-        password:password})
+      const response = await  AdminAuthService.loginAdmin({email:email,password:password})
       const accessTokenAdmin = response.data.adminAccessToken;
       const user = response.data.user;
-        if (user && accessTokenAdmin) {
-          useAuthStoreAdmin.getState().setAuthAdmin(user,accessTokenAdmin)
-        } 
+      if (user && accessTokenAdmin) {
+        useAuthStoreAdmin.getState().setAuthAdmin(user,accessTokenAdmin)
+      } 
      
       if (accessTokenAdmin) {
    
-          localStorage.setItem("accessTokenAdmin", accessTokenAdmin);
-   
-          sessionStorage.setItem("accessTokenAdmin", accessTokenAdmin);
-        
+        localStorage.setItem("accessTokenAdmin", accessTokenAdmin);
+        sessionStorage.setItem("accessTokenAdmin", accessTokenAdmin);
       }
      
-       toast.success(`Login successful as Admin`)
+      toast.success(`Login successful as Admin`)
+      setTimeout(() => router.push('/admin/dashboard'), 1500);
       
-       setTimeout(() => router.push('/admin/dashboard'), 1500);
-      
-    } catch (err){
-        toast.error("Invalid Credentials")
-    } finally {
+    }catch (err){
+      toast.error("Invalid Credentials")
+    }finally {
       setLoading(false);
     }
   };
+
+  if (!hasHydrated) {
+    return <div className="text-gray-500">Loading…</div>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-white to-blue-300">
@@ -62,78 +67,37 @@ export default function AdminLogin() {
           <p className="mt-2 text-sm text-gray-600">Please sign in to your admin account</p>
         </div>
     
-        
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            {/* <div> */}
-            
-              <InputField
-        label="Email Address"
-        name="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="your.email@example.com"
-        className=" focus:ring-blue-500 focus:border-blue-500"
-      />
-              {/* <input */}
-                {/* id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" */}
-              {/* />  */}
+      
+            <InputField
+             label="Email Address"
+             name="email"
+             type="email"
+             value={email}
+             onChange={(e) => setEmail(e.target.value)}
+             placeholder="your.email@example.com"
+             className=" focus:ring-blue-500 focus:border-blue-500"
+            />
+         
 
-               <InputField
-                        label="Password" 
-                        name="password" 
-                        type="password" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        // required 
-                        suppressHydrationWarning
-                      />
-            {/* </div> */}
-            
-            {/* <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div> */}
+            <InputField
+              label="Password" 
+              name="password" 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              // suppressHydrationWarning
+            />
           </div>
           
-          <div className="flex items-center justify-between">
-            {/* <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember_me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div> */}
-            
-            <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+          {/* <div className="flex items-center justify-between">
+           <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-500">
               Forgot your password?
             </a>
-          </div>
+          </div> */}
           
           <div>
             <button
@@ -148,7 +112,7 @@ export default function AdminLogin() {
         
         <div className="mt-6">
           <p className="text-center text-sm text-gray-600">
-            &copy; {new Date().getFullYear()} Vroom. All rights reserved.
+            &copy; {year ?? ""} Vroom. All rights reserved.
           </p>
         </div>
       </div>

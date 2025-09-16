@@ -50,7 +50,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<{ [key: string]: boolean }>({});
   // const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-
+    const [clickLocked, setClickLocked] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
         const [currentPage, setCurrentPage] = useState(1);
         const [totalOwners, setTotalOwners] = useState(0);
@@ -213,7 +213,10 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   ];
 
   const handleRowView = (rowData: any) => {
+    if (clickLocked) return; // block extra clicks
+     setClickLocked(true);
     setSelectedUser(rowData._user);
+    setTimeout(() => setClickLocked(false), 500);
   };
 
   if (loading) {

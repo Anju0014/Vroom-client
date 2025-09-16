@@ -26,13 +26,17 @@ const Sidebar: React.FC = () => {
 
   const handleLogout= async ()=>{
     try{
-      const response=await AdminAuthService.logoutAdmin();
-      if(!response){
-        throw new Error("Logout Failed")
-      }
+      await AdminAuthService.logoutAdmin();
+      // if(!response){
+      //   throw new Error("Logout Failed")
+      // }
       logout();
+      router.replace('/admin/login');
+
     }catch(error){
       toast.error("Logout Failed.Please try Again")
+      logout();
+      router.replace('/admin/login');
     }
   }
 

@@ -33,11 +33,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     );
   }
   if (!user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-red-500">Failed to load user</p>
-      </div>
-    );
+    return null
+    // return (
+    //   <div className="flex min-h-screen items-center justify-center">
+    //     <p className="text-red-500">Failed to load user</p>
+    //   </div>
+    // );
   }
 
   return (

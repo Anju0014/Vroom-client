@@ -33,7 +33,7 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<{ [key: string]: boolean }>({});
-
+  const [clickLocked, setClickLocked] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
       const [currentPage, setCurrentPage] = useState(1);
       const [totalCars, setTotalCars] = useState(0);
@@ -178,7 +178,10 @@ const debouncedSearchTerm = useDebounce(searchTerm, 500);
   ];
 
   const handleViewCar = (car: Car) => {
+     if (clickLocked) return; // block extra clicks
+     setClickLocked(true);
     setSelectedCar(car);
+    setTimeout(() => setClickLocked(false), 500);
   };
 
   if (loading) {

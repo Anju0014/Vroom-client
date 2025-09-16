@@ -55,7 +55,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
         const [totalUsers, setTotalUsers] = useState(0);
         const itemsPerPage = 5;
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  
+  const [clickLocked, setClickLocked] = useState(false);
 
 
   const fetchUsers = useCallback(async (page: number, search: string) => {
@@ -219,7 +219,10 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
   ];
 
   const handleRowView = (rowData: any) => {
+    if (clickLocked) return; // block extra clicks
+     setClickLocked(true);
     setSelectedUser(rowData._user);
+    setTimeout(() => setClickLocked(false), 500);
   };
 
   if (loading) {

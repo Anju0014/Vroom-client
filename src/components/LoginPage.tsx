@@ -383,9 +383,29 @@ const LoginComponent = ({ defaultRole = 'customer' }: LoginComponentProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect if already authenticated
+useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const blocked = urlParams.get('blocked');
+  const role = urlParams.get('role'); 
+
+  if (blocked === '1' ) {
+    if (role === 'customer') {
+      useAuthStore.getState().logout();
+      toast.error('Your customer account has been blocked.');
+      
+    } else if (role === 'carOwner') {
+      useAuthStoreOwner.getState().logout();
+      toast.error('Your car owner account has been blocked.');
+    
+    } else {
+      toast.error('Your account has been blocked.');
+    
+    }
+  }
+}, []);
+
   useEffect(() => {
-    if (!hasHydrated) return; // Skip effect when not hydrated
+    if (!hasHydrated) return; 
     
     const storedUserRole = sessionStorage.getItem('userRole') || formData.role;
     if (storedUserRole === 'customer' && customerUser && customerAccessToken) {

@@ -11,7 +11,16 @@ const ConfirmationPage = () => {
     const timer = setTimeout(() => {
       router.push('/customer/dashboard/bookings/');
 }, 5000);
-    return () => clearTimeout(timer);
+
+    const handlePopState = () => {
+      router.replace('/customer/home'); 
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () =>{
+      clearTimeout(timer);
+      window.removeEventListener('popstate',handlePopState)}
   }, [router]);
 
   return (
