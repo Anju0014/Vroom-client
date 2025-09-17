@@ -363,6 +363,7 @@ import { LoginData } from '@/types/authTypes';
 import { useHasHydrated } from '@/hooks/useHasHydrated';
 import InputField from './InputField';
 import AuthSideBanner from './AuthSideBanner';
+import ButtonUpgraded from './ButtonUpgraded';
 
 interface LoginComponentProps {
   defaultRole?: 'customer' | 'carOwner';
@@ -693,6 +694,18 @@ useEffect(() => {
         />
       </div>
 
+{/* <ButtonUpgraded
+  type="submit"
+  debounce={1500} 
+  disabled={loading} 
+  className="w-full py-3 text-white font-semibold rounded-lg 
+             bg-gradient-to-r from-red-600 to-orange-500 
+             hover:from-red-700 hover:to-orange-600 
+             transition-all flex justify-center items-center"
+>
+  {loading ? `Signing In as ${formData.role}...` : `Sign In as ${formData.role}`}
+</ButtonUpgraded> */}
+
       {/* Submit Button */}
       <button
         type="submit"
@@ -702,14 +715,28 @@ useEffect(() => {
         {loading ? `Signing In as ${formData.role}...` : `Sign In as ${formData.role}`}
       </button>
     </form>
-          <button
+          {/* <button
             type="button"
             onClick={handleGoogleLogin}
             className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
             disabled={loading}
           >
             {loading ? 'Processing...' : 'Login through Google'}
-          </button>
+          </button> */}
+
+          <ButtonUpgraded
+            type="button"
+            onClick={handleGoogleLogin}
+            debounce={1500} 
+            disabled={loading} 
+            className="w-full py-3 text-white font-semibold rounded-lg 
+                      bg-gradient-to-r from-red-600 to-orange-500 
+                      hover:from-red-700 hover:to-orange-600 
+                      transition-all flex justify-center items-center"
+          >
+            {loading ? 'Processing...' : 'Login through Google'}
+          </ButtonUpgraded>
+
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}

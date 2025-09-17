@@ -10,6 +10,7 @@ import { emailSchema } from '@/lib/validation';
 import Image from 'next/image';
 import InputField from "./InputField";
 import AuthSideBanner from "./AuthSideBanner";
+import ButtonUpgraded from "./ButtonUpgraded";
 
 
 const ForgotPassword = () => {
@@ -88,14 +89,24 @@ const ForgotPassword = () => {
               onChange={(e) => setEmail(e.target.value)} 
               placeholder="your.email@example.com"
             />
-      <button type="submit" className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center">Send Reset Link</button>
+      {/* <button type="submit" className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center">Send Reset Link</button> */}
+      <ButtonUpgraded
+          type="submit"
+          debounce={1500} // optional, prevents rapid multiple clicks
+          className="w-full py-3 text-white font-semibold rounded-lg 
+                    bg-gradient-to-r from-red-600 to-orange-500 
+                    hover:from-red-700 hover:to-orange-600 
+                    transition-all flex justify-center items-center"
+      >
+        Send Reset Link
+      </ButtonUpgraded>
     </form>
 
         
-      </div>
     </div>
-           </div>
-          </div>
+    </div>
+    </div>
+    </div>
     </div>
 
  
