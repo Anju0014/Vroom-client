@@ -86,9 +86,9 @@ deleteCar: async (carId: string) => {
   return response.data;
 },
 
-getBookingList:async()=>{
-  const response=await carOwnerApi.get('/owner/bookings');
-  return response.data.data
+getBookingList:async(page=1,limit=9)=>{
+  const response=await carOwnerApi.get(`/owner/bookings?page=${page}&limit=${limit}`);
+  return response.data
 },
 
 

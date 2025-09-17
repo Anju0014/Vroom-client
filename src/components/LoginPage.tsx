@@ -404,20 +404,40 @@ useEffect(() => {
   }
 }, []);
 
-  useEffect(() => {
-    if (!hasHydrated) return; 
+  // useEffect(() => {
+  //   if (!hasHydrated) return; 
     
-    const storedUserRole = sessionStorage.getItem('userRole') || formData.role;
-    if (storedUserRole === 'customer' && customerUser && customerAccessToken) {
-      console.log('Customer authenticated, redirecting to /customer/home');
-      window.history.replaceState(null, '', '/customer/home');
-      router.replace('/customer/home');
-    } else if (storedUserRole === 'carOwner' && ownerUser && accessTokenOwner) {
-      console.log('Car owner authenticated, redirecting to /carOwner/home');
-      window.history.replaceState(null, '', '/carOwner/home');
-      router.replace('/carOwner/home');
-    }
-  }, [customerUser, customerAccessToken, ownerUser, accessTokenOwner, formData.role, router, hasHydrated]);
+  //   const storedUserRole = sessionStorage.getItem('userRole') || formData.role;
+  //   if (storedUserRole === 'customer' && customerUser && customerAccessToken) {
+  //     console.log('Customer authenticated, redirecting to /customer/home');
+  //     window.history.replaceState(null, '', '/customer/home');
+  //     router.replace('/customer/home');
+  //   } else if (storedUserRole === 'carOwner' && ownerUser && accessTokenOwner) {
+  //     console.log('Car owner authenticated, redirecting to /carOwner/home');
+  //     window.history.replaceState(null, '', '/carOwner/home');
+  //     router.replace('/carOwner/home');
+  //   }
+  // }, [customerUser, customerAccessToken, ownerUser, accessTokenOwner, formData.role, router, hasHydrated]);
+
+  useEffect(() => {
+  if (!hasHydrated) return;
+
+  const storedUserRole = sessionStorage.getItem('userRole');
+  const storedToken = sessionStorage.getItem('accessToken');
+
+  // Use either stored values or Zustand values to detect auth state
+  const isCustomer = (storedUserRole === 'customer' && storedToken) || (customerUser && customerAccessToken);
+  const isOwner = (storedUserRole === 'carOwner' && storedToken) || (ownerUser && accessTokenOwner);
+
+  if (isCustomer) {
+    console.log('Customer authenticated, redirecting to /customer/home');
+    router.replace('/customer/home'); // 👈 replace is enough
+  } else if (isOwner) {
+    console.log('Car owner authenticated, redirecting to /carOwner/home');
+    router.replace('/carOwner/home');
+  }
+}, [hasHydrated,customerUser,customerAccessToken,ownerUser,accessTokenOwner,router]);
+
 
   // Handle Google Sign In
   useEffect(() => {

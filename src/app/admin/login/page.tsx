@@ -41,7 +41,8 @@ export default function AdminLogin() {
       }
      
       toast.success(`Login successful as Admin`)
-      setTimeout(() => router.push('/admin/dashboard'), 1500);
+      setTimeout(() => router.replace('/admin/dashboard'), 1500);
+
       
     }catch (err){
       toast.error("Invalid Credentials")

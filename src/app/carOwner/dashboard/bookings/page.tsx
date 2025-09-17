@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { OwnerAuthService } from '@/services/carOwner/authService';
+import Pagination from '@/components/pagination';
 
 // Update TypeScript interfaces to match your API response structure
 interface User {
@@ -28,12 +29,16 @@ interface Booking {
   endDate: string;
   status: string;
   totalPrice: number;
+  bookingId:string
 }
 
 export default function CarOwnerDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+   const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalBookings, setTotalBookings] = useState<number>(0);
+    const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,11 +46,12 @@ export default function CarOwnerDashboard() {
         setIsLoading(true);
 
 
-        const bookings = await OwnerAuthService.getBookingList();
-        console.log("from backend", bookings);
+        const response = await OwnerAuthService.getBookingList(currentPage,itemsPerPage);
+        console.log("from backend", response.bookings,response.total);
         
-        if (bookings) {
-          setBookings(bookings);
+        if (response.bookings) {
+          setBookings(response.bookings);
+          setTotalBookings(response.total||0)
         } else {
           setError('No booking data found');
         }
@@ -59,9 +65,15 @@ export default function CarOwnerDashboard() {
     };
 
     fetchData();
-  }, []);
+  }, [currentPage]);
 
-  
+  const totalPages=Math.ceil(totalBookings/itemsPerPage);
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   const getBookingTimeStatus = (booking: Booking): 'upcoming' | 'ongoing' | 'past' => {
     const now = new Date();
     const startDate = new Date(booking.startDate);
@@ -157,15 +169,19 @@ export default function CarOwnerDashboard() {
                 className={`border-2 rounded-lg overflow-hidden shadow-md ${statusColors}`}
               >
                 <div className="p-5">
+
+                    <div className="mb-3">
+                    <p className="font-bold  text-fuchsia-800">{booking.bookingId}</p>
+                  </div>
               
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-bold text-lg">
+                      <h3 className="font-semibold text-lg">
                         {booking.carId.carName || 'Unknown Car'}
                       </h3>
-                      <p className="text-gray-600 text-sm">
+                      {/* <p className="text-gray-600 text-sm">
                         ID: {booking.carId._id}
-                      </p>
+                      </p> */}
                     </div>
                     
                 
@@ -178,10 +194,11 @@ export default function CarOwnerDashboard() {
                     </span>
                   </div>
                   
+                
             
                   <div className="mb-3">
                     <p className="font-semibold">{booking.userId.fullName}</p>
-                    <p className="text-gray-600 text-sm">ID: {booking.userId._id}</p>
+                    {/* <p className="text-gray-600 text-sm">ID: {booking.userId._id}</p> */}
                   </div>
                   
          
@@ -225,7 +242,13 @@ export default function CarOwnerDashboard() {
               </div>
             );
           })}
+          
         </div>
+         <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
       </div>
       
       {bookings.length === 0 && (

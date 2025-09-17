@@ -90,9 +90,7 @@ const BookingsPage = () => {
         setLoading(true);
         
     
-        // const bookingDetails = await AuthService.findCustomerBookingDetails(currentPage, itemsPerPage);
-        // console.log("bookingDetails",bookingDetails)
-        // setBookingData(bookingDetails);
+     
         const data = await AuthService.findCustomerBookingDetails(currentPage, itemsPerPage);
         console.log('Bookings data:', data);
         setBookingData(data.bookings || []);

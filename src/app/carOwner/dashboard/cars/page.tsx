@@ -129,58 +129,7 @@ const YourCarsPage: React.FC = () => {
     }
   };
 
-  // const handleAvailabilityClick = async (carId: string) => {
-  //   const car = cars.find(car => car._id === carId || car.id === carId);
-  //   if (car) {
-  //     try {
-  //       const bookingsResponse = await OwnerAuthService.getBookingsForCar(carId);
-  //       console.log("bookingsResponse", bookingsResponse)
-  //       setBookings(prev => ({
-  //         ...prev,
-  //         [carId]: bookingsResponse.data.map((booking: any) => ({
-  //           id: booking._id,
-  //           bookingId: booking.bookingId,
-  //           carId: booking.carId,
-  //           userId: booking.userId,
-  //           carOwnerId: booking.carOwnerId,
-  //           startDate: booking.startDate,
-  //           endDate: booking.endDate,
-  //           totalPrice: booking.totalPrice,
-  //           status: booking.status,
-  //           paymentIntentId: booking.paymentIntentId,
-  //           paymentMethod: booking.paymentMethod,
-  //           cancellationFee: booking.cancellationFee,
-  //           refundedAmount: booking.refundedAmount,
-  //           cancelledAt: booking.cancelledAt,
-  //           createdAt: booking.createdAt,
-  //           updatedAt: booking.updatedAt,
-  //         })),
-  //       }));
-  //       setSelectedCar(car);
-  //       setIsAvailabilityModalOpen(true);
-  //     } catch (error) {
-  //       console.error('Error fetching bookings:', error);
-  //       setError('Failed to load bookings');
-  //     }
-  //   }
-  // };
 
-  // const handleUpdateAvailability = async (carId: string | undefined, newUnavailableDates: string[]) => {
-  //   if (!carId) return;
-  //   try {
-  //     await OwnerAuthService.updateCarAvailability(carId, { unavailableDates: newUnavailableDates });
-  //     setCars(prevCars =>
-  //       prevCars.map(car =>
-  //         (car._id || car.id) === carId ? { ...car, unavailableDates: newUnavailableDates } : car
-  //       )
-  //     );
-  //     setIsAvailabilityModalOpen(false);
-  //     setSelectedCar(null);
-  //   } catch (error) {
-  //     console.error('Error updating availability:', error);
-  //     setError('Failed to update availability');
-  //   }
-  // };
 const handleUpdateAvailability = async (carId: string | undefined, newUnavailableDates: string[]) => {
   if (!carId) return;
   try {
