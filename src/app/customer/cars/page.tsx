@@ -24,6 +24,8 @@ const AllCarsPage: React.FC = () => {
   const [location, setLocation] = useState<string>('');
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const [loadingLocation, setLoadingLocation] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const itemsPerPage = 5; 
 
   useEffect(() => {
@@ -37,6 +39,8 @@ const AllCarsPage: React.FC = () => {
           maxPrice: priceRange.max,
           carType,
           location,
+          startDate,
+          endDate,
           
         //   latitude: coordinates?.lat,
         //   longitude: coordinates?.lng,
@@ -58,7 +62,7 @@ const AllCarsPage: React.FC = () => {
       }
     };
     fetchCars();
-  }, [currentPage, searchTerm, priceRange,carType,location]);
+  }, [currentPage, searchTerm, priceRange,carType,location,startDate,endDate]);
 
 //   useEffect(() => {
 //     if (typeof window !== 'undefined') {
@@ -197,6 +201,31 @@ const AllCarsPage: React.FC = () => {
     className="px-4 py-2 border rounded w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
 </div>
+
+<div className="flex gap-4">
+  {/* Start Date */}
+  <input
+    type="date"
+    className="px-4 py-2 border rounded w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    value={startDate}
+    onChange={(e) => {
+      setStartDate(e.target.value);
+      setCurrentPage(1);
+    }}
+  />
+
+  {/* End Date */}
+  <input
+    type="date"
+    className="px-4 py-2 border rounded w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    value={endDate}
+    onChange={(e) => {
+      setEndDate(e.target.value);
+      setCurrentPage(1);
+    }}
+  />
+</div>
+
 
             {/* <div className="relative w-full md:w-64">
               <input

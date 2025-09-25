@@ -78,10 +78,10 @@ const BookingsPage = () => {
     }
   };
 
-  const handleContactOwner = (ownerContact: string) => {
+  const handleContactOwner = (bookingId: string|undefined) => {
     toast.success(`Connecting you with the owner`);
-    
-    // router.push(`/chats/${bookingId}`);
+    if(bookingId){
+     router.push(`/bookings/${bookingId}/chat`);}
   };
 
   useEffect(() => {
@@ -230,7 +230,7 @@ const BookingsPage = () => {
                       <div className="flex items-start gap-2 mt-2">
   {status !== "cancelled" && (
     <button
-      onClick={() => handleContactOwner(booking.ownerContact)}
+      onClick={() => handleContactOwner(booking.bookingId)}
       className="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition"
     >
       Chat with Owner

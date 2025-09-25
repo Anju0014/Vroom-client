@@ -66,7 +66,9 @@ export const AuthService = {
     minPrice?: number;
     maxPrice?: number;
     carType?:string;
-     location?:string;
+    location?:string;
+    startDate?:string;
+    endDate?:string;
     
   }) {
     try {
@@ -79,6 +81,8 @@ export const AuthService = {
           maxPrice: filters.maxPrice,
           carType:filters.carType,
           location:filters.location,
+          startDate:filters.startDate,
+          endDate:filters.endDate
         },
       });
       console.log('getAllCars response:', response.data);

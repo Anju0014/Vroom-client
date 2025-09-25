@@ -16,7 +16,10 @@ export async function middleware(req: NextRequest) {
     '/api/auth/login',
     '/',
     '/customer/cars',
-
+    '/customer/tracking/:bookingId([0-9a-fA-F]{24})',
+    '/forgotpassword/newPassword',
+    '/otp',
+    '/signup',
     '/cars/:carId([0-9a-fA-F]{24})', // Dynamic route for /customer/[carId]
   ];
 

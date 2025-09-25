@@ -583,44 +583,6 @@ const DateSelectionPage = () => {
     fetchData();
   }, [carId]);
 
-  
-  // useEffect(() => {
-  //   const checkAuthAndBlockStatus = async () => {
-  //     const isNextAuthUser = status === 'authenticated';
-  //     const isZustandUser = !!user && !!accessToken;
-
-  //     const isAuthenticated = isNextAuthUser || isZustandUser;
-
-  //     if (!isAuthenticated) {
-  //       setShowLoginModal(true);
-  //       return;
-  //     }
-
-  //     // Check block status if authenticated
-  //     if (isZustandUser && user?.id && accessToken) {
-  //       try {
-  //         const response = await fetch(`/api/auth/check-block-status/${user.id}`, {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //           },
-  //         });
-  //         const data = await response.json();
-  //         if (data.isBlocked) {
-  //           toast.error('Your account has been blocked.');
-  //           // Clear auth state
-  //           useAuthStore.getState().logout();
-  //           router.replace('/');
-  //         }
-  //       } catch (error) {
-  //         console.error('Error checking block status:', error);
-  //         toast.error('Failed to verify account status. Please log in again.');
-  //         router.replace('/login');
-  //       }
-  //     }
-  //   };
-
-  //   checkAuthAndBlockStatus();
-  // }, [status, user, accessToken, router]);
 
   const getTomorrow = () => {
     const tomorrow = new Date();
@@ -743,28 +705,6 @@ const DateSelectionPage = () => {
       return;
     }
 
-    // Re-check block status before proceeding
-    // if (user?.id && accessToken) {
-    //   try {
-    //     const response = await fetch(`/api/auth/check-block-status/${user.id}`, {
-    //       headers: {
-    //         Authorization: `Bearer ${accessToken}`,
-    //       },
-    //     });
-    //     const data = await response.json();
-    //     if (data.isBlocked) {
-    //       toast.error('Your account has been blocked.');
-    //       useAuthStore.getState().logout();
-    //       router.replace('/');
-    //       return;
-    //     }
-    //   } catch (error) {
-    //     console.error('Error checking block status:', error);
-    //     toast.error('Failed to verify account status. Please log in again.');
-    //     router.replace('/login');
-    //     return;
-    //   }
-    // }
 
     if (checkAvailability()) {
       setCurrentStep(3);

@@ -1,6 +1,6 @@
 "use client"
 
-import ForgotPassword from "@/components/Forgotpassword";
+import ForgotPassword from "@/components/forgotPassword";
 
 
 const Forgot=()=>{

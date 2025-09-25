@@ -130,7 +130,25 @@ getActiveBookingForCar:async(carId:string):Promise<Booking>=>{
     ...bookingData,
     id: bookingData?._id, 
   };
+},
+
+cancelBooking:async (bookingId: string) =>{
+  try {
+    console.log('Cancelling booking:', bookingId);
+    const response = await carOwnerApi.patch(`/bookings/${bookingId}/cancel`);
+    console.log('Booking cancelled:', response.data);
+
+    if (!response.data.success) {
+      throw new Error('Invalid response: success not found');
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Cancel booking API error:', error.response?.data || error.message);
+    throw new Error(`Failed to cancel booking: ${error.response?.data?.error || error.message}`);
+  }
 }
+  
 
 
 }

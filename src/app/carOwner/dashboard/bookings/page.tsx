@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { OwnerAuthService } from '@/services/carOwner/authService';
 import Pagination from '@/components/pagination';
+import toast from 'react-hot-toast';
 
 // Update TypeScript interfaces to match your API response structure
 interface User {
@@ -71,6 +72,32 @@ export default function CarOwnerDashboard() {
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
+    }
+  };
+
+  const canCancelBooking = (startDate: string, status: string) => {
+  if (status !== "confirmed") return false;
+  const now = new Date();
+  const start = new Date(startDate);
+  
+  const diffTime = start.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays >= 1;
+};
+
+
+const handleCancelBooking = async (bookingId: string) => {
+    try {
+        console.log("here at start of cancel")
+      await OwnerAuthService.cancelBooking(bookingId);
+      toast.success("Booking cancelled successfully");
+      setBookings((prev) =>
+        prev.map((b) => (b._id === bookingId ? { ...b, status: "cancelled" } : b))
+      );
+    } catch (err) {
+      console.error("Cancel error", err);
+      toast.error("Failed to cancel booking");
     }
   };
 
@@ -144,7 +171,7 @@ export default function CarOwnerDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {bookings.map(booking => {
             const timeStatus = getBookingTimeStatus(booking);
-            
+            const isAllowedToCancel = canCancelBooking(booking.startDate, status);
          
             let statusColors = '';
             let statusText = '';
@@ -231,6 +258,7 @@ export default function CarOwnerDashboard() {
                       Chat with Customer
                     </button>
                     
+                    
                       {/* <button className="bg-white border border-red-500 hover:bg-red-50 text-red-500 px-3 py-1 rounded text-sm flex-1">
                         Cancel
                      </button>
@@ -238,6 +266,17 @@ export default function CarOwnerDashboard() {
                     
                   </div>
                    )}
+                   {isAllowedToCancel && (
+    <div className="flex flex-col">
+      <button
+        onClick={() => handleCancelBooking(booking._id!)}
+        className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
+      >
+        Cancel
+      </button>
+      <p className="text-xs text-gray-600 mt-1">Cancellation cost included</p>
+    </div>
+  )}
                 </div>
               </div>
             );

@@ -92,6 +92,19 @@ updateBlockStatus: async (userId: string, status: number, userType: "customer" |
   }
 },
 
+updateCarBlockStatus: async (carId: string, status: number) => {
+  try {
+    const endpoint = `/admin/cars/updateblockstatus/${carId}`;
+
+      console.log(status)
+    const response = await adminApi.patch(endpoint, { status }); 
+    console.log(response)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user status:", error);
+    throw new Error("Failed to update user status");
+  }
+},
 updateUserStatus: async (userId: string, status: number, userType: "customer" | "owner") => {
   try {
     const endpoint = userType === "customer"

@@ -6,6 +6,7 @@ export interface Car {
   fuelType?: string;
   rcBookNo?: string;
   expectedWage: string;
+
   location: {
     coordinates: {
         lat: number;
@@ -17,6 +18,7 @@ export interface Car {
   make?: string;
   carModel?: string;
   verifyStatus: number;
+  blockStatus:number;
   images: string[];
   videos?: string[];
   owner:{

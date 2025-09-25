@@ -36,10 +36,9 @@ const BookingsPage: React.FC = () => {
   const [clickLocked, setClickLocked] = useState(false);
   const itemsPerPage = 5;
 
-  // Debounce search term to avoid too many API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  // Reset to first page when search changes
+
   useEffect(() => {
     setCurrentPage(1);
   }, [debouncedSearchTerm]);
@@ -85,7 +84,7 @@ const BookingsPage: React.FC = () => {
     }
   }, [itemsPerPage]);
 
-  // Fetch data when page or search term changes
+  
   useEffect(() => {
     fetchBookings(currentPage, debouncedSearchTerm);
   }, [currentPage, debouncedSearchTerm, fetchBookings]);
