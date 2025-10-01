@@ -11,7 +11,7 @@ export default function BookingChatPage({ params }: { params: { bookingId: strin
   return (
     <div>
       <h1>Chat with Owner</h1>
-      <ChatBox roomId={params.bookingId} currentUser={currentUser} />
+      <ChatBox roomId={params.bookingId} currentUser={currentUser} role='customer' />
     </div>
   );
 }

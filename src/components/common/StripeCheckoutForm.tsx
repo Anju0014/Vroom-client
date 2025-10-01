@@ -9,7 +9,7 @@ import {
   useStripe,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { createPaymentIntent } from '@/services/common/stripeService';
+import { StripeService} from '@/services/common/stripeService';
 // import { confirmBooking, cancelBooking } from '@/ser/bookingService'; // New services
 import { AuthService } from '@/services/customer/authService';
 
@@ -303,7 +303,7 @@ useEffect(() => {
     const initPayment = async () => {
       try {
         setLoading(true);
-        const data = await createPaymentIntent({
+        const data = await StripeService.createPaymentIntent({
           carId,
           startDate,
           endDate,

@@ -21,7 +21,7 @@ export default function OwnerChatPage() {
   return (
     <div>
       <h1>Chat with Customer</h1>
-      <ChatBox roomId={bookingId} currentUser={currentUser} />
+      <ChatBox roomId={bookingId} currentUser={currentUser} role='carOwner' />
     </div>
   );
 }
