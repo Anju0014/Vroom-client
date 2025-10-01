@@ -192,7 +192,10 @@ const LandingPage = () => {
   // Search function
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/search?location=${encodeURIComponent(location)}&startDate=${startDate}&endDate=${endDate}`);
+      router.push(
+    `/customer/cars?location=${encodeURIComponent(location)}&startDate=${startDate}&endDate=${endDate}`
+  );
+  
   };
 
   // Show loading or hidden state during hydration or when not authenticated

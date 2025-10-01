@@ -10,9 +10,11 @@ import { Car } from '@/types/authTypes';
 import { AuthService } from '@/services/customer/authService'; // Adjust path
 import { getReverseGeocode } from '@/services/common/mapService'
 import Pagination from '@/components/pagination';
+import { useSearchParams } from 'next/navigation';
 
 const AllCarsPage: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [cars, setCars] = useState<Car[]>([]);
   const [totalCars, setTotalCars] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -24,11 +26,24 @@ const AllCarsPage: React.FC = () => {
   const [location, setLocation] = useState<string>('');
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const [loadingLocation, setLoadingLocation] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const itemsPerPage = 5; 
+  const [filtersLoaded, setFiltersLoaded] = useState(false);
 
   useEffect(() => {
+    const loc = searchParams.get('location') || '';
+    const start = searchParams.get('startDate') || '';
+    const end = searchParams.get('endDate') || '';
+
+    setLocation(loc);
+    setStartDate(start);
+    setEndDate(end);
+    setFiltersLoaded(true)
+  }, [searchParams]);
+
+  useEffect(() => {
+     if (!filtersLoaded) return;
     const fetchCars = async () => {
       try {
         setLoading(true);
@@ -62,31 +77,7 @@ const AllCarsPage: React.FC = () => {
       }
     };
     fetchCars();
-  }, [currentPage, searchTerm, priceRange,carType,location,startDate,endDate]);
-
-//   useEffect(() => {
-//     if (typeof window !== 'undefined') {
-//       setLoadingLocation(true);
-//       navigator.geolocation.getCurrentPosition(
-//         async (pos) => {
-//           const { latitude, longitude } = pos.coords;
-//           setCoordinates({ lat: latitude, lng: longitude });
-//           try {
-//             const data = await getReverseGeocode(latitude, longitude);
-//             setLocation(data?.features?.[0]?.place_name || '');
-//           } catch (error) {
-//             console.error('Error getting address:', error);
-//           } finally {
-//             setLoadingLocation(false);
-//           }
-//         },
-//         (err) => {
-//           console.error('Geolocation error:', err);
-//           setLoadingLocation(false);
-//         }
-//       );
-//     }
-//   }, []);
+  }, [currentPage, searchTerm, priceRange,carType,location,startDate,endDate,filtersLoaded]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= Math.ceil(totalCars / itemsPerPage)) {
@@ -106,27 +97,6 @@ const AllCarsPage: React.FC = () => {
     }));
     setCurrentPage(1);
   };
-
-//   const handleLocationChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const newLocation = e.target.value;
-//     setLocation(newLocation);
-//     if (newLocation) {
-//       try {
-//         setLoadingLocation(true);
-//         const data = await getReverseGeocode(0, 0, newLocation); // Adjust to use forward geocoding
-//         const { lat, lng } = data?.features?.[0]?.center || {};
-//         setCoordinates({ lat, lng });
-//       } catch (error) {
-//         console.error('Error geocoding location:', error);
-//       } finally {
-//         setLoadingLocation(false);
-//       }
-//     } else {
-//       setCoordinates(null);
-//     }
-//     setCurrentPage(1);
-//   };
-
 
 
   return (
