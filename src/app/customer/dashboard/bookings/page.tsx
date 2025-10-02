@@ -25,6 +25,7 @@ interface Booking {
   pickupLocation?: string;
   carNumber?: string;
   brand?: string;
+  receiptUrl?:string;
 }
 
 const getBookingStatus = (startDate: string, endDate: string, status: string) => {
@@ -235,6 +236,17 @@ const BookingsPage = () => {
     >
       Chat with Owner
     </button>
+  )}
+
+  {booking.receiptUrl && (
+    <a
+      href={booking.receiptUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
+    >
+      Download Receipt
+    </a>
   )}
 
   {isAllowedToCancel && (

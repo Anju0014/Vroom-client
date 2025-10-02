@@ -30,7 +30,8 @@ interface Booking {
   endDate: string;
   status: string;
   totalPrice: number;
-  bookingId:string
+  bookingId:string;
+  receiptUrl?:string;
 }
 
 export default function CarOwnerDashboard() {
@@ -75,17 +76,27 @@ export default function CarOwnerDashboard() {
     }
   };
 
-  const canCancelBooking = (startDate: string, status: string) => {
-  if (status !== "confirmed") return false;
+//   const canCancelBooking = (startDate: string, status: string) => {
+//   if (status !== "confirmed") return false;
+//   const now = new Date();
+//   const start = new Date(startDate);
+  
+//   const diffTime = start.getTime() - now.getTime();
+//   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+//   return diffDays >= 1;
+// };
+
+const canCancelBooking = (startDate: string, bookingStatus: string) => {
+  if (bookingStatus.toLowerCase() !== "confirmed") return false;
   const now = new Date();
   const start = new Date(startDate);
   
   const diffTime = start.getTime() - now.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = diffTime / (1000 * 60 * 60 * 24);
   
   return diffDays >= 1;
 };
-
 
 const handleCancelBooking = async (bookingId: string) => {
     try {
@@ -171,7 +182,7 @@ const handleCancelBooking = async (bookingId: string) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {bookings.map(booking => {
             const timeStatus = getBookingTimeStatus(booking);
-            const isAllowedToCancel = canCancelBooking(booking.startDate, status);
+            const isAllowedToCancel = canCancelBooking(booking.startDate, booking.status);
          
             let statusColors = '';
             let statusText = '';
@@ -247,6 +258,17 @@ const handleCancelBooking = async (bookingId: string) => {
                         <p className="font-medium">
                           {format(new Date(booking.endDate), 'MMM d, yyyy')}
                         </p>
+
+                         {booking.receiptUrl && (
+    <a
+      href={booking.receiptUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
+    >
+      Download Receipt
+    </a>
+  )}
                       </div>
                     </div>
                   </div>
@@ -259,14 +281,10 @@ const handleCancelBooking = async (bookingId: string) => {
                     </button>
                     
                     
-                      {/* <button className="bg-white border border-red-500 hover:bg-red-50 text-red-500 px-3 py-1 rounded text-sm flex-1">
-                        Cancel
-                     </button>
-                    */}
                     
-                  </div>
-                   )}
-                   {isAllowedToCancel && (
+
+
+                                  {isAllowedToCancel && (
     <div className="flex flex-col">
       <button
         onClick={() => handleCancelBooking(booking._id!)}
@@ -274,9 +292,14 @@ const handleCancelBooking = async (bookingId: string) => {
       >
         Cancel
       </button>
-      <p className="text-xs text-gray-600 mt-1">Cancellation cost included</p>
+      
     </div>
+    
   )}
+                    
+                  </div>
+                   )}
+      
                 </div>
               </div>
             );

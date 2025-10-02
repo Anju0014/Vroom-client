@@ -99,9 +99,9 @@ export const API_ROUTES = {
     createPaymentIntent: "api/stripe/create-payment-intent",
   },
   tracking: {
-    updateLocation: "/tracking/update",
+    updateLocation: "tracking/update",
   },
   s3: {
-    generatePresignedUrl: "/generatePresignedUrl",
+    generatePresignedUrl: "api/s3/generatePresignedUrl",
   },
 };

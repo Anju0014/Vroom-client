@@ -73,6 +73,7 @@ interface ChatMessage {
   _id: string;
   roomId: string;
   senderId: string;
+  senderName:string;
   message: string;
   timestamp: string;
 }
@@ -178,7 +179,7 @@ export default function ChatBox({
                         isCurrentUser ? "text-blue-100" : "text-blue-600"
                       }`}
                     >
-                      {isCurrentUser ? "You" : m.senderId}
+                      {isCurrentUser ? "You" : m.senderName}
                     </span>
                     <span
                       className={`text-xs ${
