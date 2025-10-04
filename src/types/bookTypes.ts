@@ -8,6 +8,7 @@ export interface Location {
   export interface Car {
     _id: string;
     carName: string;
+    owner?:string
     brand: string;
     expectedWage: string;
     location: Location;
@@ -18,6 +19,9 @@ export interface Location {
     carId: string;
     startDate: Date;
     endDate: Date;
+    status:string;
+    lockedUntil:Date;
+
   }
   
   export interface DateRange {

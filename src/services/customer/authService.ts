@@ -151,6 +151,15 @@ export const AuthService = {
     console.log("getBookings response:", response.data);
     return response.data;
   },
+  checkBookingAvailability: async (carId: string,startDate: string,endDate: string) => {
+  const response = await customerApi.get(
+    API_ROUTES.customer.checkBookingAvailability,
+    {
+      params: { carId, startDate, endDate },
+    }
+  );
+  return response.data;
+},
 
   createPendingBooking: async (data: BookingData): Promise<BookingResponse> => {
     try {
@@ -171,6 +180,13 @@ export const AuthService = {
       );
     }
   },
+   updatePendingBooking: async (bookingId: string, data: { status: string }) => {
+  const response = await customerApi.patch(
+    API_ROUTES.customer.updatePendingBooking(bookingId),
+    data
+  );
+  return response.data.data;
+},
 
   confirmBooking: async (
     bookingId: string,

@@ -1,15 +1,13 @@
-
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { format, differenceInCalendarDays } from 'date-fns';
-// import { findCarDetails } from '@/services/common/carDetails';
 import { AuthService } from '@/services/customer/authService';
 import { useAuthStore } from '@/store/customer/authStore';
 import StripeCheckoutForm from '@/components/common/StripeCheckoutForm';
+import Stepper from '@/components/common/StepperBooking';
 
 interface Car {
   _id: string;
@@ -23,74 +21,69 @@ const PaymentPage = () => {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
-
   const carId = params?.carId as string;
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
   const totalPrice = searchParams.get('totalPrice');
+  const bookingId = searchParams.get('bookingId');
 
   const { data: session, status } = useSession();
   const { user, accessToken } = useAuthStore();
 
   const [car, setCar] = useState<Car | null>(null);
-  const [bookingId, setBookingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
-  
 
   const isNextAuthUser = status === 'authenticated';
   const isZustandUser = !!user && !!accessToken;
   const isAuthenticated = isNextAuthUser || isZustandUser;
 
-    if (!user) {
-        return;
-    }
   useEffect(() => {
+    
     if (!isAuthenticated) {
       router.push(`/bookings/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
       return;
     }
-  
 
-    let isMounted = true; 
-    const initializeBooking = async () => {
+    
+    if (!carId || !startDate || !endDate || !totalPrice) {
+      setError('Incomplete booking data');
+      setLoading(false);
+      return;
+    }
+
+    
+    if (!session?.user?.email && !user?.email) {
+      setError('User email is missing');
+      setLoading(false);
+      return;
+    }
+
+    
+    if (!bookingId) {
+      setError('Booking ID is missing');
+      setLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+
+    const findPendingBooking = async () => {
       try {
-        console.log("user",user);
-        // console.log("user._id checking for token change?",user?._id)
-        console.log("user.id normal ",user.id)
+        console.log("user", user);
+        console.log("user.id normal ", user?.id);
         setLoading(true);
-  
-      
+
         const carData = await AuthService.findCarDetails(carId);
         if (!isMounted) return;
-  
+
         setCar(carData);
-  
-        if (!startDate || !endDate) {
-          throw new Error('Start date or end date is missing');
-        }
-        if (!totalPrice || isNaN(parseInt(totalPrice))) {
-          throw new Error('Invalid or missing totalPrice');
-        }
-        if (!session?.user?.id && !user.id) {
+
+        if (!session?.user?.id && !user?.id) {
           throw new Error('User ID is missing');
         }
-  
-        // Create pending booking
-        const bookingData = {
-          carId,
-          userId: session?.user?.id || user.id,
-          carOwnerId: carData.owner,
-          startDate,
-          endDate,
-          totalPrice: parseInt(totalPrice),
-        };
-  
-        const bookingResponse = await AuthService.createPendingBooking(bookingData);
-        if (!isMounted) return;
-  
-        setBookingId(bookingResponse.bookingId);
+
       } catch (err: any) {
         console.error('Error initializing booking:', err);
         if (isMounted) {
@@ -102,18 +95,14 @@ const PaymentPage = () => {
         }
       }
     };
-  
-    if (carId && startDate && endDate && totalPrice && (session?.user?.email || user.email)) {
-      initializeBooking();
-    } else {
-      setError('Incomplete booking data or missing email');
-      setLoading(false);
-    }
-  
+
+    findPendingBooking();
+
     return () => {
-      isMounted = false; 
+      isMounted = false;
     };
-  }, [carId, startDate, endDate, totalPrice, isAuthenticated, session?.user?.email, user.email]);
+  }, [carId, startDate, endDate, totalPrice, bookingId, isAuthenticated, session?.user?.email, session?.user?.id, user?.email, user?.id, router]);
+
   const handleBack = () => {
     router.push(`/bookings/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
   };
@@ -161,45 +150,7 @@ const PaymentPage = () => {
     <div className="bg-gradient-to-b from-blue-200 to-yellow-200 min-h-screen py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="mb-8">
-          <ol className="flex items-center justify-between w-full text-sm font-medium text-gray-500">
-            {steps.map((step, idx) => (
-              <li
-                key={step}
-                className={`flex items-center ${
-                  idx <= currentStep ? 'text-indigo-600' : ''
-                } ${idx < steps.length - 1 ? 'flex-1' : ''}`}
-              >
-                <span className="flex items-center">
-                  <span
-                    className={`w-6 h-6 flex items-center justify-center rounded-full mr-2 ${
-                      idx <= currentStep ? 'bg-indigo-600 text-white' : 'bg-gray-200'
-                    }`}
-                  >
-                    {idx < currentStep ? (
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M6.293 13.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" />
-                      </svg>
-                    ) : (
-                      idx + 1
-                    )}
-                  </span>
-                  {step}
-                </span>
-                {idx < steps.length - 1 && (
-                  <div className="flex-1 h-1 bg-gray-200 mx-4">
-                    <div
-                      className={`h-full ${idx < currentStep ? 'bg-indigo-600' : ''}`}
-                    ></div>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
+          <Stepper steps={steps} currentStep={currentStep} />
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
@@ -249,11 +200,11 @@ const PaymentPage = () => {
                 startDate={startDate}
                 endDate={endDate}
                 totalPrice={parseInt(totalPrice)}
-                customerEmail={session?.user?.email || user.email}
-                userId={session?.user?.id || user.id}
+                customerEmail={session?.user?.email || user?.email || ''}
+                userId={session?.user?.id || user?.id || ''}
                 carOwnerId={car.ownerId}
                 dailyRate={car.expectedWage}
-                bookingId={bookingId} // Pass bookingId
+                bookingId={bookingId}
               />
             </div>
           </div>
@@ -264,5 +215,3 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
-
-

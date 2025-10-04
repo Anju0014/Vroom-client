@@ -31,6 +31,9 @@ interface Booking {
   status: string;
   totalPrice: number;
   bookingId:string
+  receiptUrl?:string;
+
+
 }
 
 export default function CarOwnerDashboard() {
@@ -248,6 +251,18 @@ const handleCancelBooking = async (bookingId: string) => {
                           {format(new Date(booking.endDate), 'MMM d, yyyy')}
                         </p>
                       </div>
+                      {booking.receiptUrl && (
+    <a
+      href={booking.receiptUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
+    >
+      Download Receipt
+    </a>
+  )}
+
+
                     </div>
                   </div>
                   

@@ -85,7 +85,9 @@ export const API_ROUTES = {
     featuredCarList: "/car/featured",
     findCarDetails: (carId: string) => `/car/getCarDetails/${carId}`,
     findBookingDetails: (carId: string) => `/car/getBookingDetails/${carId}`,
+    checkBookingAvailability:"/bookings/checkBookingAvailability",
     findCustomerBookingDetails: "/getCustomerBookingDetails",
+    updatePendingBooking:(bookingId:string)=>`/bookings/${bookingId}/updatePendingBooking`,
     createPendingBooking: "/bookings/create",
     confirmBooking: (bookingId: string) => `/bookings/${bookingId}/confirm`,
     failBooking: (bookingId: string) => `/bookings/${bookingId}/fail`,
@@ -99,9 +101,9 @@ export const API_ROUTES = {
     createPaymentIntent: "api/stripe/create-payment-intent",
   },
   tracking: {
-    updateLocation: "/tracking/update",
+    updateLocation: "tracking/update",
   },
   s3: {
-    generatePresignedUrl: "/generatePresignedUrl",
+    generatePresignedUrl: "api/s3/generatePresignedUrl",
   },
 };

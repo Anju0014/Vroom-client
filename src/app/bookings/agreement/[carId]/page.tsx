@@ -1,13 +1,10 @@
 
-
-
-
 "use client"
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { format, differenceInCalendarDays } from 'date-fns';
-// import { findCarDetails } from '@/services/common/carDetails';
 import { AuthService } from '@/services/customer/authService';
+import Stepper from '@/components/common/StepperBooking';
+import toast from 'react-hot-toast';
 
 interface Car {
   _id: string;
@@ -15,22 +12,22 @@ interface Car {
   brand: string;
   expectedWage: string;
 }
-
 const AgreementPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // const carId = searchParams.get('carId');
   const params = useParams();
-   const carId = params?.carId as string;
+  const carId = params?.carId as string;
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
   const totalPrice = searchParams.get('totalPrice');
+ const bookingId = searchParams.get('bookingId');
 
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAgreed, setIsAgreed] = useState(false);
   const [showModal, setShowModal] = useState(true);
+  const [currentStep, setCurrentStep] = useState(2);
 
   useEffect(() => {
     if (!carId) return;
@@ -51,106 +48,75 @@ const AgreementPage = () => {
     fetchCarData();
   }, [carId]);
 
-  const handleAgree = () => {
+const handleAgree = async () => {
+  if (!bookingId) return; 
+  try {
     setIsAgreed(true);
-    setShowModal(false);
+    await AuthService.updatePendingBooking(bookingId, { status: "agreementAccepted" });
     router.push(
-      `/bookings/payment/${carId}?startDate=${startDate}&endDate=${endDate}&totalPrice=${totalPrice}`
+      `/bookings/payment/${carId}?startDate=${startDate}&endDate=${endDate}&totalPrice=${totalPrice}&bookingId=${bookingId}`
     );
-  };
+  } catch (err) {
+    console.error("Failed to update booking:", err);
+    toast.error("Could not save your agreement. Please try again.");
+  }
+};
 
   const handleDisagree = () => {
     setShowModal(false);
-    router.push(`/booking/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
+    router.push(`/bookings/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
   };
 
   if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
   if (error) return <div className="text-red-500 text-center p-8">{error}</div>;
   if (!car) return <div className="text-center p-8">Car not found</div>;
 
+  const steps = ['Check Availability', 'Select Dates', 'Agreement', 'Payment'];
   return (
-    <div className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+    <div className="bg-gradient-to-b from-blue-200 to-yellow-200 min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        {/* Stepper */}
-        <div className="mb-8">
-          <ol className="flex items-center w-full text-sm font-medium text-center text-gray-500 sm:text-base">
-            <li className="flex items-center text-indigo-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-indigo-100 after:border-1 after:hidden sm:after:inline-block sm:after:mx-6">
-              <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                </svg>
-                Check Availability
-              </span>
-            </li>
-            <li className="flex items-center text-indigo-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-indigo-100 after:border-1 after:hidden sm:after:inline-block sm:after:mx-6">
-              <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                </svg>
-                Select Dates
-              </span>
-            </li>
-            <li className="flex items-center text-indigo-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-indigo-100 after:border-1 after:hidden sm:after:inline-block sm:after:mx-6">
-              <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                </svg>
-                Agreement
-              </span>
-            </li>
-            <li className="flex items-center">
-              Payment
-            </li>
-          </ol>
+        <div className="mb-8 relative z-50">
+        <Stepper steps={steps} currentStep={currentStep} />
         </div>
-
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-2xl font-bold text-indigo-700 mb-6">Booking Agreement for {car.carName}</h2>
-        
-
-          {showModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl p-8 max-w-lg w-full">
-                <h3 className="text-2xl font-bold text-indigo-700 mb-4">Rental Agreement</h3>
-                <div className="max-h-96 overflow-y-auto mb-6">
-                  <p className="text-gray-700">
-                    Please read and agree to the following terms and conditions for renting the vehicle:
-                    <br /><br />
-                    1. The vehicle must be returned in the same condition as received, excluding normal wear and tear.
-                    <br />
-                    2. The renter is responsible for any damage to the vehicle during the rental period.
-                    <br />
-                    3. The vehicle must not be used for illegal activities or driven by unauthorized drivers.
-                    <br />
-                    4. The rental period is as specified above, and late returns may incur additional charges.
-                    <br />
-                    5. The renter agrees to pay the total price as displayed above.
-                    <br /><br />
-                    By proceeding, you confirm that you have read, understood, and agree to these terms.
-                  </p>
-                </div>
-                <div className="flex justify-between">
-                  <button
-                    onClick={handleDisagree}
-                    className="py-2 px-4 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300"
-                  >
-                    Disagree
-                  </button>
-                  <button
-                    onClick={handleAgree}
-                    className="py-2 px-4 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
-                  >
-                    Agree
-                  </button>
-                </div>
+          <div className=  "flex items-center  justify-center" >
+            <div className="bg-white rounded-xl p-8 max-w-xl w-full mx-4">
+              <h2 className="text-2xl font-bold text-indigo-700 mb-6">Rental Agreement for {car.carName}</h2>
+              <div className="max-h-96 overflow-y-auto mb-6 text-sm">
+                <p className="text-gray-700">
+                  Please read and agree to the following terms and conditions for renting the vehicle:
+                  <br /><br />
+                  1. The vehicle must be returned in the same condition as received, excluding normal wear and tear.
+                  <br />
+                  2. The renter is responsible for any damage to the vehicle during the rental period.
+                  <br />
+                  3. The vehicle must not be used for illegal activities or driven by unauthorized drivers.
+                  <br />
+                  4. The rental period is as specified above, and late returns may incur additional charges.
+                  <br />
+                  5. The renter agrees to pay the total price as displayed above.
+                  <br /><br />
+                  By proceeding, you confirm that you have read, understood, and agree to these terms.
+                </p>
+              </div>
+              <div className="flex justify-between gap-4">
+                <button
+                  onClick={handleDisagree}
+                  className="py-2 px-6 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
+                >
+                  Disagree
+                </button>
+                <button
+                  onClick={handleAgree}
+                  className="py-2 px-6 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+                >
+                  Agree & Continue
+                </button>
               </div>
             </div>
-          )}
-        </div>
+          </div>
       </div>
     </div>
   );
 };
 
 export default AgreementPage;
-
