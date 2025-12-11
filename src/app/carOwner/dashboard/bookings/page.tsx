@@ -31,7 +31,7 @@ interface Booking {
   status: string;
   totalPrice: number;
   bookingId:string
-  receiptUrl?:string;
+  receiptKey?:string;
 
 
 }
@@ -78,6 +78,17 @@ export default function CarOwnerDashboard() {
     }
   };
 
+  const handleDownloadReceipt = async (bookingId: string) => {
+  try {
+    console.log("booking,,,,",bookingId)
+    const res = await OwnerAuthService.getReceiptUrl(bookingId);
+     const url = res.url;
+    console.log("url...",url)
+    window.open(url, "_blank");
+  } catch (error) {
+    toast.error("Unable to download receipt");
+  }
+};
   const canCancelBooking = (startDate: string, status: string) => {
   if (status !== "confirmed") return false;
   const now = new Date();
@@ -251,16 +262,12 @@ const handleCancelBooking = async (bookingId: string) => {
                           {format(new Date(booking.endDate), 'MMM d, yyyy')}
                         </p>
                       </div>
-                      {booking.receiptUrl && (
-    <a
-      href={booking.receiptUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
-    >
-      Download Receipt
-    </a>
-  )}
+                     <button
+  onClick={() => handleDownloadReceipt(booking._id)}
+  className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
+>
+  Download Receipt
+</button>
 
 
                     </div>

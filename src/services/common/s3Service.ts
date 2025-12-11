@@ -30,33 +30,68 @@
 // };
 
 
+
+
+
+// import { plainAxios } from "@/code/plainAxios";
+// import { API_ROUTES } from "@/code/constants/apiRoutes";
+
+// const BUCKET_NAME = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
+// const REGION = process.env.NEXT_PUBLIC_S3_REGION;
+
+// const api = plainAxios; // Use plainAxios if public
+
+// export const S3Service = {
+//   async getPresignedUrl(file: File) {
+//     const response = await api.post(API_ROUTES.s3.generatePresignedUrl, {
+//       fileName: file.name,
+//       fileType: file.type,
+//     });
+//     return response.data;
+//   },
+
+//   async uploadToS3(url: string, file: File) {
+//     await fetch(url, {
+//       method: "PUT",
+//       body: file,
+//       headers: { "Content-Type": file.type },
+//     });
+//   },
+
+//   getPublicUrl(key: string) {
+//     return `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${key}`;
+//   },
+// };
+
+
 import { plainAxios } from "@/code/plainAxios";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
 
-const BUCKET_NAME = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
-const REGION = process.env.NEXT_PUBLIC_S3_REGION;
-
-const api = plainAxios; // Use plainAxios if public
+const api = plainAxios;
 
 export const S3Service = {
-  async getPresignedUrl(file: File) {
-    const response = await api.post(API_ROUTES.s3.generatePresignedUrl, {
+  async getPresignedUploadUrl(file: File) {
+    const res = await api.post(API_ROUTES.s3.presignedUpload, {
       fileName: file.name,
       fileType: file.type,
     });
-    return response.data;
+    return res.data; // { uploadUrl, key }
   },
 
-  async uploadToS3(url: string, file: File) {
-    await fetch(url, {
+  async uploadToS3(uploadUrl: string, file: File) {
+    await fetch(uploadUrl, {
       method: "PUT",
       body: file,
-      headers: { "Content-Type": file.type },
+      headers: {
+        "Content-Type": file.type,
+      },
     });
   },
 
-  getPublicUrl(key: string) {
-    return `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${key}`;
+  async getPresignedViewUrl(key: string) {
+    const res = await api.get(
+      `${API_ROUTES.s3.presignedView}?key=${key}`
+    );
+    return res.data.url;
   },
 };
-
