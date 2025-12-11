@@ -303,8 +303,7 @@ interface FileUploadProps {
   multiple?: boolean;
   maxFiles?: number;
   children?: React.ReactNode;
-  // Add a unique identifier prop
-  uploadId?: string;
+   uploadId?: string;
 }
 
 export default function FileUpload({
@@ -321,7 +320,6 @@ export default function FileUpload({
   const [progress, setProgress] = useState<number[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Generate unique ID for this component instance
   const uniqueId = useId();
   const componentId = uploadId || uniqueId;
 
@@ -372,9 +370,11 @@ export default function FileUpload({
     try {
       for (let i = 0; i < filesToUpload.length; i++) {
         const file = filesToUpload[i];
-        const { url, key } = await S3Service.getPresignedUrl(file);
+        // const { url, key } = await S3Service.getPresignedUrl(file);
+        const { url, key } = await S3Service.getPresignedUploadUrl(file);
         await S3Service.uploadToS3(url, file);
-        const uploadedUrl = S3Service.getPublicUrl(key);
+        // const uploadedUrl = S3Service.getPublicUrl(key);
+        const uploadedUrl =await S3Service.getPresignedViewUrl(key);
         urls.push(uploadedUrl);
         
         progressArray[i] = 100;

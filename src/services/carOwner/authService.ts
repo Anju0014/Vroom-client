@@ -313,6 +313,12 @@ export const OwnerAuthService = {
     };
   },
 
+   getReceiptUrl:async(bookingId: string):Promise<{url:string}>=> {
+    const response = await carOwnerApi.get(API_ROUTES.owner.receiptUrlBooking(bookingId));
+  console.log("resres", response)
+  return response.data;
+  },
+
   cancelBooking: async (bookingId: string) => {
     try {
       console.log("Cancelling booking:", bookingId);

@@ -224,6 +224,7 @@ import { useAuthStore } from '@/store/customer/authStore'
 import { AuthService } from '@/services/customer/authService';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from "next-auth/react";
+import NotificationBell from './common/NotificationBell';
 
 const Header = () => {
     const router = useRouter();
@@ -310,9 +311,11 @@ const Header = () => {
               Become A Host
             </Link>
             
+           
               <div className="flex items-center space-x-4">
                 {accessToken ? (
                   <>
+                   {user?.id && <NotificationBell userId={user.id} />}
                     <Link href="/customer/dashboard/profile" className="text-sm font-medium text-gray-500 hover:text-gray-700">
                       My Profile
                     </Link> 

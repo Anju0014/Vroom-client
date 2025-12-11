@@ -78,6 +78,7 @@ export const API_ROUTES = {
     updateCarAvailability: (carId: string) => `/owner/cars/${carId}/availability`,
     getActiveBookingForCar: (carId: string) => `/owner/activebooking/${carId}`,
     cancelBooking: (bookingId: string) => `/bookings/${bookingId}/cancel`,
+    receiptUrlBooking: (bookingId: string) => `owner/booking/${bookingId}/receipt-url`
   },
   customer: {
     nearByCars: "/car/nearby",
@@ -103,7 +104,16 @@ export const API_ROUTES = {
   tracking: {
     updateLocation: "tracking/update",
   },
-  s3: {
-    generatePresignedUrl: "api/s3/generatePresignedUrl",
+  notification:{
+   getNotification: "notifications",          
+    getUnreadCount: "notifications/unread-count", 
+    markAsRead: "notifications",  
   },
+  // s3: {
+  //   generatePresignedUrl: "api/s3/generatePresignedUrl",
+  // },
+  s3: {
+  presignedUpload: "api/s3/generate-upload-url",
+  presignedView: "api/s3/generate-view-url",
+}
 };
