@@ -109,11 +109,11 @@ export const API_ROUTES = {
     getUnreadCount: "notifications/unread-count", 
     markAsRead: "notifications",  
   },
-  // s3: {
-  //   generatePresignedUrl: "api/s3/generatePresignedUrl",
-  // },
   s3: {
-  presignedUpload: "api/s3/generate-upload-url",
-  presignedView: "api/s3/generate-view-url",
-}
+    generatePresignedUrl: "api/s3/generatePresignedUrl",
+  },
+//   s3: {
+//   presignedUpload: "api/s3/generate-upload-url",
+//   presignedView: "api/s3/generate-view-url",
+// }
 };

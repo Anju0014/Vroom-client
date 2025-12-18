@@ -33,35 +33,35 @@
 
 
 
-// import { plainAxios } from "@/code/plainAxios";
-// import { API_ROUTES } from "@/code/constants/apiRoutes";
+import { plainAxios } from "@/code/plainAxios";
+import { API_ROUTES } from "@/code/constants/apiRoutes";
 
-// const BUCKET_NAME = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
-// const REGION = process.env.NEXT_PUBLIC_S3_REGION;
+const BUCKET_NAME = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
+const REGION = process.env.NEXT_PUBLIC_S3_REGION;
 
-// const api = plainAxios; // Use plainAxios if public
+const api = plainAxios; // Use plainAxios if public
 
-// export const S3Service = {
-//   async getPresignedUrl(file: File) {
-//     const response = await api.post(API_ROUTES.s3.generatePresignedUrl, {
-//       fileName: file.name,
-//       fileType: file.type,
-//     });
-//     return response.data;
-//   },
+export const S3Service = {
+  async getPresignedUrl(file: File) {
+    const response = await api.post(API_ROUTES.s3.generatePresignedUrl, {
+      fileName: file.name,
+      fileType: file.type,
+    });
+    return response.data;
+  },
 
-//   async uploadToS3(url: string, file: File) {
-//     await fetch(url, {
-//       method: "PUT",
-//       body: file,
-//       headers: { "Content-Type": file.type },
-//     });
-//   },
+  async uploadToS3(url: string, file: File) {
+    await fetch(url, {
+      method: "PUT",
+      body: file,
+      headers: { "Content-Type": file.type },
+    });
+  },
 
-//   getPublicUrl(key: string) {
-//     return `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${key}`;
-//   },
-// };
+  getPublicUrl(key: string) {
+    return `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${key}`;
+  },
+};
 
 
 // import { plainAxios } from "@/code/plainAxios";
@@ -95,35 +95,36 @@
 //     return res.data.url;
 //   },
 // };
-import { plainAxios } from "@/code/plainAxios";
-import { API_ROUTES } from "@/code/constants/apiRoutes";
 
-const api = plainAxios;
+// import { plainAxios } from "@/code/plainAxios";
+// import { API_ROUTES } from "@/code/constants/apiRoutes";
 
-export const S3Service = {
-  // Get presigned URL for upload
-  async getPresignedUploadUrl(file: File) {
-    const response = await api.post(API_ROUTES.s3.presignedUpload, {
-      fileName: file.name,
-      fileType: file.type,
-    });
-    return response.data; // Expected: { url: uploadUrl, key }
-  },
+// const api = plainAxios;
 
-  // Upload file to the presigned URL
-  async uploadToS3(uploadUrl: string, file: File) {
-    await fetch(uploadUrl, {
-      method: "PUT",
-      body: file,
-      headers: {
-        "Content-Type": file.type || "application/octet-stream",
-      },
-    });
-  },
+// export const S3Service = {
+//   // Get presigned URL for upload
+//   async getPresignedUploadUrl(file: File) {
+//     const response = await api.post(API_ROUTES.s3.presignedUpload, {
+//       fileName: file.name,
+//       fileType: file.type,
+//     });
+//     return response.data; 
+//   },
 
-  // Get a presigned URL for viewing/downloading the file (since bucket is private now)
-  async getPresignedViewUrl(key: string) {
-    const response = await api.get(`${API_ROUTES.s3.presignedView}?key=${encodeURIComponent(key)}`);
-    return response.data.url; // or response.data depending on your backend
-  },
-};
+  
+//   async uploadToS3(uploadUrl: string, file: File) {
+//     await fetch(uploadUrl, {
+//       method: "PUT",
+//       body: file,
+//       headers: {
+//         "Content-Type": file.type || "application/octet-stream",
+//       },
+//     });
+//   },
+
+ 
+//   async getPresignedViewUrl(key: string) {
+//     const response = await api.get(`${API_ROUTES.s3.presignedView}?key=${encodeURIComponent(key)}`);
+//     return response.data.url; // or response.data depending on your backend
+//   },
+// };

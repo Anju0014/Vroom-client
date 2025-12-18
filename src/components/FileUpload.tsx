@@ -76,32 +76,32 @@ export default function FileUpload({
     setProgress(progressArray);
 
     try {
-      // for (let i = 0; i < filesToUpload.length; i++) {
-      //   const file = filesToUpload[i];
-      //    const { url, key } = await S3Service.getPresignedUrl(file);
-      //   // const { url, key } = await S3Service.getPresignedUploadUrl(file);
-      //   await S3Service.uploadToS3(url, file);
-      //   const uploadedUrl = S3Service.getPublicUrl(key);
-      //   // const uploadedUrl =await S3Service.getPresignedViewUrl(key);
-      //   urls.push(uploadedUrl);
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const file = filesToUpload[i];
+         const { url, key } = await S3Service.getPresignedUrl(file);
+        // const { url, key } = await S3Service.getPresignedUploadUrl(file);
+        await S3Service.uploadToS3(url, file);
+        const uploadedUrl = S3Service.getPublicUrl(key);
+        // const uploadedUrl =await S3Service.getPresignedViewUrl(key);
+        urls.push(uploadedUrl);
         
-      //   progressArray[i] = 100;
-      //   setProgress([...progressArray]);
-      // }
-for (let i = 0; i < filesToUpload.length; i++) {
-    const file = filesToUpload[i];
+        progressArray[i] = 100;
+        setProgress([...progressArray]);
+      }
+// for (let i = 0; i < filesToUpload.length; i++) {
+//     const file = filesToUpload[i];
 
-    const { url: uploadUrl, key } = await S3Service.getPresignedUploadUrl(file);
+//     const { url: uploadUrl, key } = await S3Service.getPresignedUploadUrl(file);
 
-    await S3Service.uploadToS3(uploadUrl, file);
+//     await S3Service.uploadToS3(uploadUrl, file);
 
-    const viewUrl = await S3Service.getPresignedViewUrl(key);
+//     const viewUrl = await S3Service.getPresignedViewUrl(key);
 
-    urls.push(viewUrl);
+//     urls.push(viewUrl);
 
-    progressArray[i] = 100;
-    setProgress([...progressArray]);
-  }
+//     progressArray[i] = 100;
+//     setProgress([...progressArray]);
+//   }
 
       setUploadedUrls(urls);
       
