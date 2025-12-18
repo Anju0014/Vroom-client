@@ -64,34 +64,66 @@
 // };
 
 
+// import { plainAxios } from "@/code/plainAxios";
+// import { API_ROUTES } from "@/code/constants/apiRoutes";
+
+// const api = plainAxios;
+
+// export const S3Service = {
+//   async getPresignedUploadUrl(file: File) {
+//     const res = await api.post(API_ROUTES.s3.presignedUpload, {
+//       fileName: file.name,
+//       fileType: file.type,
+//     });
+//     return res.data; // { uploadUrl, key }
+//   },
+
+//   async uploadToS3(uploadUrl: string, file: File) {
+//     await fetch(uploadUrl, {
+//       method: "PUT",
+//       body: file,
+//       headers: {
+//         "Content-Type": file.type,
+//       },
+//     });
+//   },
+
+//   async getPresignedViewUrl(key: string) {
+//     const res = await api.get(
+//       `${API_ROUTES.s3.presignedView}?key=${key}`
+//     );
+//     return res.data.url;
+//   },
+// };
 import { plainAxios } from "@/code/plainAxios";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
 
 const api = plainAxios;
 
 export const S3Service = {
+  // Get presigned URL for upload
   async getPresignedUploadUrl(file: File) {
-    const res = await api.post(API_ROUTES.s3.presignedUpload, {
+    const response = await api.post(API_ROUTES.s3.presignedUpload, {
       fileName: file.name,
       fileType: file.type,
     });
-    return res.data; // { uploadUrl, key }
+    return response.data; // Expected: { url: uploadUrl, key }
   },
 
+  // Upload file to the presigned URL
   async uploadToS3(uploadUrl: string, file: File) {
     await fetch(uploadUrl, {
       method: "PUT",
       body: file,
       headers: {
-        "Content-Type": file.type,
+        "Content-Type": file.type || "application/octet-stream",
       },
     });
   },
 
+  // Get a presigned URL for viewing/downloading the file (since bucket is private now)
   async getPresignedViewUrl(key: string) {
-    const res = await api.get(
-      `${API_ROUTES.s3.presignedView}?key=${key}`
-    );
-    return res.data.url;
+    const response = await api.get(`${API_ROUTES.s3.presignedView}?key=${encodeURIComponent(key)}`);
+    return response.data.url; // or response.data depending on your backend
   },
 };

@@ -10,22 +10,36 @@ export default function NotificationBell({userId}:{userId:string}){
     const [unread,setUnread]=useState(0);
     const[open,setOpen]=useState(false);
 
-     useEffect(() => {
-    if (!userId) return; 
 
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL!, {
-      query: { userId },
-      withCredentials: true,
-    });
+    useEffect(() => {
+  if (!userId) return; 
 
-    socket.emit("join", userId);
+  const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL!, {
+    query: { userId },
+    withCredentials: true,
+  });
 
+  socket.on('connect', () => {
+    console.log('Socket connected successfully');
+  });
+
+  socket.on('connect_error', (err) => {
+    console.error('Socket connection error:', err);
+  });
 
   socket.on("newNotification", (notification) => {
     console.log("Received live notification:", notification);
     setNotifications((prev) => [notification, ...prev]);
     setUnread((prev) => prev + 1);
   });
+
+  // If implementing mark-as-read real-time:
+  // socket.on('notificationRead', ({ id }) => {
+  //   setNotifications((prev) =>
+  //     prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+  //   );
+  //   setUnread((prev) => Math.max(0, prev - 1));
+  // });
 
   const fetchNotifications = async () => {
     try {
@@ -41,13 +55,13 @@ export default function NotificationBell({userId}:{userId:string}){
   };
   
   fetchNotifications();
-return () => {
+
+  return () => {
     socket.off('newNotification'); 
     socket.off('notificationRead');
+    socket.disconnect();  // Add this to clean up on unmount (prevents leaks)
   };
 }, [userId]);
-
-    
     
   
 

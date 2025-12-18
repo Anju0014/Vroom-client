@@ -6,6 +6,7 @@ import { AdminAuthService} from "@/services/admin/adminService";
 import { useAuthStoreAdmin } from "@/store/admin/authStore";
 
 import toast from "react-hot-toast";
+import NotificationBell from "../common/NotificationBell";
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -41,13 +42,27 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     // );
   }
 
-  return (
-    <div className="flex min-h-screen bg-gray-100">
+  // return (
+  //   <div className="flex min-h-screen bg-gray-100">
     
-      <Sidebar  />
+  //     <Sidebar  />
+  //     <main className="flex-1 p-6">{children}</main>
+  //   </div>
+  // );
+  return (
+  <div className="flex min-h-screen bg-gray-100">
+    <Sidebar />
+    <div className="flex-1 flex flex-col">
+      {accessTokenAdmin && (
+  <div className="w-full h-16 flex items-center justify-end px-6">
+    {user?.id && <NotificationBell userId={user.id} />}
+  </div>
+)}
+     
       <main className="flex-1 p-6">{children}</main>
     </div>
-  );
+  </div>
+);
 };
 
 export default DashboardLayout;
