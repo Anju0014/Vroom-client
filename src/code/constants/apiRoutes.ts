@@ -67,6 +67,8 @@ export const API_ROUTES = {
     getAllVerifiedCars: "/admin/verifiedcars",
     getAllBookings: "/admin/bookings",
     updateCarVerifyStatus: (carId: string) => `/admin/cars/updateverifystatus/${carId}`,
+    getAllComplaints: "/complaints/admin",
+    updateComplaint: (id: string) => `/complaints/admin/${id}`,
   },
   owner: {
     addCar: "/owner/carupload",
@@ -88,11 +90,13 @@ export const API_ROUTES = {
     findBookingDetails: (carId: string) => `/car/getBookingDetails/${carId}`,
     checkBookingAvailability:"/bookings/checkBookingAvailability",
     findCustomerBookingDetails: "/getCustomerBookingDetails",
+    findCustomerWalletDetails: "/getCustomerWalleDetails",
     updatePendingBooking:(bookingId:string)=>`/bookings/${bookingId}/updatePendingBooking`,
     createPendingBooking: "/bookings/create",
     confirmBooking: (bookingId: string) => `/bookings/${bookingId}/confirm`,
     failBooking: (bookingId: string) => `/bookings/${bookingId}/fail`,
     cancelBooking: (bookingId: string) => `/bookings/${bookingId}/cancel`,
+    
   },
   chat: {
     ownerChats: "/chats/ownerchats",

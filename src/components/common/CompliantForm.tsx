@@ -1,0 +1,232 @@
+// "use client";
+// import React from "react";
+// import { Send } from "lucide-react";
+// import { CreateComplaintDTO } from "@/types/complaintTypes"; 
+
+// interface Props {
+//   formData: CreateComplaintDTO;
+//   onChange: (e: React.ChangeEvent<any>) => void;
+//   onSubmit: () => void;
+//   onCancel: () => void;
+//   loading: boolean;
+// }
+
+// const ComplaintForm: React.FC<Props> = ({
+//   formData,
+//   onChange,
+//   onSubmit,
+//   onCancel,
+//   loading,
+// }) => {
+//   return (
+//     <div className="bg-gray-50 p-6 rounded-lg border mb-6">
+//       <h2 className="text-lg font-semibold mb-4">Submit Complaint</h2>
+
+//       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+//         <input
+//           name="bookingId"
+//           placeholder="Booking ID"
+//           value={formData.bookingId}
+//           onChange={onChange}
+//           className="input"
+//         />
+
+//         <input
+//           name="carId"
+//           placeholder="Car ID"
+//           value={formData.carId}
+//           onChange={onChange}
+//           className="input"
+//         />
+//       </div>
+
+//       <select
+//         name="category"
+//         value={formData.category}
+//         onChange={onChange}
+//         className="input mb-3"
+//       >
+//         <option value="car">Car Issue</option>
+//         <option value="payment">Payment Issue</option>
+//         <option value="app">App Issue</option>
+//         <option value="behavior">Behavior Issue</option>
+//         <option value="other">Other</option>
+//       </select>
+
+//       <input
+//         name="title"
+//         placeholder="Complaint title"
+//         value={formData.title}
+//         onChange={onChange}
+//         className="input mb-3"
+//       />
+
+//       <textarea
+//         name="description"
+//         placeholder="Describe the issue"
+//         value={formData.description}
+//         onChange={onChange}
+//         rows={4}
+//         className="input mb-4"
+//       />
+
+//       <div className="flex gap-3">
+//         <button
+//           disabled={loading}
+//           onClick={onSubmit}
+//           className="btn-primary flex items-center gap-2"
+//         >
+//           <Send size={16} />
+//           {loading ? "Submitting..." : "Submit"}
+//         </button>
+//         <button onClick={onCancel} className="btn-secondary">
+//           Cancel
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ComplaintForm;
+
+
+"use client";
+import React from "react";
+import { Send, X, AlertCircle } from "lucide-react";
+
+interface CreateComplaintDTO {
+  bookingId: string;
+  carId: string;
+  title: string;
+  description: string;
+  category: string;
+}
+
+interface Props {
+  formData: CreateComplaintDTO;
+  onChange: (e: React.ChangeEvent<any>) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+  loading: boolean;
+}
+
+const ComplaintForm: React.FC<Props> = ({
+  formData,
+  onChange,
+  onSubmit,
+  onCancel,
+  loading,
+}) => {
+  return (
+    <div className="bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl border-2 border-blue-200 shadow-xl mt-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl shadow-lg">
+            <AlertCircle className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800">Submit Complaint</h2>
+        </div>
+        <button
+          onClick={onCancel}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <X className="w-5 h-5 text-gray-500" />
+        </button>
+      </div>
+
+      <div className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Booking ID
+            </label>
+            <input
+              name="bookingId"
+              placeholder="Enter booking ID Eg: VROOM-RIDE-1234"
+              value={formData.bookingId}
+              onChange={onChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Car ID
+            </label>
+            <input
+              name="carId"
+              placeholder="Enter car ID"
+              value={formData.carId}
+              onChange={onChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Category
+          </label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={onChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all bg-white"
+          >
+            <option value="car">Car Issue</option>
+            <option value="payment">Payment Issue</option>
+            <option value="app">App Issue</option>
+            <option value="behavior">Behavior Issue</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Complaint Title
+          </label>
+          <input
+            name="title"
+            placeholder="Brief description of the issue"
+            value={formData.title}
+            onChange={onChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Description
+          </label>
+          <textarea
+            name="description"
+            placeholder="Provide detailed information about your complaint"
+            value={formData.description}
+            onChange={onChange}
+            rows={4}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all resize-none"
+          />
+        </div>
+
+        <div className="flex gap-3 pt-2">
+          <button
+            disabled={loading}
+            onClick={onSubmit}
+            className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <Send size={18} />
+            {loading ? "Submitting..." : "Submit"}
+          </button>
+          <button 
+            onClick={onCancel} 
+            className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ComplaintForm;

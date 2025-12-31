@@ -151,6 +151,16 @@ export const AuthService = {
     console.log("getBookings response:", response.data);
     return response.data;
   },
+
+    findCustomerWalletDetails: async (page = 1, limit = 5) => {
+    console.log("sending request for user wallet");
+    const response = await customerApi.get(API_ROUTES.customer.findCustomerWalletDetails, {
+      params: { page, limit },
+    });
+    console.log("getWallets response:", response.data);
+    return response.data;
+  },
+  
   checkBookingAvailability: async (carId: string,startDate: string,endDate: string) => {
   const response = await customerApi.get(
     API_ROUTES.customer.checkBookingAvailability,

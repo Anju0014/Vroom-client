@@ -46,7 +46,7 @@ const YourCarsPage: React.FC = () => {
         console.log('API response:', data); // Debug API response
         console.log('totalCars:', data.total); // Debug total
         setCars(formattedCars);
-        setTotalCars(data.total || 0); // Assuming API returns { cars: [], total: number }
+        setTotalCars(data.total || 0); 
       } catch (error) {
         console.error('Error fetching cars:', error);
         setError('Failed to load cars');

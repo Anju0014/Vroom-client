@@ -9,7 +9,6 @@ export async function middleware(req: NextRequest) {
   const { pathname } = url;
 
   console.log("middleware working")
-  // Public routes that don't require authentication
   const publicRoutes = [
     '/login',
     '/admin/login',

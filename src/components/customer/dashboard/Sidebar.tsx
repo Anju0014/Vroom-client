@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname ,useRouter} from "next/navigation";
 import { useAuthStore } from "@/store/customer/authStore";
 import { AuthService } from "@/services/customer/authService";
 import { signOut,useSession } from "next-auth/react";
@@ -19,12 +19,14 @@ import {
   AlertTriangle, 
   DollarSign, 
   Settings, 
-  LogOut 
+  LogOut, 
+  WalletIcon
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const Sidebar: React.FC = () => {
     const {user,logout} =useAuthStore();
+     const router=useRouter()
     console.log("user",user);
      const [isGoogleUser, setIsGoogleUser] = useState(false);
   const pathname = usePathname();
@@ -43,6 +45,7 @@ const Sidebar: React.FC = () => {
                   await signOut({ callbackUrl: "/" });
                  }
         logout();
+         router.replace('/login');
 
       }catch(error){
         toast.error("Logout Failed.Please try Again")
@@ -50,11 +53,12 @@ const Sidebar: React.FC = () => {
     }
 
   const navItems = [
-    { name: "DashBoard", path: "/customer/dashboard/documents", icon: <CreditCard size={18} /> },
+    { name: "DashBoard", path: "/customer/dashboard/profile", icon: <CreditCard size={18} /> },
     { name: "Personal Details", path: "/customer/dashboard/profile", icon: <User size={18} /> },
     // { name: "Your Cars", path: "/dashboard/cars", icon: <Car size={18} /> },
     { name: "Bookings", path: "/customer/dashboard/bookings", icon: <Calendar size={18} /> },
     { name: "Report & Complaint", path: "/customer/dashboard/complaints", icon: <AlertTriangle size={18} /> },
+    { name: "Wallet", path: "/customer/dashboard/wallets", icon: <WalletIcon size={18} /> },
     // { name: "Revenue", path: "/dashboard/revenue", icon: <DollarSign size={18} /> },
     { name: "Chat", path: "/customer/dashboard/chat", icon: <MessageSquare size={18} /> },
     // { name: "Settings", path: "/dashboard/settings", icon: <Settings size={18} /> },

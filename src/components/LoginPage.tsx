@@ -85,7 +85,7 @@ useEffect(() => {
 
   if (isCustomer) {
     console.log('Customer authenticated, redirecting to /customer/home');
-    router.replace('/customer/home'); // 👈 replace is enough
+    router.replace('/customer/home');
   } else if (isOwner) {
     console.log('Car owner authenticated, redirecting to /carOwner/home');
     router.replace('/carOwner/home');
