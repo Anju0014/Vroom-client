@@ -61,13 +61,13 @@ const AllCarsPage: React.FC = () => {
         //   longitude: coordinates?.lng,
         });
         console.log('All cars response:', response);
-        const verifiedCars = response.data
-          .filter((car: Car) => car.verifyStatus === 1 && !car.isDeleted)
-          .map((car: Car) => ({
-            ...car,
-            location: { address: car.location?.address || 'No address' },
-          }));
-        setCars(verifiedCars);
+        // const verifiedCars = response.data
+        //   .filter((car: Car) => car.verifyStatus === 1 && !car.isDeleted)
+        //   .map((car: Car) => ({
+        //     ...car,
+        //     location: { address: car.location?.address || 'No address' },
+        //   }));
+        setCars(response.data);
         setTotalCars(response.total || 0);
       } catch (error) {
         console.error('Error fetching cars:', error);
