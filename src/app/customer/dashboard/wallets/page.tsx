@@ -4,32 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Wallet, ArrowUpRight, ArrowDownLeft, RefreshCw, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AuthService } from '@/services/customer/authService'; 
 import Pagination from '@/components/pagination';
+import {ITransaction ,IWalletData, IWalletResponse }  from '@/types/walletTypes'
 
-
-interface ITransaction {
-  _id: string;
-  type: 'refund' | 'payment' | 'cancellation' | 'other';
-  amount: number;
-  date: string | Date;
-  description?: string;
-}
-
-interface IWalletData {
-  balance: number;
-  transactions: ITransaction[];
-}
-
-interface IWalletResponse {
-  data: {
-    wallet: {
-      balance: number;
-      transactions: ITransaction[];
-    };
-    total: number;
-    page: number;
-    limit: number;
-  };
-}
 
 
 
