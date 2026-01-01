@@ -16,7 +16,8 @@ import {
   Home,
   LogOut,
   CheckCircleIcon,
-  CreditCard
+  CreditCard,
+  Pen
 } from "lucide-react";
 
 const Sidebar: React.FC = () => {
@@ -71,6 +72,11 @@ const Sidebar: React.FC = () => {
       name: "Cars", 
       path: "/admin/dashboard/cars", 
       icon: <Car size={18} /> 
+    },
+    { 
+      name: "Complaints", 
+      path: "/admin/dashboard/complaints", 
+      icon: <Pen size={18} /> 
     },
     { 
       name: "Revenue", 

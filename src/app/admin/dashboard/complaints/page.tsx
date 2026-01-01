@@ -16,10 +16,7 @@ interface Complaint {
   createdAt: string;
   description?: string;
   adminResponse?: string;
-  user?: {
-    fullName: string;
-    email: string;
-  };
+  raisedBy?:string;
 }
 
 const useDebounce = (value: string, delay: number) => {
@@ -56,16 +53,18 @@ const AdminComplaintsPage: React.FC = () => {
     try {
       setLoading(true);
       
-      // Assuming you'll update the service to support pagination and search
-      const response = await AdminAuthService.getAllComplaints(
-        page,
-        itemsPerPage,
-        { search: search.trim() }
-      );
+      // const response = await AdminAuthService.getAllComplaints(
+      //   page,
+      //   itemsPerPage,
+      //   { search: search.trim() }
+      // );
       
-      if (!response || !response.data) throw new Error("Failed to fetch complaints");
+       const response = await AdminAuthService.getAllComplaints();
+       console.log("response",response)
       
-      setComplaints(response.data);
+      if (!response) throw new Error("Failed to fetch complaints");
+      
+      setComplaints(response);
       setTotalComplaints(response.total || 0);
     } catch (err) {
       setError("Error fetching complaints");
@@ -138,15 +137,13 @@ const AdminComplaintsPage: React.FC = () => {
 
   const totalPages = Math.ceil(totalComplaints / itemsPerPage);
 
-  // Transform complaints data for the UserTable
   const tableData = complaints.map(complaint => ({
     title: complaint.title,
     category: complaint.category,
-    userName: complaint.user?.fullName || "Unknown User",
+    userName: complaint?.raisedBy || "Unknown User",
     statusBadge: getStatusBadge(complaint.status),
     priorityBadge: getPriorityBadge(complaint.priority),
     formattedDate: formatDate(complaint.createdAt),
-    // Keep reference to original complaint for view action
     _complaint: complaint,
   }));
 

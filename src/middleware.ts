@@ -119,13 +119,13 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Handle refresh token scenario
+  
   if (!token && refreshToken) {
     console.log('Access token expired, but refresh token exists. Allowing frontend to refresh.');
     return NextResponse.next();
   }
 
-  // Role-based access control
+  
   if (role) {
     if (pathname.startsWith('/admin') && role !== 'admin') {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
@@ -135,7 +135,7 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Prevent caching of protected routes
+  
   const response = NextResponse.next();
   response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   response.headers.set('Pragma', 'no-cache');
