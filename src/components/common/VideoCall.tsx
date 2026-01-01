@@ -1,0 +1,379 @@
+// "use client";
+
+// import { useEffect, useRef, useState } from "react";
+// import socket from "@/services/common/socketService";
+
+// interface Props {
+//   roomId: string;
+//   role: "admin" | "owner";
+// }
+
+// export default function VideoCall({ roomId, role }: Props) {
+//   const localVideoRef = useRef<HTMLVideoElement>(null);
+//   const remoteVideoRef = useRef<HTMLVideoElement>(null);
+//   const peerRef = useRef<RTCPeerConnection | null>(null);
+//   const localStreamRef = useRef<MediaStream | null>(null);
+
+//   const [inCall, setInCall] = useState(false);
+
+//   useEffect(() => {
+//     socket.emit("join-room", roomId);
+
+//     socket.on("offer", handleOffer);
+//     socket.on("answer", handleAnswer);
+//     socket.on("ice-candidate", handleIceCandidate);
+//     socket.on("call-ended", handleRemoteEndCall);
+
+//     return () => {
+//       endCall();
+//       socket.off("offer");
+//       socket.off("answer");
+//       socket.off("ice-candidate");
+//       socket.off("call-ended");
+//       socket.emit("leave-room", roomId);
+//     };
+//   }, []);
+
+//   /* -------------------- CALL START -------------------- */
+
+//   const startCall = async () => {
+//     const stream = await navigator.mediaDevices.getUserMedia({
+//       video: true,
+//       audio: true,
+//     });
+
+//     localStreamRef.current = stream;
+
+//     if (localVideoRef.current) {
+//       localVideoRef.current.srcObject = stream;
+//     }
+
+//     const peer = createPeer();
+//     stream.getTracks().forEach(track => peer.addTrack(track, stream));
+//     peerRef.current = peer;
+
+//     const offer = await peer.createOffer();
+//     await peer.setLocalDescription(offer);
+//     socket.emit("offer", { roomId, offer });
+
+//     setInCall(true);
+//   };
+
+//   /* -------------------- HANDLERS -------------------- */
+
+//   const handleOffer = async (offer: RTCSessionDescriptionInit) => {
+//     if (role !== "owner") return;
+
+//     const stream = await navigator.mediaDevices.getUserMedia({
+//       video: true,
+//       audio: true,
+//     });
+
+//     localStreamRef.current = stream;
+
+//     if (localVideoRef.current) {
+//       localVideoRef.current.srcObject = stream;
+//     }
+
+//     const peer = createPeer();
+//     stream.getTracks().forEach(track => peer.addTrack(track, stream));
+//     peerRef.current = peer;
+
+//     await peer.setRemoteDescription(new RTCSessionDescription(offer));
+
+//     const answer = await peer.createAnswer();
+//     await peer.setLocalDescription(answer);
+//     socket.emit("answer", { roomId, answer });
+
+//     setInCall(true);
+//   };
+
+//   const handleAnswer = async (answer: RTCSessionDescriptionInit) => {
+//     await peerRef.current?.setRemoteDescription(
+//       new RTCSessionDescription(answer)
+//     );
+//   };
+
+//   const handleIceCandidate = async (candidate: RTCIceCandidateInit) => {
+//     await peerRef.current?.addIceCandidate(
+//       new RTCIceCandidate(candidate)
+//     );
+//   };
+
+//   /* -------------------- PEER SETUP -------------------- */
+
+//   const createPeer = () => {
+//     const peer = new RTCPeerConnection({
+//       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+//     });
+
+//     peer.ontrack = event => {
+//         console.log("Remote track received", event.streams);
+//       if (remoteVideoRef.current) {
+//         remoteVideoRef.current.srcObject = event.streams[0];
+//       }
+//     };
+
+//     peer.onicecandidate = event => {
+//       if (event.candidate) {
+//         socket.emit("ice-candidate", {
+//           roomId,
+//           candidate: event.candidate,
+//         });
+//       }
+//     };
+
+//     return peer;
+//   };
+
+//   /* -------------------- END CALL -------------------- */
+
+//   const endCall = () => {
+//     peerRef.current?.close();
+//     peerRef.current = null;
+
+//     localStreamRef.current?.getTracks().forEach(track => track.stop());
+//     localStreamRef.current = null;
+
+//     if (localVideoRef.current) localVideoRef.current.srcObject = null;
+//     if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+
+//     socket.emit("call-ended", roomId);
+//     setInCall(false);
+//   };
+
+//   const handleRemoteEndCall = () => {
+//     endCall();
+//   };
+
+  
+//   /* -------------------- UI -------------------- */
+
+//   return (
+//     <div className="space-y-3">
+//       {role === "admin" && !inCall && (
+//         <button
+//           onClick={startCall}
+//           className="px-4 py-2 bg-green-600 text-white rounded"
+//         >
+//           Start Verification Call
+//         </button>
+//       )}
+
+//       {inCall && (
+//         <button
+//           onClick={endCall}
+//           className="px-4 py-2 bg-red-600 text-white rounded"
+//         >
+//           End Call
+//         </button>
+//       )}
+
+//       <div className="grid grid-cols-2 gap-2">
+//         <div className="relative">
+//           <span className="absolute top-1 left-1 text-xs bg-black/70 text-white px-1 rounded">
+//             You
+//           </span>
+//           <span className="absolute top-1 left-1 text-xs bg-black/70 text-white px-2 rounded">
+//   {role === "admin" ? "Admin (You)" : "Owner (You)"}
+// </span>
+
+//           <video
+//             ref={localVideoRef}
+//             autoPlay
+//             muted
+//             className="rounded bg-black"
+//           />
+//         </div>
+
+//         <div className="relative">
+//           <span className="absolute top-1 left-1 text-xs bg-black/70 text-white px-1 rounded">
+//             Remote
+//           </span>
+//           <span className="absolute top-1 left-1 text-xs bg-black/70 text-white px-2 rounded">
+//   {role === "admin" ? "Owner" : "Admin"}
+// </span>
+
+//           <video
+//             ref={remoteVideoRef}
+//             autoPlay
+//             className="rounded bg-black"
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import socket from "@/services/common/socketService";
+
+interface Props {
+  roomId: string;
+  role: "admin" | "owner";
+}
+
+export default function VideoCall({ roomId, role }: Props) {
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const peerRef = useRef<RTCPeerConnection | null>(null);
+  const localStreamRef = useRef<MediaStream | null>(null);
+  const endingRef = useRef(false); // Prevent multiple endCall calls
+
+  const [inCall, setInCall] = useState(false);
+
+  /* -------------------- SOCKET SETUP -------------------- */
+  useEffect(() => {
+    socket.emit("join-room", roomId);
+
+    socket.on("offer", handleOffer);
+    socket.on("answer", handleAnswer);
+    socket.on("ice-candidate", handleIceCandidate);
+    socket.on("end-call", handleRemoteEndCall);
+
+    return () => {
+      endCall(false); // cleanup without emitting
+      socket.emit("leave-room", roomId);
+      socket.off();
+    };
+  }, []);
+
+  /* -------------------- START CALL -------------------- */
+  const startCall = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    localStreamRef.current = stream;
+    if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+
+    const peer = createPeer();
+    stream.getTracks().forEach(track => peer.addTrack(track, stream));
+    peerRef.current = peer;
+
+    const offer = await peer.createOffer();
+    await peer.setLocalDescription(offer);
+    socket.emit("offer", { roomId, offer });
+
+    setInCall(true);
+  };
+
+  /* -------------------- HANDLE OFFER -------------------- */
+  const handleOffer = async (offer: RTCSessionDescriptionInit) => {
+    if (role !== "owner") return;
+
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    localStreamRef.current = stream;
+    if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+
+    const peer = createPeer();
+    stream.getTracks().forEach(track => peer.addTrack(track, stream));
+    peerRef.current = peer;
+
+    await peer.setRemoteDescription(new RTCSessionDescription(offer));
+
+    const answer = await peer.createAnswer();
+    await peer.setLocalDescription(answer);
+    socket.emit("answer", { roomId, answer });
+
+    setInCall(true);
+  };
+
+  const handleAnswer = async (answer: RTCSessionDescriptionInit) => {
+    await peerRef.current?.setRemoteDescription(new RTCSessionDescription(answer));
+  };
+
+  const handleIceCandidate = async (candidate: RTCIceCandidateInit) => {
+    await peerRef.current?.addIceCandidate(new RTCIceCandidate(candidate));
+  };
+
+  /* -------------------- CREATE PEER -------------------- */
+  const createPeer = () => {
+    const peer = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+
+    peer.ontrack = (event) => {
+      if (remoteVideoRef.current) remoteVideoRef.current.srcObject = event.streams[0];
+    };
+
+    peer.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit("ice-candidate", { roomId, candidate: event.candidate });
+      }
+    };
+
+    return peer;
+  };
+
+  /* -------------------- END CALL -------------------- */
+  const endCall = (emit: boolean = true) => {
+    if (endingRef.current) return;
+    endingRef.current = true;
+
+    // Stop local stream
+    localStreamRef.current?.getTracks().forEach(track => track.stop());
+    localStreamRef.current = null;
+
+    // Close peer connection
+    peerRef.current?.close();
+    peerRef.current = null;
+
+    // Clear video elements
+    if (localVideoRef.current) localVideoRef.current.srcObject = null;
+    if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+
+    // Notify remote
+    if (emit) socket.emit("end-call", roomId);
+
+    setInCall(false);
+    endingRef.current = false;
+  };
+
+  const handleRemoteEndCall = () => {
+    console.log("Remote ended the call");
+    endCall(false); // Don't emit again
+  };
+
+  /* -------------------- UI -------------------- */
+  return (
+    <div className="space-y-3">
+      {/* Start Call Button (Admin only) */}
+      {role === "admin" && !inCall && (
+        <button
+          onClick={startCall}
+          className="px-4 py-2 bg-green-600 text-white rounded"
+        >
+          Start Verification Call
+        </button>
+      )}
+
+      {/* End Call Button */}
+      {inCall && (
+        <button
+          onClick={() => endCall()}
+          className="px-4 py-2 bg-red-600 text-white rounded"
+        >
+          End Call
+        </button>
+      )}
+
+      {/* Video Grid */}
+      <div className="grid grid-cols-2 gap-2">
+        {/* Local Video */}
+        <div className="relative">
+          <span className="absolute top-1 left-1 text-xs bg-black/70 text-white px-2 rounded">
+            {role === "admin" ? "Admin (You)" : "Owner (You)"}
+          </span>
+          <video ref={localVideoRef} autoPlay muted className="rounded bg-black w-full h-60" />
+        </div>
+
+        {/* Remote Video */}
+        <div className="relative">
+          <span className="absolute top-1 left-1 text-xs bg-black/70 text-white px-2 rounded">
+            {role === "admin" ? "Owner" : "Admin"}
+          </span>
+          <video ref={remoteVideoRef} autoPlay className="rounded bg-black w-full h-60" />
+        </div>
+      </div>
+    </div>
+  );
+}

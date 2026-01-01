@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { X, Check, X as Cross } from "lucide-react";
 import toast from "react-hot-toast";
 import { Car } from "@/types/carTypes";
-import {Eye} from 'lucide-react'
+import {Eye,VideoIcon} from 'lucide-react'
+import VideoCall from "../common/VideoCall";
 
 interface CarVerifyModalProps {
   car: Car;
@@ -18,6 +19,8 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
   const [rejectReason, setRejectReason] = useState("");
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [showVideoCall, setShowVideoCall] = useState(false);
+
 
   const handleVerify = async () => {
     try {
@@ -167,6 +170,26 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
             </div>
           )}
 
+<div className="mb-6">
+  <h3 className="text-lg font-medium mb-4">Live Verification</h3>
+
+  {!showVideoCall ? (
+    <button
+      onClick={() => setShowVideoCall(true)}
+      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+    >
+      <VideoIcon className="mr-1" size={18}/>
+       Start Video Verification
+    </button>
+  ) : (
+    <div className="border rounded-lg p-3 bg-gray-50">
+      <VideoCall
+        roomId={`car-verification-${car.id}`}
+        role="admin"
+      />
+    </div>
+  )}
+</div>
 
           {/* Reject Form */}
           {showRejectForm && (

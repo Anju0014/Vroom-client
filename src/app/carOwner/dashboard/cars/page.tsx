@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { FaPlus, FaPencilAlt, FaTrashAlt, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaPlus, FaPencilAlt, FaTrashAlt, FaCheckCircle, FaTimesCircle, FaClock } from 'react-icons/fa';
 import { Calendar } from 'lucide-react';
 import Image from 'next/image';
 import AddNewCarModal from '@/components/cars/addcar';
@@ -18,6 +18,7 @@ import { transformGeoCoordinates } from '@/utils/transformGeoCoordinates';
 import Pagination from '@/components/pagination';
 import LiveLocationModal from '@/components/carOwner/dashboard/LiveLocationModal';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 
 const YourCarsPage: React.FC = () => {
@@ -37,6 +38,7 @@ const YourCarsPage: React.FC = () => {
   const [isLiveLocationOpen, setIsLiveLocationOpen] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
   const [defLocation, setDefLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const router=useRouter()
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -238,88 +240,122 @@ const handleAvailabilityClick = async (carId: string) => {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {cars.length > 0 ? (
-                  cars.map((car) => {
-                    const carId = car._id || car.id;
-                    return (
-                      <div key={carId} className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div className="h-48 bg-gray-200 relative">
-                          {/* Verification badge */}
-                          <div className="absolute top-2 left-2 z-10">
-                            {car.verifyStatus === 1 ? (
-                              <span className="bg-green-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
-                                <FaCheckCircle className="mr-1" /> Verified
-                              </span>
-                            ) : (
-                              <span className="bg-red-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
-                                <FaTimesCircle className="mr-1" /> Not Verified
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Action buttons */}
-                          <div className="absolute top-2 right-2 z-10 flex space-x-2">
-                            {carId && (
-                              <>
-                                <button
-                                  onClick={() => handleEditCar(carId)}
-                                  className="bg-white p-2 rounded-full shadow-md hover:bg-blue-50 transition-colors"
-                                  title="Edit"
-                                >
-                                  <FaPencilAlt className="text-blue-600" size={14} />
-                                </button>
-                                <button
-                                  onClick={() => handleAvailabilityClick(carId)}
-                                  className="bg-white p-2 rounded-full shadow-md hover:bg-green-50 transition-colors"
-                                  title="Manage Availability"
-                                >
-                                  <Calendar className="text-green-600" size={14} />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteCar(carId)}
-                                  className="bg-white p-2 rounded-full shadow-md hover:bg-red-50 transition-colors"
-                                  title="Delete"
-                                >
-                                  <FaTrashAlt className="text-red-600" size={14} />
-                                </button>
-                              </>
-                            )}
-                          </div>
-
-                          {car.images && car.images.length > 0 ? (
-                            <Image
-                              src={car.images[0]}
-                              alt={car.carName}
-                              fill
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              style={{ objectFit: 'cover' }}
-                              priority
-                            />
+                cars.map((car) => {
+                  const carId = car._id || car.id;
+                  return (
+                    <div key={carId} className="bg-white rounded-lg shadow-md overflow-hidden">
+                      <div className="h-48 bg-gray-200 relative">
+                   
+                        <div className="absolute top-2 left-2 z-10">
+                          {car.verifyStatus === 1 ? (
+                            <span className="bg-green-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
+                              <FaCheckCircle className="mr-1" /> Verified
+                            </span>
+                          ) : car.verifyStatus === -1 ? (
+                            <span className="bg-red-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
+                              <FaTimesCircle className="mr-1" /> Rejected
+                            </span>
                           ) : (
-                            <div className="flex items-center justify-center h-full text-gray-400">
-                              No Image Available
-                            </div>
+                            <span className="bg-yellow-500 text-white text-xs py-1 px-2 rounded-full flex items-center">
+                              <FaClock className="mr-1" /> Pending
+                            </span>
                           )}
                         </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold text-lg">{car.carName}</h3>
-                          <p className="text-gray-600">{car.brand} • {car.year}</p>
-                          <div className="mt-2 flex justify-between">
-                            <span className="text-sm">{car.fuelType}</span>
-                            <span className="font-medium">₹{car.expectedWage}/day</span>
-                          </div>
-                          <p className="text-sm text-gray-500 mt-1">{car.location.address}</p>
-      
-                          <button  onClick={() => handleViewLiveLocation(car._id!)}className="bg-white p-2 rounded-full 
-                          shadow-md hover:bg-blue-50 transition-colors" >View Live Location📍</button>
+
+                 
+                        <div className="absolute top-2 right-2 z-10 flex space-x-2">
+                          {carId && (
+                            <>
+                              <button
+                                onClick={() => handleEditCar(carId)}
+                                className="bg-white p-2 rounded-full shadow-md hover:bg-blue-50 transition-colors"
+                                title="Edit"
+                              >
+                                <FaPencilAlt className="text-blue-600" size={14} />
+                              </button>
+                              <button
+                                onClick={() => handleAvailabilityClick(carId)}
+                                className="bg-white p-2 rounded-full shadow-md hover:bg-green-50 transition-colors"
+                                title="Manage Availability"
+                              >
+                                <Calendar className="text-green-600" size={14} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteCar(carId)}
+                                className="bg-white p-2 rounded-full shadow-md hover:bg-red-50 transition-colors"
+                                title="Delete"
+                              >
+                                <FaTrashAlt className="text-red-600" size={14} />
+                              </button>
+                            </>
+                          )}
                         </div>
+
+                        {car.images && car.images.length > 0 ? (
+                          <Image
+                            src={car.images[0]}
+                            alt={car.carName}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            style={{ objectFit: 'cover' }}
+                            priority
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-gray-400">
+                            No Image Available
+                          </div>
+                        )}
                       </div>
-                    );
-                  })
-                ) : (
-                  <div className="col-span-full text-center py-10 text-gray-500">
-                    No cars added yet. Click "Add New Car" to get started.
-                  </div>
-                )}
+                      
+                      <div className="p-4">
+                        <h3 className="font-semibold text-lg">{car.carName}</h3>
+                        <p className="text-gray-600">{car.brand} • {car.year}</p>
+                        <div className="mt-2 flex justify-between">
+                          <span className="text-sm">{car.fuelType}</span>
+                          <span className="font-medium">₹{car.expectedWage}/day</span>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1">{car.location.address}</p>
+
+                        {car.verifyStatus === 0 && (
+                          <div className="mt-3 flex items-center justify-between p-2 bg-blue-50 border border-blue-200 rounded">
+                            <span className="text-xs text-blue-700 flex items-center">
+                              <FaClock className="mr-1" size={12} />
+                              Awaiting verification
+                            </span>
+                            <button
+                              onClick={() => router.push(`/carOwner/carVerification/${carId}`)}
+                              className="text-xs bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 transition-colors"
+                            >
+                              Join Call
+                            </button>
+                          </div>
+                        )}
+
+                     
+                        {car.verifyStatus === -1 && (
+                          <div className="mt-3 p-2 bg-red-50 border border-red-200 rounded">
+                            <p className="text-xs text-red-700">
+                              Verification rejected. Please update car details and resubmit.
+                            </p>
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => handleViewLiveLocation(car._id!)}
+                          className="mt-3 w-full bg-white border border-gray-300 p-2 rounded hover:bg-gray-50 transition-colors text-sm"
+                        >
+                          📍 View Live Location
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="col-span-full text-center py-10 text-gray-500">
+                  No cars added yet. Click "Add New Car" to get started.
+                </div>
+              )}
+               
               </div>
               <Pagination
                 currentPage={currentPage}
