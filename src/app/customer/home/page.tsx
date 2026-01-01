@@ -94,11 +94,11 @@ const LandingPage = () => {
         setLoadingFeaturedCars(true);
         let response = await AuthService.featuredCarList();
         let data = response.data;
-        const verifiedCars = data.filter((car: Car) => 
-          car.verifyStatus === 1 && !car.isDeleted
-        );
+        // const verifiedCars = data.filter((car: Car) => 
+        //   car.verifyStatus === 1 && !car.isDeleted
+        // );
         
-        setFeaturedCars(verifiedCars);
+        setFeaturedCars(data);
       } catch (error) {
         console.error('Error fetching featured cars:', error);
       } finally {
