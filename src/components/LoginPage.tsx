@@ -58,20 +58,6 @@ useEffect(() => {
   }
 }, []);
 
-  // useEffect(() => {
-  //   if (!hasHydrated) return; 
-    
-  //   const storedUserRole = sessionStorage.getItem('userRole') || formData.role;
-  //   if (storedUserRole === 'customer' && customerUser && customerAccessToken) {
-  //     console.log('Customer authenticated, redirecting to /customer/home');
-  //     window.history.replaceState(null, '', '/customer/home');
-  //     router.replace('/customer/home');
-  //   } else if (storedUserRole === 'carOwner' && ownerUser && accessTokenOwner) {
-  //     console.log('Car owner authenticated, redirecting to /carOwner/home');
-  //     window.history.replaceState(null, '', '/carOwner/home');
-  //     router.replace('/carOwner/home');
-  //   }
-  // }, [customerUser, customerAccessToken, ownerUser, accessTokenOwner, formData.role, router, hasHydrated]);
 
   useEffect(() => {
   if (!hasHydrated) return;
@@ -141,6 +127,7 @@ useEffect(() => {
         });
         accessToken = response.data.customerAccessToken;
         user = response.data.user;
+        useAuthStore.getState().setAuth(user, accessToken);
       } else {
         response = await OwnerAuthService.loginCarOwner({
           email: formData.email,
@@ -148,14 +135,16 @@ useEffect(() => {
         });
         accessToken = response.data.ownerAccessToken;
         user = response.data.user;
+        useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
       }
+      
 
-      if (user && accessToken) {
-        if (formData.role === 'customer') {
-          useAuthStore.getState().setAuth(user, accessToken);
-        } else {
-          useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
-        }
+      // if (user && accessToken) {
+      //   if (formData.role === 'customer') {
+      //     useAuthStore.getState().setAuth(user, accessToken);
+      //   } else {
+      //     useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
+      //   }
 
         storeSessionData(formData.role, accessToken);
         toast.success(`Login successful as ${formData.role}!`);
@@ -163,9 +152,9 @@ useEffect(() => {
         console.log(`Redirecting to ${redirectPath}`);
         window.history.replaceState(null, '', redirectPath);
         router.replace(redirectPath);
-      } else {
-        throw new Error('User or access token is missing.');
-      }
+      // } else {
+      //   throw new Error('User or access token is missing.');
+      // }
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials.';
       setError(errorMessage);
@@ -215,6 +204,7 @@ useEffect(() => {
         });
         accessToken = response.data.customerAccessToken;
         user = response.data.user;
+        useAuthStore.getState().setAuth(user, accessToken);
       } else if (storedRole === 'carOwner') {
         response = await OwnerAuthService.googlesigninOwner({
           fullName: session.user.name ?? '',
@@ -225,6 +215,7 @@ useEffect(() => {
         });
         accessToken = response.data.ownerAccessToken;
         user = response.data.user;
+        useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
       } else {
         throw new Error('Invalid role selected.');
       }
@@ -257,7 +248,7 @@ useEffect(() => {
     }
   };
 
-  // Render loading state if not hydrated yet
+ 
   if (!hasHydrated) {
     return <div>Loading...</div>;
   }

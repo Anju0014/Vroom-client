@@ -14,7 +14,6 @@ const ComplaintPage: React.FC = () => {
 
   const [formData, setFormData] = useState<CreateComplaintDTO>({
     bookingId: "",
-    carId: "",
     title: "",
     description: "",
     category: "car",
@@ -37,7 +36,6 @@ const ComplaintPage: React.FC = () => {
       setShowForm(false);
       setFormData({
         bookingId: "",
-        carId: "",
         title: "",
         description: "",
         category: "car",
@@ -51,115 +49,6 @@ const ComplaintPage: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-6">
-//       <div className="max-w-4xl mx-auto">
-//         <div className="bg-white p-6 rounded shadow mb-6">
-//           <div className="flex justify-between items-center">
-//             <div className="flex items-center gap-3">
-//               <AlertCircle className="text-indigo-600" />
-//               <div>
-//                 <h1 className="text-xl font-bold">Complaints</h1>
-//                 <p className="text-sm text-gray-500">
-//                   {/* Logged in as {user.role} */}
-//                 </p>
-//               </div>
-//             </div>
-//             <button
-//               onClick={() => setShowForm(!showForm)}
-//               className="btn-primary"
-//             >
-//               New Complaint
-//             </button>
-//           </div>
-
-//           {showForm && (
-//             <ComplaintForm
-//               formData={formData}
-//               onChange={handleChange}
-//               onSubmit={handleSubmit}
-//               onCancel={() => setShowForm(false)}
-//               loading={loading}
-//             />
-//           )}
-//         </div>
-
-//         <div className="space-y-4">
-//           {complaints.map((c) => (
-//             <div key={c._id} className="bg-white p-4 rounded shadow">
-//               <h3 className="font-semibold">{c.title}</h3>
-//               <p className="text-sm text-gray-600">{c.description}</p>
-
-//               <div className="text-xs text-gray-500 mt-2">
-//                 Status: {c.status} | Priority: {c.priority}
-//               </div>
-
-//               {c.adminResponse && (
-//                 <div className="mt-2 bg-blue-50 p-2 text-sm">
-//                   Admin: {c.adminResponse}
-//                 </div>
-//               )}
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ComplaintPage;
-
-
-// "use client";
-// import React, { useEffect, useState } from "react";
-// import { AlertCircle, Plus, X, Clock, CheckCircle, AlertTriangle } from "lucide-react";
-// import { complaintService } from "@/services/common/complaintService";
-// import ComplaintForm from "@/components/common/CompliantForm";
-// import { Complaint,CreateComplaintDTO } from "@/types/complaintTypes";
-
-// const ComplaintPage: React.FC = () => {
-//   const [complaints, setComplaints] = useState<Complaint[]>([]);
-//   const [showForm, setShowForm] = useState(false);
-//   const [loading, setLoading] = useState(false);
-
-//   const [formData, setFormData] = useState<CreateComplaintDTO>({
-//     bookingId: "",
-//     carId: "",
-//     title: "",
-//     description: "",
-//     category: "car",
-//   });
-
-//   useEffect(() => {
-//     loadComplaints();
-//   }, []);
-
-//   const loadComplaints = async () => {
-//     const data = await complaintService.getMyComplaints();
-//     setComplaints(data);
-//   };
-
-//   const handleSubmit = async () => {
-//     setLoading(true);
-//     try {
-//       await complaintService.createComplaint(formData);
-//       await loadComplaints();
-//       setShowForm(false);
-//       setFormData({
-//         bookingId: "",
-//         carId: "",
-//         title: "",
-//         description: "",
-//         category: "car",
-//       });
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleChange = (e: React.ChangeEvent<any>) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {

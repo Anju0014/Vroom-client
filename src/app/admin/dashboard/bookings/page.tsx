@@ -227,7 +227,6 @@ const BookingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Results Summary */}
       <div className="mb-4 text-sm text-gray-600">
         {!isLoading && (
           <>
@@ -240,7 +239,6 @@ const BookingsPage: React.FC = () => {
         )}
       </div>
 
-      {/* Table */}
       <UserTable
         columns={columns}
         data={tableData}
@@ -249,7 +247,7 @@ const BookingsPage: React.FC = () => {
         isLoading={isLoading}
       />
 
-      {/* Pagination - Only show if there are multiple pages */}
+  
       {totalPages > 1 && (
         <div className="mt-6 flex justify-center">
           <Pagination
@@ -260,7 +258,7 @@ const BookingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Booking Details Modal */}
+   
       {selectedBooking && (
         <BookingDetailsModal
           booking={selectedBooking}

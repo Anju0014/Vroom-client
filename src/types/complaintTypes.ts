@@ -25,7 +25,6 @@ export interface Complaint {
 
 export interface CreateComplaintDTO {
   bookingId: string;
-  carId: string;
   title: string;
   description: string;
   category: ComplaintCategory;
