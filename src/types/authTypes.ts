@@ -228,3 +228,13 @@ export interface SignupData {
     reason?:string
   }
   
+
+  // types/auth.ts  (or put it directly in the store file)
+export interface UserPayload {
+  id: number | string;
+  username?: string;
+  roles: string[];  // e.g., ['user', 'admin', 'owner']
+  iat?: number;
+  exp?: number;
+  // Add any other fields you include in the JWT
+}
