@@ -1,55 +1,92 @@
-// lib/axiosInstance.js
-import axios from 'axios';
+// lib/axiosInstance.ts
+import axios, {
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+} from 'axios';
 import useAuthStore from '@/store/useAuthStore';
 
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
-  withCredentials: true, // Required to send/receive httpOnly refreshToken cookie
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+
+/* ----------------------------------
+   Main API instance
+---------------------------------- */
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
 });
 
-// Request interceptor: Attach access token if available
-api.interceptors.request.use(
-  (config) => {
+/* ----------------------------------
+   Refresh-only instance
+---------------------------------- */
+const refreshApi = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+});
+
+/* ----------------------------------
+   Retry flag type
+---------------------------------- */
+interface AxiosRequestWithRetry extends AxiosRequestConfig {
+  _retry?: boolean;
+}
+
+/* ----------------------------------
+   Request interceptor
+---------------------------------- */
+axiosInstance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
     const token = useAuthStore.getState().accessToken;
+
     if (token) {
+      // Axios v1 safe
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor: Handle 401 by refreshing token
-api.interceptors.response.use(
+/* ----------------------------------
+   Response interceptor
+---------------------------------- */
+axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest =
+      error.config as AxiosRequestWithRetry;
 
-    // Only retry once to prevent infinite loop
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {
-        // This calls backend /refresh — refreshToken cookie is sent automatically
-        const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/refresh`,
-          {},
-          { withCredentials: true }
-        );
+        const { data } = await refreshApi.post('/refresh');
 
-        // Update store with new access token
-        useAuthStore.getState().setAccessToken(data.accessToken);
+        // Update Zustand
+        useAuthStore
+          .getState()
+          .setAccessToken(data.accessToken);
 
-        // Update the header and retry the original request
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-        return api(originalRequest);
+        // ✅ Ensure headers exist
+        if (!originalRequest.headers) {
+          originalRequest.headers = {};
+        }
+
+        originalRequest.headers.Authorization =
+          `Bearer ${data.accessToken}`;
+
+        return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Refresh failed → force logout
         useAuthStore.getState().logout();
-        // Redirect to login (adjust path as needed)
+
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }
+
         return Promise.reject(refreshError);
       }
     }
@@ -58,4 +95,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default axiosInstance;

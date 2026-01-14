@@ -84,11 +84,12 @@
 
 
 
-import { axiosCustomer } from "@/code/axiosCustomer";
-import { API_ROUTES } from "@/code/constants/apiRoutes";
-import { plainAxios } from "@/code/plainAxios";
 
-const commonApi = plainAxios;
+import { API_ROUTES } from "@/code/constants/apiRoutes";
+// import { plainAxios } from "@/code/plainAxios";
+import axiosInstance from "@/lib/axiosInstance";
+const commonApi = axiosInstance;
+// const commonApi = plainAxios;
 
 interface PaymentIntentData {
   carId: string;

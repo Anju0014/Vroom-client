@@ -78,86 +78,86 @@
 // export default axiosInstanceOwner;
 
 
-import { useAuthStoreOwner } from "@/store/carOwner/authStore";
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+// import { useAuthStoreOwner } from "@/store/carOwner/authStore";
+// import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const axiosInstanceOwner = () => {
-  const refreshEndpoint = "/owner/refreshToken";
+// const axiosInstanceOwner = () => {
+//   const refreshEndpoint = "/owner/refreshToken";
 
-  const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
-    withCredentials: true, // required for sending refresh token cookie
-  });
+//   const instance = axios.create({
+//     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+//     withCredentials: true, // required for sending refresh token cookie
+//   });
 
-  let isRefreshing = false;
-  let refreshPromise: Promise<string> | null = null;
+//   let isRefreshing = false;
+//   let refreshPromise: Promise<string> | null = null;
 
-  // Attach accessToken to every request
-  instance.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-      const accessToken = useAuthStoreOwner.getState().accessTokenOwner;
-      if (accessToken) {
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+//   // Attach accessToken to every request
+//   instance.interceptors.request.use(
+//     (config: InternalAxiosRequestConfig) => {
+//       const accessToken = useAuthStoreOwner.getState().accessTokenOwner;
+//       if (accessToken) {
+//         config.headers["Authorization"] = `Bearer ${accessToken}`;
+//       }
+//       return config;
+//     },
+//     (error) => Promise.reject(error)
+//   );
 
-  // Handle expired token in responses
-  instance.interceptors.response.use(
-    (response) => response,
-    async (error: AxiosError) => {
-      const originalRequest: any = error.config;
+//   // Handle expired token in responses
+//   instance.interceptors.response.use(
+//     (response) => response,
+//     async (error: AxiosError) => {
+//       const originalRequest: any = error.config;
 
-      // If token expired and we haven’t retried yet
-      if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
-        originalRequest._retry = true;
+//       // If token expired and we haven’t retried yet
+//       if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+//         originalRequest._retry = true;
 
-        if (!isRefreshing) {
-          isRefreshing = true;
-          refreshPromise = instance
-            .post(refreshEndpoint, {}, { withCredentials: true })
-            .then((res) => {
-              const newAccessToken = res.data.accessToken;
+//         if (!isRefreshing) {
+//           isRefreshing = true;
+//           refreshPromise = instance
+//             .post(refreshEndpoint, {}, { withCredentials: true })
+//             .then((res) => {
+//               const newAccessToken = res.data.accessToken;
 
-              // Update Zustand store
-              useAuthStoreOwner.getState().setAuthOwner(
-                useAuthStoreOwner.getState().user!,
-                newAccessToken
-              );
+//               // Update Zustand store
+//               useAuthStoreOwner.getState().setAuthOwner(
+//                 useAuthStoreOwner.getState().user!,
+//                 newAccessToken
+//               );
 
-              isRefreshing = false;
-              return newAccessToken;
-            })
-            .catch((refreshError) => {
-              console.error("Refresh token expired or invalid", refreshError);
-              isRefreshing = false;
+//               isRefreshing = false;
+//               return newAccessToken;
+//             })
+//             .catch((refreshError) => {
+//               console.error("Refresh token expired or invalid", refreshError);
+//               isRefreshing = false;
 
-              // Clear store + logout
-              useAuthStoreOwner.getState().logout();
-              if (typeof window !== "undefined") {
-                window.location.href = "/login";
-              }
+//               // Clear store + logout
+//               useAuthStoreOwner.getState().logout();
+//               if (typeof window !== "undefined") {
+//                 window.location.href = "/login";
+//               }
 
-              return Promise.reject(refreshError);
-            });
-        }
+//               return Promise.reject(refreshError);
+//             });
+//         }
 
-        try {
-          const newAccessToken = await refreshPromise!;
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return instance(originalRequest); // retry original request
-        } catch (err) {
-          return Promise.reject(err);
-        }
-      }
+//         try {
+//           const newAccessToken = await refreshPromise!;
+//           originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+//           return instance(originalRequest); // retry original request
+//         } catch (err) {
+//           return Promise.reject(err);
+//         }
+//       }
 
-      return Promise.reject(error);
-    }
-  );
+//       return Promise.reject(error);
+//     }
+//   );
 
-  return instance;
-};
+//   return instance;
+// };
 
-export default axiosInstanceOwner;
+// export default axiosInstanceOwner;

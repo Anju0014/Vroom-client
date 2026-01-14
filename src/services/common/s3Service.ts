@@ -33,13 +33,15 @@
 
 
 
-import { plainAxios } from "@/code/plainAxios";
+// import { plainAxios } from "@/code/plainAxios";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
+import axiosInstance from "@/lib/axiosInstance";
 
 const BUCKET_NAME = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
 const REGION = process.env.NEXT_PUBLIC_S3_REGION;
 
-const api = plainAxios; // Use plainAxios if public
+const api = axiosInstance;
+// const api = plainAxios; // Use plainAxios if public
 
 export const S3Service = {
   async getPresignedUrl(file: File) {

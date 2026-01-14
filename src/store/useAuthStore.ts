@@ -1,7 +1,7 @@
-// stores/useAuthStore.ts
+// store/useAuthStore.ts
 import { create } from 'zustand';
-import jwtDecode from 'jwt-decode';
-import type { UserPayload } from '@/types/authTypes'; // adjust path as needed
+import {jwtDecode} from 'jwt-decode';
+import type { UserPayload } from '@/types/authTypes';
 
 interface AuthState {
   accessToken: string | null;
@@ -10,7 +10,6 @@ interface AuthState {
   setAccessToken: (token: string | null) => void;
   logout: () => void;
 
-  // Selectors
   isAuthenticated: () => boolean;
   hasRole: (role: string) => boolean;
   isAdmin: () => boolean;
@@ -23,15 +22,20 @@ const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
 
   setAccessToken: (token) => {
-    if (token) {
-      try {
-        const decoded = jwtDecode<UserPayload>(token); // <-- Properly typed!
-        set({ accessToken: token, user: decoded });
-      } catch (error) {
-        console.error('Invalid access token', error);
-        set({ accessToken: null, user: null });
-      }
-    } else {
+    if (!token) {
+      set({ accessToken: null, user: null });
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode<UserPayload>(token);
+
+      set({
+        accessToken: token,
+        user: decoded,
+      });
+    } catch (error) {
+      console.error('JWT decode failed', error);
       set({ accessToken: null, user: null });
     }
   },
@@ -40,9 +44,15 @@ const useAuthStore = create<AuthState>((set, get) => ({
     set({ accessToken: null, user: null });
   },
 
-  isAuthenticated: () => !!get().accessToken,
+  isAuthenticated: () => {
+    const user = get().user;
+    if (!user?.exp) return false;
+    return user.exp * 1000 > Date.now();
+  },
 
-  hasRole: (role) => get().user?.roles?.includes(role) ?? false,
+  hasRole: (role) => {
+    return get().user?.roles?.includes(role) ?? false;
+  },
 
   isAdmin: () => get().hasRole('admin'),
   isOwner: () => get().hasRole('owner'),

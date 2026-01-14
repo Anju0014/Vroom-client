@@ -1,9 +1,8 @@
 
 import { API_ROUTES } from "@/code/constants/apiRoutes";
-import { plainAxios } from "@/code/plainAxios";
-import { axiosCustomer } from "@/code/axiosCustomer";
+import axiosInstance from "@/lib/axiosInstance";
 
-const commonApi = axiosCustomer;
+const commonApi = axiosInstance;
 import { Complaint, CreateComplaintDTO } from "@/types/complaintTypes";
 
 export const complaintService = {

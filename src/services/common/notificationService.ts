@@ -1,7 +1,7 @@
 import { API_ROUTES } from "@/code/constants/apiRoutes";
-import { plainAxios } from "@/code/plainAxios";
+import axiosInstance from "@/lib/axiosInstance";
 
-const commonApi = plainAxios;
+const commonApi = axiosInstance;
 
 export const NotificationService = {
   async getNotifications(userId: string) {
