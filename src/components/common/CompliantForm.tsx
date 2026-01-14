@@ -1,8 +1,10 @@
 
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Send, X, AlertCircle } from "lucide-react";
 import { CreateComplaintDTO } from "@/types/complaintTypes";
+import toast from "react-hot-toast";
+import FileUpload from "../FileUpload";
 
 interface Props {
   formData: CreateComplaintDTO;
@@ -19,6 +21,21 @@ const ComplaintForm: React.FC<Props> = ({
   onCancel,
   loading,
 }) => {
+ 
+
+    const handleFileComplaintProofUpload = (uploadedUrl: string | string[]) => {
+    if (typeof uploadedUrl === "string") {
+      onChange({
+        target: {
+          name: "complaintProof",
+          value: uploadedUrl,
+        },
+      } as React.ChangeEvent<HTMLInputElement>);
+
+      toast.success("Complaint Proof uploaded successfully!");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl border-2 border-blue-200 shadow-xl mt-6">
       <div className="flex items-center justify-between mb-6">
@@ -86,16 +103,24 @@ const ComplaintForm: React.FC<Props> = ({
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Description
+            Description 
           </label>
           <textarea
             name="description"
-            placeholder="Provide detailed information about your complaint"
+            placeholder="Provide detailed information about your complaint attachment"
             value={formData.description}
             onChange={onChange}
             rows={4}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all resize-none"
           />
+        </div>
+
+           <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Attachments
+          </label>
+          <FileUpload accept="image/*,application/pdf" multiple={false} onUploadComplete={handleFileComplaintProofUpload} />
+           {formData.complaintProof&& <p className="text-green-600 mt-1">File uploaded successfully.</p>}
         </div>
 
         <div className="flex gap-3 pt-2">

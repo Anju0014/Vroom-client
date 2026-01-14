@@ -6,18 +6,9 @@ import { AdminAuthService } from "@/services/admin/adminService";
 import UpdateComplaintModal from "@/components/admin/UpdateComplaintModal";
 import Pagination from "@/components/pagination";
 import toast from "react-hot-toast";
+import { ComplaintAdminResponseDTO } from "@/types/complaintTypes";
 
-interface Complaint {
-  _id: string;
-  title: string;
-  category: string;
-  status: string;
-  priority: string;
-  createdAt: string;
-  description?: string;
-  adminResponse?: string;
-  raisedBy?:string;
-}
+
 
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -36,8 +27,8 @@ const useDebounce = (value: string, delay: number) => {
 };
 
 const AdminComplaintsPage: React.FC = () => {
-  const [complaints, setComplaints] = useState<Complaint[]>([]);
-  const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
+  const [complaints, setComplaints] = useState<ComplaintAdminResponseDTO[]>([]);
+  const [selectedComplaint, setSelectedComplaint] = useState<ComplaintAdminResponseDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [clickLocked, setClickLocked] = useState(false);
@@ -140,7 +131,7 @@ const AdminComplaintsPage: React.FC = () => {
   const tableData = complaints.map(complaint => ({
     title: complaint.title,
     category: complaint.category,
-    userName: complaint?.raisedBy || "Unknown User",
+    userName: complaint?.raisedByUser?.fullName || "Unknown User",
     statusBadge: getStatusBadge(complaint.status),
     priorityBadge: getPriorityBadge(complaint.priority),
     formattedDate: formatDate(complaint.createdAt),

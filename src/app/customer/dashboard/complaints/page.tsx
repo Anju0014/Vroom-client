@@ -17,6 +17,7 @@ const ComplaintPage: React.FC = () => {
     title: "",
     description: "",
     category: "car",
+    complaintProof:"",
   });
 
   useEffect(() => {
@@ -39,6 +40,8 @@ const ComplaintPage: React.FC = () => {
         title: "",
         description: "",
         category: "car",
+        complaintProof:"",
+
       });
     } finally {
       setLoading(false);
