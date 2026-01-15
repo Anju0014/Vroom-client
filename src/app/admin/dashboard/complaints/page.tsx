@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable";
+import { Table, TableColumn } from "@/components/admin/Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import UpdateComplaintModal from "@/components/admin/UpdateComplaintModal";
 import Pagination from "@/components/pagination";
@@ -207,7 +207,7 @@ const AdminComplaintsPage: React.FC = () => {
         )}
       </div>
 
-      <UserTable
+      <Table
         columns={columns}
         data={tableData}
         showViewButton={true}

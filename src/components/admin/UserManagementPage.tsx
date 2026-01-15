@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "./UserTable";
+import { Table, TableColumn } from "./Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import UserDetailsModal from "@/components/admin/UserDetailsModal";
@@ -279,7 +279,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
           </>
       </div>
 
-      <UserTable
+      <Table
                        columns={columns}
                        data={tableData}
                        showViewButton={true}

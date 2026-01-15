@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable";
+import { Table, TableColumn } from "@/components/admin/Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import UserVerifyModal from "@/components/admin/UserVerifyModal";
@@ -271,7 +271,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
           </>
       </div>
 
-       <UserTable
+       <Table
                     columns={columns}
                     data={tableData}
                     showViewButton={true}

@@ -135,6 +135,8 @@ const handleCancelBooking = async (bookingId: string) => {
     }
   };
 
+  
+
   const getBookingTimeStatus = (booking: Booking): 'upcoming' | 'ongoing' | 'past' => {
     const now = new Date();
     const startDate = new Date(booking.startDate);
@@ -255,13 +257,17 @@ const handleCancelBooking = async (bookingId: string) => {
                     </span>
                   </div>
                   
-                
             
                   <div className="mb-3">
+                    <label>Customer Name</label>
                     <p className="font-semibold">{booking.userId.fullName}</p>
-                    {/* <p className="text-gray-600 text-sm">ID: {booking.userId._id}</p> */}
                   </div>
+               
                   
+                  <div className="mb-3">
+                    <label>Car Name</label>
+                    <p className="font-semibold">{booking.carId.carName}</p>
+                  </div>
          
                   <div className="mb-3">
                     <p className="font-medium text-green-600">₹{booking.totalPrice}</p>

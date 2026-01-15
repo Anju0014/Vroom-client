@@ -3,7 +3,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable"; // Update import path
+import { Table, TableColumn } from "@/components/admin/Table"; 
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import CarVerifyModal from "@/components/admin/CarVerifyModal";
@@ -235,7 +235,7 @@ const debouncedSearchTerm = useDebounce(searchTerm, 500);
       </div>
 
    
-   <UserTable
+   <Table
               columns={columns}
               data={cars}
               showViewButton={true}

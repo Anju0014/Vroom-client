@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable";
+import {Table, TableColumn } from "@/components/admin/Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import BookingDetailsModal from "@/components/admin/BookingDetailsModal";
 import { format } from "date-fns";
@@ -239,7 +239,7 @@ const BookingsPage: React.FC = () => {
         )}
       </div>
 
-      <UserTable
+      <Table
         columns={columns}
         data={tableData}
         showViewButton={true}
