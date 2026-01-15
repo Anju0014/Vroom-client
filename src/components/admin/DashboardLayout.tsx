@@ -20,7 +20,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   
 
   useEffect(() => {
-    // Simulate hydration/loading from localStorage or API
+
     if (user !== undefined) {
       setLoading(false);
     }

@@ -70,10 +70,10 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
         if (user) {
           if (role === "customer" && accessToken) {
             setAuth(user, accessToken);
-            setStorageItem(localStorage, "accessToken", accessToken);
+            // setStorageItem(localStorage, "accessToken", accessToken);
           } else if (accessTokenOwner) {
             setAuthOwner(user, accessTokenOwner);
-            setStorageItem(localStorage, "accessTokenOwner", accessTokenOwner);
+            // setStorageItem(localStorage, "accessTokenOwner", accessTokenOwner);
           } else {
             throw new Error("No valid access token found.");
           }

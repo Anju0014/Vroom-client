@@ -1,78 +1,86 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/customer/authStore';
-import { useAuthStoreAdmin } from '@/store/admin/authStore';
 import { useAuthStoreOwner } from '@/store/carOwner/authStore';
+import { useAuthStoreAdmin } from '@/store/admin/authStore';
+import { IUser } from '@/types/authTypes';
+
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   withCredentials: true,
 });
 
-// Helper to get refresh endpoint
+
+const getStoreByUrl = (url: string) => {
+  if (url.startsWith('/admin')) return useAuthStoreAdmin.getState();
+  if (url.startsWith('/owner') || url.startsWith('/carOwner')) return useAuthStoreOwner.getState();
+  return useAuthStore.getState(); 
+};
+
 const getRefreshEndpoint = (url: string) => {
   if (url.startsWith('/admin')) return '/admin/refreshToken';
   if (url.startsWith('/owner') || url.startsWith('/carOwner')) return '/owner/refreshToken';
-  return '/refreshToken'; // customer
+  return '/refreshToken'; 
 };
 
-let isRefreshing = false;
-let refreshPromise: Promise<string> | null = null;
 
-// Request interceptor to attach token dynamically
+const getTokenFromStore = (store: any) => {
+  if ('accessTokenAdmin' in store) return store.accessTokenAdmin;
+  if ('accessTokenOwner' in store) return store.accessTokenOwner;
+  return store.accessToken;
+};
+
+
+const setTokenToStore = (store: any, user: IUser | null, accessToken: string) => {
+  if ('setAuthAdmin' in store) store.setAuthAdmin(user, accessToken);
+  else if ('setAuthOwner' in store) store.setAuthOwner(user, accessToken);
+  else if ('setAuth' in store) store.setAuth(user, accessToken);
+};
+
+// --- Axios Interceptors ---
+
+// Request: attach token
 instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const url = config.url || '';
-  let token: string | null = null;
-
-  if (url.startsWith('/admin')) token = useAuthStoreAdmin.getState().accessTokenAdmin;
-  else if (url.startsWith('/owner') || url.startsWith('/carOwner')) token = useAuthStoreOwner.getState().accessTokenOwner;
-  else token = useAuthStore.getState().accessToken;
+  const store = getStoreByUrl(url);
+  const token = getTokenFromStore(store);
 
   if (token) config.headers['Authorization'] = `Bearer ${token}`;
   return config;
 });
 
-// Response interceptor to handle refresh token
+// Response: refresh token on 401/403
+let isRefreshing = false;
+let refreshPromise: Promise<string> | null = null;
+
 instance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest: any = error.config;
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
+
+      const store = getStoreByUrl(originalRequest.url || '');
 
       if (!isRefreshing) {
         isRefreshing = true;
-        refreshPromise = instance.post(getRefreshEndpoint(originalRequest.url), {}, { withCredentials: true })
+
+        refreshPromise = instance
+          .post(getRefreshEndpoint(originalRequest.url || ''), {}, { withCredentials: true })
           .then((res) => {
-            const newAccessToken = res.data.accessToken;
-
-           if (originalRequest.url.startsWith('/admin')) {
-          const adminUser = useAuthStoreAdmin.getState().user;
-          if (adminUser) {
-            useAuthStoreAdmin.getState().setAuthAdmin(adminUser, newAccessToken);
-          }
-        } else if (originalRequest.url.startsWith('/owner') || originalRequest.url.startsWith('/carOwner')) {
-          const ownerUser = useAuthStoreOwner.getState().user;
-          if (ownerUser) {
-            useAuthStoreOwner.getState().setAuthOwner(ownerUser, newAccessToken);
-          }
-        } else {
-          const customerUser = useAuthStore.getState().user;
-          if (customerUser) {
-            useAuthStore.getState().setAuth(customerUser, newAccessToken);
-          }
-        }
-            // if (originalRequest.url.startsWith('/admin')) useAuthStoreAdmin.getState().setAuthAdmin(useAuthStoreAdmin.getState().user, newAccessToken);
-            // else if (originalRequest.url.startsWith('/owner') || originalRequest.url.startsWith('/carOwner')) useAuthStoreOwner.getState().setAuthOwner(useAuthStoreOwner.getState().user, newAccessToken);
-            // else useAuthStore.getState().setAuth(useAuthStore.getState().user, newAccessToken);
-
+            const newAccessToken = res.data.accessToken as string;
+            setTokenToStore(store, store.user, newAccessToken);
             isRefreshing = false;
             return newAccessToken;
           })
           .catch((refreshError) => {
-            console.error('Refresh token expired or invalid', refreshError);
+            console.error('Refresh token invalid', refreshError);
 
-            // Logout all stores if refresh fails
+            // Logout all stores
             useAuthStore.getState().logout();
             useAuthStoreOwner.getState().logout();
             useAuthStoreAdmin.getState().logout();
@@ -85,6 +93,7 @@ instance.interceptors.response.use(
 
       try {
         const newAccessToken = await refreshPromise!;
+        originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
         return instance(originalRequest);
       } catch (err) {

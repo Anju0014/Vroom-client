@@ -16,11 +16,11 @@
 
 
 
-import { axiosCustomer } from "@/code/axiosCustomer";
+// import { axiosCustomer } from "@/code/axiosCustomer";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
-import { plainAxios } from "@/code/plainAxios";
+// import { plainAxios } from "@/code/plainAxios";
+import api from "@/code/axiosInstance";
 
-const commonApi = plainAxios;
 
 export const LocationService = {
   async updateLocation(data: {
@@ -29,7 +29,7 @@ export const LocationService = {
     lat: number;
     lng: number;
   }) {
-    const response = await commonApi.post(API_ROUTES.tracking.updateLocation, data);
+    const response = await api.post(API_ROUTES.tracking.updateLocation, data);
     return response;
   },
 };
