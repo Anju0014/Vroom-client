@@ -11,6 +11,10 @@ export const fetchOwnerChats = async () => {
   return res.data;
 };
 
+export const fetchCustomerChats = async () => {
+  const res = await customerApi.get("/chats/customerChats"); 
+  return res.data;
+};
 export const fetchChatHistory = async (roomId: string, role:string) => {
 const api = role === "carOwner" ? carOwnerApi : customerApi;
   const res = await api.get(`/chats/room/${roomId}`);

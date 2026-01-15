@@ -3,8 +3,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { fetchOwnerChats } from "@/services/common/chatService";
-import { useAuthStoreOwner } from "@/store/carOwner/authStore";
+import { fetchCustomerChats } from "@/services/common/chatService";
+import { useAuthStore } from "@/store/customer/authStore";
 
 interface ChatMessage {
   roomId: string;
@@ -17,15 +17,15 @@ interface ChatMessage {
   timestamp: string;
 }
 
-export default function OwnerChatsPage() {
-  const { user } = useAuthStoreOwner();
+export default function CustomerChatsPage() {
+  const { user } = useAuthStore();
   const [chats, setChats] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
 
-    fetchOwnerChats()
+    fetchCustomerChats()
       .then(setChats)
       .finally(() => setIsLoading(false));
   }, [user]);
@@ -102,7 +102,7 @@ export default function OwnerChatsPage() {
                 const messages = chatsByRoom[roomId];
                 const lastMessage = getLastMessage(messages);
 
-                const customerId =
+                const ownerId =
                   lastMessage.senderId === user.id
                     ? lastMessage.receiverId
                     : lastMessage.senderId;
@@ -112,17 +112,17 @@ export default function OwnerChatsPage() {
                 //     ? lastMessage.receiverName
                 //     : lastMessage.senderName;
 
-                const customerName =
+                const ownerName =
   lastMessage.senderId === user.id
     ? messages.find((m) => m.senderId !== user.id)?.senderName || "Unknown"
     : lastMessage.senderName;
-                const isCustomer = lastMessage.senderRole === "customer";
+                const isOwner = lastMessage.senderRole === "carOwner";
 
                 return (
                   <Link
                     key={roomId}
-                    href={`/carOwner/dashboard/chats/${customerId}/${encodeURIComponent(
-                      customerName
+                    href={`/carOwner/dashboard/chats/${ownerId}/${encodeURIComponent(
+                      ownerName
                     )}`}
                     className="block"
                   >
@@ -130,10 +130,10 @@ export default function OwnerChatsPage() {
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <h3 className="font-semibold text-lg text-blue-700">
-                            {customerName}
+                            {ownerName}
                           </h3>
                           <span className="text-xs text-blue-500 font-medium">
-                            {isCustomer ? "customer" : "car owner"}
+                            {isOwner ?  "car owner":"customer"}
                           </span>
                         </div>
                         <span className="text-xs text-blue-400 font-medium">

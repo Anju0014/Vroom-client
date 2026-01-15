@@ -90,11 +90,24 @@ export default function CarOwnerDashboard() {
   }
 };
 
-const handleContactCustomer = (bookingId: string|undefined) => {
-    toast.success(`Connecting you with the customer`);
-    if(bookingId){
-     router.push(`/carOwner/dashboard/chats/${bookingId}`);}
-  };
+// const handleContactCustomer = (bookingId: string|undefined) => {
+//     toast.success(`Connecting you with the customer`);
+//     if(bookingId){
+//      router.push(`/carOwner/dashboard/chats/${bookingId}`);}
+//   };
+
+const handleContactCustomer = (
+  customerId: string | undefined,
+  customerName: string | undefined
+) => {
+  toast.success("Connecting you with the customer");
+
+  if (!customerId || !customerName) return;
+
+  router.push(
+    `/carOwner/dashboard/chats/${customerId}/${encodeURIComponent(customerName)}`
+  );
+};
 
   const canCancelBooking = (startDate: string, status: string) => {
   if (status !== "confirmed") return false;
@@ -283,7 +296,7 @@ const handleCancelBooking = async (bookingId: string) => {
                   
                   {booking.status.toLowerCase() !== 'cancelled'&& (
                   <div className="mt-4 flex gap-2">
-                    <button   onClick={() => handleContactCustomer(booking.bookingId)} className="bg-blue-200 hover:bg-blue-400 text-gray-800 px-3 py-1 rounded text-sm flex-1">
+                    <button   onClick={() => handleContactCustomer(booking.userId._id,booking.userId.fullName)} className="bg-blue-200 hover:bg-blue-400 text-gray-800 px-3 py-1 rounded text-sm flex-1">
                       
                       Chat with Customer
                     </button>

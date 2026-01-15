@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Car } from "@/types/carTypes";
 import {Eye,VideoIcon} from 'lucide-react'
 import VideoCall from "../common/VideoCall";
+import { useAuthStoreAdmin } from "@/store/admin/authStore";
 
 interface CarVerifyModalProps {
   car: Car;
@@ -20,6 +21,8 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [showVideoCall, setShowVideoCall] = useState(false);
+  const { user } = useAuthStoreAdmin(); // or whatever store you use
+   if (!user) return null;
 
 
   const handleVerify = async () => {
@@ -59,7 +62,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
         </div>
 
         <div className="p-4 overflow-y-auto" style={{ maxHeight: "calc(90vh - 160px)" }}>
-          {/* Car Details */}
+       
           <div className="mb-6">
             <h3 className="text-lg font-medium mb-4">Car Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -98,7 +101,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
             </div>
           </div>
 
-          {/* Car Images */}
+      
           <div className="mb-6">
             <h3 className="text-lg font-medium mb-4">Car Images</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -118,7 +121,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
             </div>
           </div>
 
-          {/* Car Videos */}
+    
           {car.videos && car.videos.length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-medium mb-4">Car Videos</h3>
@@ -183,15 +186,16 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
     </button>
   ) : (
     <div className="border rounded-lg p-3 bg-gray-50">
-      <VideoCall
-        roomId={`car-verification-${car.id}`}
-        role="admin"
-      />
+  <VideoCall
+    roomId={`car-verification-${car.id}`}
+    currentUserId={user.id}
+    currentUserRole="admin"
+  />
     </div>
   )}
 </div>
 
-          {/* Reject Form */}
+         
           {showRejectForm && (
             <div className="mb-6">
               <h3 className="text-lg font-medium mb-2">Rejection Reason</h3>
