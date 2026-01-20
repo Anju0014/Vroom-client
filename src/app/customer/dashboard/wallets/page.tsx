@@ -2,10 +2,34 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Wallet, ArrowUpRight, ArrowDownLeft, RefreshCw, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { AuthService } from '@/services/customer/authService'; 
+import { AuthService } from '@/services/customer/authService'; // Adjust the import path as needed
 import Pagination from '@/components/pagination';
-import {ITransaction ,IWalletData, IWalletResponse }  from '@/types/walletTypes'
 
+// Type Definitions
+interface ITransaction {
+  _id: string;
+  type: 'refund' | 'payment' | 'cancellation' | 'other';
+  amount: number;
+  date: string | Date;
+  description?: string;
+}
+
+interface IWalletData {
+  balance: number;
+  transactions: ITransaction[];
+}
+
+interface IWalletResponse {
+  data: {
+    wallet: {
+      balance: number;
+      transactions: ITransaction[];
+    };
+    total: number;
+    page: number;
+    limit: number;
+  };
+}
 
 
 
@@ -15,7 +39,7 @@ const WalletPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const fetchWalletData = async (page: number): Promise<void> => {
     try {
@@ -24,7 +48,6 @@ const WalletPage: React.FC = () => {
       
      const response: IWalletResponse =
   await AuthService.findCustomerWalletDetails(page, itemsPerPage);
-  console.log("wallet",response)
 
 setWalletData({
   balance: response.data.wallet.balance,
@@ -56,6 +79,7 @@ setCurrentPage(response.data.page);
   const handlePageChange = (page: number): void => {
     if (page >= 1 && page <= totalPages && page !== currentPage) {
       setCurrentPage(page);
+      // Scroll to top of the page for better UX
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -134,7 +158,7 @@ setCurrentPage(response.data.page);
   return (
     <div className="bg-gradient-to-b from-blue-200 to-yellow-200 p-4 min-h-screen">
       <div className="max-w-4xl mx-auto">
-      
+        {/* Wallet Balance Card */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 shadow-xl mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -239,3 +263,162 @@ setCurrentPage(response.data.page);
 
 export default WalletPage;
 
+
+
+
+
+
+// interface Transaction {
+//   _id: string;
+//   type: 'refund' | 'payment' | 'cancellation' | 'other';
+//   amount: number;
+//   date: string;
+//   description?: string;
+// }
+
+// interface Wallet {
+//   balance: number;
+//   transactions: Transaction[];
+// }
+
+// interface WalletApiResponse {
+//   data: {
+//     wallet: Wallet;
+//     total: number;
+//     page: number;
+//     limit: number;
+//   };
+// }
+
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import { Wallet as WalletIcon, ArrowUpRight, ArrowDownLeft, RefreshCw, X } from "lucide-react";
+// import { AuthService } from "@/services/customer/authService";
+// import Pagination from "@/components/pagination";
+
+// const ITEMS_PER_PAGE = 10;
+
+// export default function WalletPage() {
+//   const [wallet, setWallet] = useState<Wallet | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+//   const [page, setPage] = useState(1);
+//   const [totalPages, setTotalPages] = useState(1);
+
+//   const fetchWallet = async (page: number) => {
+//     try {
+//       setLoading(true);
+//       const response: WalletApiResponse =
+//         await AuthService.findCustomerWalletDetails(page, ITEMS_PER_PAGE);
+
+//       setWallet(response.data.wallet);
+//       setTotalPages(Math.ceil(response.data.total / ITEMS_PER_PAGE));
+//     } catch (err: any) {
+//       setError(err?.response?.data?.message || "Failed to load wallet");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchWallet(page);
+//   }, [page]);
+
+//   const isCredit = (type: Transaction["type"]) =>
+//     type === "refund" || type === "cancellation" || type === "other";
+
+//   const formatAmount = (amount: number, type: Transaction["type"]) =>
+//     `${isCredit(type) ? "+" : "-"}₹${Math.abs(amount).toFixed(2)}`;
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center">
+//         <RefreshCw className="animate-spin" />
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center">
+//         <div className="text-center">
+//           <X className="mx-auto text-red-500" />
+//           <p>{error}</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-gray-100 p-4">
+//       <div className="max-w-4xl mx-auto">
+
+//         {/* Balance */}
+//         <div className="bg-blue-600 text-white rounded-xl p-6 mb-6">
+//           <div className="flex items-center gap-3">
+//             <WalletIcon />
+//             <h1 className="text-xl font-bold">My Wallet</h1>
+//           </div>
+//           <p className="mt-4 text-3xl font-bold">
+//             ₹{wallet?.balance.toFixed(2)}
+//           </p>
+//         </div>
+
+//         {/* Transactions */}
+//         <div className="bg-white rounded-xl shadow">
+//           <div className="p-4 border-b">
+//             <h2 className="font-semibold">Transaction History</h2>
+//             <p className="text-sm text-gray-500">
+//               Page {page} of {totalPages}
+//             </p>
+//           </div>
+
+//           {wallet?.transactions.length ? (
+//             <>
+//               <table className="w-full text-sm">
+//                 <tbody>
+//                   {wallet.transactions.map(txn => (
+//                     <tr key={txn._id} className="border-b">
+//                       <td className="p-4">
+//                         {isCredit(txn.type) ? (
+//                           <ArrowDownLeft className="text-green-600" />
+//                         ) : (
+//                           <ArrowUpRight className="text-red-600" />
+//                         )}
+//                       </td>
+//                       <td className="p-4">{txn.description || "-"}</td>
+//                       <td className="p-4">
+//                         {new Date(txn.date).toLocaleDateString()}
+//                       </td>
+//                       <td
+//                         className={`p-4 text-right font-semibold ${
+//                           isCredit(txn.type) ? "text-green-600" : "text-red-600"
+//                         }`}
+//                       >
+//                         {formatAmount(txn.amount, txn.type)}
+//                       </td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+
+//               {totalPages > 1 && (
+//                 <Pagination
+//                   currentPage={page}
+//                   totalPages={totalPages}
+//                   onPageChange={setPage}
+//                 />
+//               )}
+//             </>
+//           ) : (
+//             <p className="p-6 text-center text-gray-500">
+//               No transactions yet
+//             </p>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

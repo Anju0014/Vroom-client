@@ -438,18 +438,18 @@ export const AdminAuthService = {
     }
   },
     getAllComplaints: async (
-    // page: number,
-    // limit: number,
-    // filters: { status?: string; search?: string }
+    page: number,
+    limit: number,
+    filters: { status?: string; search?: string }
   ) => {
     const response = await adminApi.get(
       API_ROUTES.admin.getAllComplaints,
       {
         params: {
-          // page,
-          // limit,
-          // status: filters.status || "",
-          // search: filters.search || "",
+          page,
+          limit,
+          status: filters.status || "",
+          search: filters.search || "",
         },
       }
     );

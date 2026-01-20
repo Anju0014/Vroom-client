@@ -1,8 +1,106 @@
+// "use client";
+// import React from "react";
+// import { Send } from "lucide-react";
+// import { CreateComplaintDTO } from "@/types/complaintTypes"; 
+
+// interface Props {
+//   formData: CreateComplaintDTO;
+//   onChange: (e: React.ChangeEvent<any>) => void;
+//   onSubmit: () => void;
+//   onCancel: () => void;
+//   loading: boolean;
+// }
+
+// const ComplaintForm: React.FC<Props> = ({
+//   formData,
+//   onChange,
+//   onSubmit,
+//   onCancel,
+//   loading,
+// }) => {
+//   return (
+//     <div className="bg-gray-50 p-6 rounded-lg border mb-6">
+//       <h2 className="text-lg font-semibold mb-4">Submit Complaint</h2>
+
+//       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+//         <input
+//           name="bookingId"
+//           placeholder="Booking ID"
+//           value={formData.bookingId}
+//           onChange={onChange}
+//           className="input"
+//         />
+
+//         <input
+//           name="carId"
+//           placeholder="Car ID"
+//           value={formData.carId}
+//           onChange={onChange}
+//           className="input"
+//         />
+//       </div>
+
+//       <select
+//         name="category"
+//         value={formData.category}
+//         onChange={onChange}
+//         className="input mb-3"
+//       >
+//         <option value="car">Car Issue</option>
+//         <option value="payment">Payment Issue</option>
+//         <option value="app">App Issue</option>
+//         <option value="behavior">Behavior Issue</option>
+//         <option value="other">Other</option>
+//       </select>
+
+//       <input
+//         name="title"
+//         placeholder="Complaint title"
+//         value={formData.title}
+//         onChange={onChange}
+//         className="input mb-3"
+//       />
+
+//       <textarea
+//         name="description"
+//         placeholder="Describe the issue"
+//         value={formData.description}
+//         onChange={onChange}
+//         rows={4}
+//         className="input mb-4"
+//       />
+
+//       <div className="flex gap-3">
+//         <button
+//           disabled={loading}
+//           onClick={onSubmit}
+//           className="btn-primary flex items-center gap-2"
+//         >
+//           <Send size={16} />
+//           {loading ? "Submitting..." : "Submit"}
+//         </button>
+//         <button onClick={onCancel} className="btn-secondary">
+//           Cancel
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ComplaintForm;
+
 
 "use client";
 import React from "react";
 import { Send, X, AlertCircle } from "lucide-react";
-import { CreateComplaintDTO } from "@/types/complaintTypes";
+
+interface CreateComplaintDTO {
+  bookingId: string;
+  carId: string;
+  title: string;
+  description: string;
+  category: string;
+}
 
 interface Props {
   formData: CreateComplaintDTO;
@@ -51,6 +149,18 @@ const ComplaintForm: React.FC<Props> = ({
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Car ID
+            </label>
+            <input
+              name="carId"
+              placeholder="Enter car ID"
+              value={formData.carId}
+              onChange={onChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all"
+            />
+          </div>
         </div>
 
         <div>

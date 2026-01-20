@@ -213,7 +213,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   ];
 
   const handleRowView = (rowData: any) => {
-    if (clickLocked) return; 
+    if (clickLocked) return; // block extra clicks
      setClickLocked(true);
     setSelectedUser(rowData._user);
     setTimeout(() => setClickLocked(false), 500);

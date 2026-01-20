@@ -90,7 +90,7 @@ export const API_ROUTES = {
     findBookingDetails: (carId: string) => `/car/getBookingDetails/${carId}`,
     checkBookingAvailability:"/bookings/checkBookingAvailability",
     findCustomerBookingDetails: "/getCustomerBookingDetails",
-    findCustomerWalletDetails: "/getCustomerWalletDetails",
+    findCustomerWalletDetails: "/getCustomerWalleDetails",
     updatePendingBooking:(bookingId:string)=>`/bookings/${bookingId}/updatePendingBooking`,
     createPendingBooking: "/bookings/create",
     confirmBooking: (bookingId: string) => `/bookings/${bookingId}/confirm`,
