@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable"; // Update import path
+import { UserTable, TableColumn } from "@/components/admin/UserTable"; 
 import { AdminAuthService } from "@/services/admin/adminService";
 import CarDetailsModal from "@/components/admin/CarDetailsModal";
 import { Car } from '@/types/carTypes';
@@ -172,7 +172,7 @@ const VerifiedCarsPage: React.FC = () => {
     blockStatusText: getBlockStatusBadge(car.blockStatus),
     expectedWage: `₹${car.expectedWage}`,
     formattedDate: formatDate(new Date(car.createdAt)),
-    // Keep reference to original car for view action
+  
     _car: car,
   }));
     
