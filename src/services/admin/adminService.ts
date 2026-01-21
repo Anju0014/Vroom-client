@@ -437,19 +437,19 @@ export const AdminAuthService = {
       throw error;
     }
   },
-    getAllComplaints: async (
-    page: number,
-    limit: number,
-    filters: { status?: string; search?: string }
+  getAllComplaints: async (
+    // page: number,
+    // limit: number,
+    // filters: { status?: string; search?: string }
   ) => {
     const response = await adminApi.get(
       API_ROUTES.admin.getAllComplaints,
       {
         params: {
-          page,
-          limit,
-          status: filters.status || "",
-          search: filters.search || "",
+          // page,
+          // limit,
+          // status: filters.status || "",
+          // search: filters.search || "",
         },
       }
     );
@@ -471,4 +471,40 @@ export const AdminAuthService = {
       throw new Error("Failed to update complaint");
     }
   },
+
+
+  //   getAllComplaints: async (
+  //   page: number,
+  //   limit: number,
+  //   filters: { status?: string; search?: string }
+  // ) => {
+  //   const response = await adminApi.get(
+  //     API_ROUTES.admin.getAllComplaints,
+  //     {
+  //       params: {
+  //         page,
+  //         limit,
+  //         status: filters.status || "",
+  //         search: filters.search || "",
+  //       },
+  //     }
+  //   );
+  //   return response.data;
+  // },
+
+  // updateComplaint: async (
+  //   complaintId: string,
+  //   payload: UpdateComplaintPayload
+  // ) => {
+  //   try {
+  //     const response = await adminApi.patch(
+  //       API_ROUTES.admin.updateComplaint(complaintId),
+  //       payload
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error updating complaint:", error);
+  //     throw new Error("Failed to update complaint");
+  //   }
+  // },
 };
