@@ -260,7 +260,7 @@ import UpdateComplaintModal from "@/components/admin/UpdateComplaintModal";
 import Pagination from "@/components/pagination";
 import toast from "react-hot-toast";
 import { ComplaintAdminResponseDTO } from "@/types/complaintTypes";
-import { UserTable } from "@/components/admin/UserTable";
+import { TableColumn, UserTable } from "@/components/admin/UserTable";
 
 
 
