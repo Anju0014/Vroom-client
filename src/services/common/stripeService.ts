@@ -84,11 +84,11 @@
 
 
 
-import { axiosCustomer } from "@/code/axiosCustomer";
+// import { axiosCustomer } from "@/code/axiosCustomer";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
-import { plainAxios } from "@/code/plainAxios";
-
-const commonApi = plainAxios;
+// import { plainAxios } from "@/code/plainAxios";
+import api from "@/code/axiosInstance";
+// const commonApi = plainAxios;
 
 interface PaymentIntentData {
   carId: string;
@@ -117,7 +117,7 @@ export const StripeService = {
       }
 
       console.log("Sending data to:", API_ROUTES.stripe.createPaymentIntent, data);
-      const response = await commonApi.post(API_ROUTES.stripe.createPaymentIntent, data);
+      const response = await api.post(API_ROUTES.stripe.createPaymentIntent, data);
       console.log("Received response:", response.data);
 
       if (!response.data.clientSecret) {

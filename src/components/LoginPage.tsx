@@ -62,12 +62,15 @@ useEffect(() => {
   useEffect(() => {
   if (!hasHydrated) return;
 
-  const storedUserRole = sessionStorage.getItem('userRole');
-  const storedToken = sessionStorage.getItem('accessToken');
+  // const storedUserRole = sessionStorage.getItem('userRole');
+  // const storedToken = sessionStorage.getItem('accessToken');
+  const isCustomer = customerUser && customerAccessToken;
+const isOwner = ownerUser && accessTokenOwner;
+
 
   // Use either stored values or Zustand values to detect auth state
-  const isCustomer = (storedUserRole === 'customer' && storedToken) || (customerUser && customerAccessToken);
-  const isOwner = (storedUserRole === 'carOwner' && storedToken) || (ownerUser && accessTokenOwner);
+  // const isCustomer = (storedUserRole === 'customer' && storedToken) || (customerUser && customerAccessToken);
+  // const isOwner = (storedUserRole === 'carOwner' && storedToken) || (ownerUser && accessTokenOwner);
 
   if (isCustomer) {
     console.log('Customer authenticated, redirecting to /customer/home');
@@ -94,8 +97,8 @@ useEffect(() => {
     setFormData({ ...formData, role });
   };
 
-  const storeSessionData = (role: string, accessToken: string) => {
-    sessionStorage.setItem('accessToken', accessToken);
+  const storeSessionData = (role: string) => {
+    // sessionStorage.setItem('accessToken', accessToken);
     sessionStorage.setItem('isLoggedIn', 'true');
     sessionStorage.setItem('userRole', role);
   };
@@ -146,7 +149,7 @@ useEffect(() => {
       //     useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
       //   }
 
-        storeSessionData(formData.role, accessToken);
+        storeSessionData(formData.role);
         toast.success(`Login successful as ${formData.role}!`);
         const redirectPath = formData.role === 'customer' ? '/customer/home' : '/carOwner/home';
         console.log(`Redirecting to ${redirectPath}`);
@@ -227,7 +230,7 @@ useEffect(() => {
           useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
         }
 
-        storeSessionData(storedRole, accessToken);
+        storeSessionData(storedRole);
         sessionStorage.setItem('provider', 'google');
         sessionStorage.setItem('userEmail', session.user.email ?? '');
         toast.success('Google Login Successful!');

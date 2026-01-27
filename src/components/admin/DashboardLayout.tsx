@@ -20,6 +20,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   
 
   useEffect(() => {
+
     if (user !== undefined) {
       setLoading(false);
     }

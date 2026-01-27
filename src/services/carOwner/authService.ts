@@ -154,8 +154,9 @@
 // }
 
 
-import { axiosOwner } from "@/code/axiosCarOwner";
+// import { axiosOwner } from "@/code/axiosCarOwner";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
+import carOwnerApi from "@/code/axiosInstance";
 import {
   SignupData,
   GoogleSignInData,
@@ -166,7 +167,7 @@ import {
 } from "@/types/authTypes";
 import { Booking } from "@/types/carTypes";
 
-const carOwnerApi = axiosOwner;
+// const carOwnerApi = axiosOwner;
 
 export const OwnerAuthService = {
   registerCarOwner: async (userData: SignupData) => {

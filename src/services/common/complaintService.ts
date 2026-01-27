@@ -1,18 +1,19 @@
 
 import { API_ROUTES } from "@/code/constants/apiRoutes";
-import { plainAxios } from "@/code/plainAxios";
-import { axiosCustomer } from "@/code/axiosCustomer";
+// import { plainAxios } from "@/code/plainAxios";
+// import { axiosCustomer } from "@/code/axiosCustomer";
+import api from "@/code/axiosInstance";
 
-const commonApi = axiosCustomer;
+// const commonApi = axiosCustomer;
 import { Complaint, CreateComplaintDTO } from "@/types/complaintTypes";
 
 export const complaintService = {
   createComplaint: async (data: CreateComplaintDTO): Promise<void> => {
-    await commonApi.post("/complaints", data);
+    await api.post("/complaints", data);
   },
 
   getMyComplaints: async (): Promise<Complaint[]> => {
-    const res = await commonApi.get("/complaints");
+    const res = await api.get("/complaints");
     return res.data;
   },
 };

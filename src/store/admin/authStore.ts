@@ -1,36 +1,17 @@
-"use client";
-
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { IUser } from "../../types/authTypes";
+'use client';
+import { create } from 'zustand';
+import { IUser } from '../../types/authTypes';
 
 interface AuthStateAdmin {
   user: IUser | null;
   accessTokenAdmin: string | null;
-  setAuthAdmin: (user: IUser, accessToken: string) => void;
+  setAuthAdmin: (user: IUser|null, accessToken: string) => void;
   logout: () => void;
 }
 
-export const useAuthStoreAdmin = create<AuthStateAdmin>()(
-  persist(
-    (set) => ({
-      user: null,
-      accessTokenAdmin: null,
-
-    
-      setAuthAdmin: (user, accessTokenAdmin) => {
-        set({ user, accessTokenAdmin });
-      },
-
-      logout: () => {
-        set({ user: null, accessTokenAdmin: null });
-        localStorage.removeItem("authStoreAdmin");
-        sessionStorage.removeItem("provider");
-        sessionStorage.removeItem("userEmail");
-        sessionStorage.removeItem("role");
-        window.location.href = "/admin/login";
-      },
-    }),
-    { name: "authStoreAdmin" }
-  )
-);
+export const useAuthStoreAdmin = create<AuthStateAdmin>((set) => ({
+  user: null,
+  accessTokenAdmin: null,
+  setAuthAdmin: (user, accessToken) => set({ user, accessTokenAdmin: accessToken }),
+  logout: () => set({ user: null, accessTokenAdmin: null }),
+}));

@@ -1,6 +1,7 @@
 // 
 
-import { axiosCustomer } from "@/code/axiosCustomer";
+// import { axiosCustomer } from "@/code/axiosCustomer";
+import customerApi from "@/code/axiosInstance";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
 import {
   SignupData,
@@ -15,7 +16,7 @@ import {
   ConfirmBookingResponse,
 } from "@/types/workTypes";
 
-const customerApi = axiosCustomer;
+// const customerApi = axiosCustomer;
 
 export const AuthService = {
   registerCustomer: async (userData: SignupData) => {
