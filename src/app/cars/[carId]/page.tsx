@@ -9,12 +9,16 @@ import { format, isSameDay, startOfDay, endOfDay } from 'date-fns';
 import { AuthService } from '@/services/customer/authService';
 import { useSession } from 'next-auth/react';
 import { useAuthStore } from '@/store/customer/authStore';
+import LocationMapView from '@/components/maps/LocationMapView';
 
 interface Location {
   address?: string;
   city?: string;
   state?: string;
-  coordinates?: [number, number];
+  coordinates?:{
+    type?:string,
+    coordinates?:[number,number]
+  };
 }
 
 interface Car {
@@ -126,6 +130,9 @@ const CarBookingPage = () => {
     fetchBookings();
   }, [carId]);
 
+
+  
+
   const isDateUnavailable = (date: Date): boolean => {
     if (!car || !car.available) return true;
 
@@ -197,6 +204,12 @@ const CarBookingPage = () => {
     setShowLoginModal(false);
     router.push('/login');
   };
+
+const coordinates = car?.location?.coordinates?.coordinates;
+
+const lat = coordinates?.[1];
+const lng = coordinates?.[0];
+
 
   if (loading)
     return (
@@ -330,7 +343,9 @@ const CarBookingPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-md p-6 mb-6">
               <h2 className="text-2xl font-bold text-blue-600 mb-6 flex items-center">
@@ -370,16 +385,31 @@ const CarBookingPage = () => {
                 </div>
               </div>
 
-              {car.location && car.location.address && (
-                <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 mb-6">
-                  <h3 className="text-sm text-blue-600 font-medium">Location</h3>
-                  <p className="font-semibold text-lg text-gray-800">
-                    {car.location.address}
-                    {car.location.city && `, ${car.location.city}`}
-                    {car.location.state && `, ${car.location.state}`}
-                  </p>
-                </div>
-              )}
+
+              {car.location?.coordinates && (
+  <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 mb-6">
+    <h3 className="text-sm text-blue-600 font-medium mb-2">
+      Pickup Location
+    </h3>
+
+    <p className="font-semibold text-gray-800 mb-3">
+      {car.location.address}
+      {car.location.city && `, ${car.location.city}`}
+      {car.location.state && `, ${car.location.state}`}
+   
+    </p>
+
+    <div className="h-64 w-full rounded-lg overflow-hidden border">
+      
+      {typeof lat === "number" && typeof lng === "number" && (
+        
+  <LocationMapView lat={lat} lng={lng} />
+)}
+
+    </div>
+  </div>
+)}
+
 
               <div
                 className={`p-5 rounded-xl flex items-center ${
@@ -433,7 +463,7 @@ const CarBookingPage = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-white rounded-xl  shadow-md p-6">
             <h2 className="text-2xl font-bold text-blue-600 mb-6 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -453,15 +483,23 @@ const CarBookingPage = () => {
             </h2>
 
             <div className="mb-6">
-              <Calendar
+              {/* <Calendar
                 onChange={() => {}}
                 value={null}
                 tileClassName={tileClassName}
                 minDate={new Date()}
                 className="rounded-lg shadow-sm border-none w-full"
-                tileDisabled={() => true}
+                tileDisabled={() => false}
                 key={existingBookings.length}
-              />
+              /> */}
+              <Calendar
+  onChange={() => {}}
+  value={null}
+  minDate={new Date()}
+  tileClassName={tileClassName}
+  tileDisabled={({ view }) => view === "month"} // disable days only
+/>
+
               <style jsx global>{`
                 .react-calendar {
                   font-family: system-ui, -apple-system, sans-serif;
@@ -519,6 +557,13 @@ const CarBookingPage = () => {
                   background-color: transparent;
                   color: inherit;
                 }
+                .react-calendar__navigation button:disabled {
+                    background-color: #1e3a8a; 
+                    color: #c7d2fe;           
+                    opacity: 1;               
+                    cursor: not-allowed;
+                  }
+
               `}</style>
             </div>
 
@@ -530,6 +575,7 @@ const CarBookingPage = () => {
             </button>
           </div>
         </div>
+        
 
         <Modal
           isOpen={showLoginModal}

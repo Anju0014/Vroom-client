@@ -20,7 +20,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   
 
   useEffect(() => {
-    // Simulate hydration/loading from localStorage or API
     if (user !== undefined) {
       setLoading(false);
     }
@@ -35,20 +34,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   }
   if (!user) {
     return null
-    // return (
-    //   <div className="flex min-h-screen items-center justify-center">
-    //     <p className="text-red-500">Failed to load user</p>
-    //   </div>
-    // );
+   
   }
-
-  // return (
-  //   <div className="flex min-h-screen bg-gray-100">
-    
-  //     <Sidebar  />
-  //     <main className="flex-1 p-6">{children}</main>
-  //   </div>
-  // );
   return (
   <div className="flex min-h-screen bg-gray-100">
     <Sidebar />

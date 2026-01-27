@@ -1,28 +1,13 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable"; 
+import { TableColumn, Table } from "@/components/admin/Table"; 
 import { AdminAuthService } from "@/services/admin/adminService";
 import CarDetailsModal from "@/components/admin/CarDetailsModal";
 import { Car } from '@/types/carTypes';
 import Pagination from "@/components/pagination";
 import toast from "react-hot-toast";
-
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import { useDebounce } from "@/hooks/useDebounce";
 
 const VerifiedCarsPage: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -61,7 +46,7 @@ const VerifiedCarsPage: React.FC = () => {
           expectedWage: car.expectedWage,
           location: car.location,
           verifyStatus: car.verifyStatus,
-          blockStatus: car.blockStatus || 0, // Add this line to include blockStatus
+          blockStatus: car.blockStatus || 0, 
           images: car.images,
           videos: car.videos || [],
           owner: car.owner,
@@ -162,7 +147,7 @@ const VerifiedCarsPage: React.FC = () => {
     }
   };
 
-  // Transform filtered cars data for the SimpleTable
+
   const tableData = cars.map(car => ({
     carName: car.carName,
     brand: car.brand,
@@ -172,7 +157,6 @@ const VerifiedCarsPage: React.FC = () => {
     blockStatusText: getBlockStatusBadge(car.blockStatus),
     expectedWage: `₹${car.expectedWage}`,
     formattedDate: formatDate(new Date(car.createdAt)),
-  
     _car: car,
   }));
     
@@ -188,7 +172,7 @@ const VerifiedCarsPage: React.FC = () => {
   ];
 
   const handleViewCar = (rowData: any) => {
-    if (clickLocked) return; // block extra clicks
+    if (clickLocked) return; 
     setClickLocked(true);
     setSelectedCar(rowData._car);
     setTimeout(() => setClickLocked(false), 500);
@@ -219,7 +203,6 @@ const VerifiedCarsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Search Input */}
       <div className="mb-6">
         <div className="relative max-w-md">
           <input
@@ -247,7 +230,7 @@ const VerifiedCarsPage: React.FC = () => {
         </>
       </div>
 
-      <UserTable
+      <Table
         columns={columns}
         data={tableData}
         showViewButton={true}

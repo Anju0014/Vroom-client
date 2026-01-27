@@ -1,102 +1,134 @@
 
+'use client';
+import React from 'react';
 
-// import React from "react";
+export type TableColumn = {
+  header: string;
+  key: string;
+};
 
-// interface Column {
-//   key: string;
-//   label: string;
-//   sortable?: boolean;
-//   render?: (row: any) => React.ReactNode;
-// }
+export type TableProps = {
+  columns: TableColumn[];
+  data: any[];
+  onView?: (item: any) => void;
+  showViewButton?: boolean;
+  isLoading?: boolean;
+};
 
-// interface ReusableTableProps {
-//   columns: Column[];
-//   data: any[];
-//   loading: boolean;
-//   onRowClick?: (row: any) => void;
-//   actions?: (row: any) => React.ReactNode;
-//   page: number;
-//   totalPages: number;
-//   onPageChange: (newPage: number) => void;
-// }
+export function Table({
+  columns,
+  data,
+  onView,
+  showViewButton = false,
+  isLoading = false
+}: TableProps) {
+  
+  if (isLoading) {
+    return (
+      <div className="w-full">
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-200">
+            <thead className="bg-gray-100">
+              <tr>
+                {columns.map((column, index) => (
+                  <th
+                    key={index}
+                    className="px-4 py-3 text-left font-medium text-gray-700 border border-gray-200"
+                  >
+                    {column.header}
+                  </th>
+                ))}
+                {showViewButton && (
+                  <th className="px-4 py-3 text-left font-medium text-gray-700 border border-gray-200">
+                    Action
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td
+                  colSpan={columns.length + (showViewButton ? 1 : 0)}
+                  className="px-4 py-8 text-center text-gray-500 border border-gray-200"
+                >
+                  <div className="flex justify-center items-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+                    <span className="ml-2">Loading...</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
 
-// const ReusableTable: React.FC<ReusableTableProps> = ({
-//   columns,
-//   data,
-//   loading,
-//   onRowClick,
-//   actions,
-//   page,
-//   totalPages,
-//   onPageChange,
-// }) => {
-//   return (
-//     <div className="overflow-x-auto">
-//       {loading ? (
-//         <p>Loading...</p>
-//       ) : (
-//         <>
-//           <table className="min-w-full border-collapse border border-gray-300">
-//             <thead>
-//               <tr className="bg-gray-200">
-//                 {columns.map((col) => (
-//                   <th key={col.key} className="border p-2 text-left">
-//                     {col.label}
-//                   </th>
-//                 ))}
-//                 {actions && <th className="border p-2">Actions</th>}
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {data.length > 0 ? (
-//                 data.map((row, index) => (
-//                   <tr
-//                     key={index}
-//                     className="border hover:bg-gray-100 cursor-pointer"
-//                     onClick={() => onRowClick && onRowClick(row)}
-//                   >
-//                     {columns.map((col) => (
-//                       <td key={col.key} className="border p-2">
-//                         {col.render ? col.render(row) : row[col.key]}
-//                       </td>
-//                     ))}
-//                     {actions && <td className="border p-2">{actions(row)}</td>}
-//                   </tr>
-//                 ))
-//               ) : (
-//                 <tr>
-//                   <td colSpan={columns.length + (actions ? 1 : 0)} className="text-center p-4">
-//                     No data available
-//                   </td>
-//                 </tr>
-//               )}
-//             </tbody>
-//           </table>
+  return (
+    <div className="w-full">
+     
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse border border-gray-200">
+      
+          <thead className="bg-gray-100">
+            <tr>
+              {columns.map((column, index) => (
+                <th
+                  key={index}
+                  className="px-4 py-3 text-left font-bold text-black-700 border border-gray-200"
+                >
+                  {column.header}
+                </th>
+              ))}
+              {showViewButton && (
+                <th className="px-4 py-3 text-left font-bold text-black-700 border border-gray-200">
+                  Action
+                </th>
+              )}
+            </tr>
+          </thead>
 
-          
-//           {totalPages > 1 && (
-//             <div className="flex justify-center items-center mt-4 space-x-2">
-//               <button
-//                 disabled={page === 1}
-//                 onClick={() => onPageChange(page - 1)}
-//                 className="px-4 py-2 bg-gray-300 disabled:opacity-50"
-//               >
-//                 Previous
-//               </button>
-//               <span>Page {page} of {totalPages}</span>
-//               <button
-//                 disabled={page === totalPages}
-//                 onClick={() => onPageChange(page + 1)}
-//                 className="px-4 py-2 bg-gray-300 disabled:opacity-50"
-//               >
-//                 Next
-//               </button>
-//             </div>
-//           )}
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ReusableTable;
+        
+          <tbody>
+            {data.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={columns.length + (showViewButton ? 1 : 0)}
+                  className="px-4 py-8 text-center text-gray-500 border border-gray-200"
+                >
+                  No data available
+                </td>
+              </tr>
+            ) : (
+              data.map((item, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  className="hover:bg-gray-50"
+                >
+                  {columns.map((column, colIndex) => (
+                    <td
+                      key={colIndex}
+                      className="px-4 py-3 border border-gray-200"
+                    >
+                      {item[column.key] || '-'}
+                    </td>
+                  ))}
+                  {showViewButton && (
+                    <td className="px-4 py-3 border border-gray-200">
+                      <button
+                        onClick={() => onView && onView(item)}
+                        className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+                      >
+                        View
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

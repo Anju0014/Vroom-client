@@ -40,25 +40,60 @@ const YourCarsPage: React.FC = () => {
   const [defLocation, setDefLocation] = useState<{ lat: number; lng: number } | null>(null);
   const router=useRouter()
 
-  useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const data = await OwnerAuthService.getCars(currentPage, itemsPerPage);
-        const formattedCars = (data.cars || []).map(transformGeoCoordinates);
-        console.log('API response:', data); // Debug API response
-        console.log('totalCars:', data.total); // Debug total
-        setCars(formattedCars);
-        setTotalCars(data.total || 0); 
-      } catch (error) {
-        console.error('Error fetching cars:', error);
-        setError('Failed to load cars');
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchCars();
-  }, [currentPage]);
+  useEffect(() => {
+  const fetchCars = async () => 
+    {
+    try {
+      setLoading(true);
+
+      const data = await OwnerAuthService.getCars(currentPage, itemsPerPage);
+      const formattedCars = (data.cars || []).map(transformGeoCoordinates);
+
+      const carsWithBookingStatus = await Promise.all(
+  formattedCars.map(async (car: Car) => {
+    try {
+      const carId = car._id ?? car.id;
+
+      if (!carId) {
+        return {
+          ...car,
+          hasBookingToday: false,
+        };
+      }
+
+      const booking = await OwnerAuthService.getActiveBookingForCar(
+        carId.toString()
+      );
+
+      return {
+        ...car,
+        hasBookingToday: !!booking,
+      };
+    } catch {
+      return {
+        ...car,
+        hasBookingToday: false,
+      };
+    }
+  })
+);
+
+    
+
+      setCars(carsWithBookingStatus);
+      setTotalCars(data.total || 0);
+    } catch (error) {
+      console.error('Error fetching cars:', error);
+      setError('Failed to load cars');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCars();
+}, [currentPage]);
+
 
   const totalPages = Math.ceil(totalCars / itemsPerPage);
 
@@ -339,13 +374,14 @@ const handleAvailabilityClick = async (carId: string) => {
                             </p>
                           </div>
                         )}
-
+                        {car.hasBookingToday && (
                         <button
                           onClick={() => handleViewLiveLocation(car._id!)}
                           className="mt-3 w-full bg-white border border-gray-300 p-2 rounded hover:bg-gray-50 transition-colors text-sm"
                         >
                           📍 View Live Location
                         </button>
+)}
                       </div>
                     </div>
                   );

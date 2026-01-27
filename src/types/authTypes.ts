@@ -131,8 +131,7 @@ export interface SignupData {
     available?:boolean;
     insuranceProof:string;
     rcBookProof:string;
-  
-
+    hasBookingToday?:boolean;
    }
 
 

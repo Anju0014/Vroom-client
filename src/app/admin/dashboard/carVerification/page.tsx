@@ -3,29 +3,13 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable"; // Update import path
+import { Table, TableColumn } from "@/components/admin/Table"; 
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import CarVerifyModal from "@/components/admin/CarVerifyModal";
 import { Car, CarVerifyProps } from '@/types/carTypes';
 import Pagination from "@/components/pagination";
-
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
-
+import { useDebounce } from "@/hooks/useDebounce";
 
 const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -39,10 +23,6 @@ const CarVerifyPage: React.FC<CarVerifyProps> = ({ carType }) => {
       const [totalCars, setTotalCars] = useState(0);
       const itemsPerPage = 5;
 const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
-  // useEffect(() => {
-  //   fetchCars();
-  // }, [carType]);
 
   const fetchUnVerifiedCars = useCallback(async (page: number, search: string) => {
     try {
@@ -235,7 +215,7 @@ const debouncedSearchTerm = useDebounce(searchTerm, 500);
       </div>
 
    
-   <UserTable
+   <Table
               columns={columns}
               data={cars}
               showViewButton={true}

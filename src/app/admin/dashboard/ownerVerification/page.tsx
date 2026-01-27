@@ -2,28 +2,13 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable";
+import { Table, TableColumn } from "@/components/admin/Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import UserVerifyModal from "@/components/admin/UserVerifyModal";
 import { Eye } from "lucide-react";
 import Pagination from "@/components/pagination";
-
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface User {
   id: string;
@@ -49,7 +34,6 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<{ [key: string]: boolean }>({});
-  // const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
     const [clickLocked, setClickLocked] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
         const [currentPage, setCurrentPage] = useState(1);
@@ -271,7 +255,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
           </>
       </div>
 
-       <UserTable
+       <Table
                     columns={columns}
                     data={tableData}
                     showViewButton={true}
