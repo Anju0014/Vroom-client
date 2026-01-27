@@ -1,13 +1,12 @@
-// pages/all-cars.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import { Search, ChevronDown } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Image from 'next/image';
 import { Car } from '@/types/authTypes';
-import { AuthService } from '@/services/customer/authService'; // Adjust path
+import { AuthService } from '@/services/customer/authService'; 
 import { getReverseGeocode } from '@/services/common/mapService'
 import Pagination from '@/components/pagination';
 import { useSearchParams } from 'next/navigation';
@@ -78,6 +77,8 @@ const AllCarsPage: React.FC = () => {
     };
     fetchCars();
   }, [currentPage, searchTerm, priceRange,carType,location,startDate,endDate,filtersLoaded]);
+
+  const today = new Date().toISOString().split("T")[0];
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= Math.ceil(totalCars / itemsPerPage)) {
@@ -176,6 +177,7 @@ const AllCarsPage: React.FC = () => {
   {/* Start Date */}
   <input
     type="date"
+    min={today}
     className="px-4 py-2 border rounded w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
     value={startDate}
     onChange={(e) => {
@@ -184,9 +186,9 @@ const AllCarsPage: React.FC = () => {
     }}
   />
 
-  {/* End Date */}
   <input
     type="date"
+    min={startDate||today}
     className="px-4 py-2 border rounded w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
     value={endDate}
     onChange={(e) => {

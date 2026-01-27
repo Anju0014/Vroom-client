@@ -254,31 +254,13 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-// import { Table, TableColumn } from "@/components/admin/Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import UpdateComplaintModal from "@/components/admin/UpdateComplaintModal";
 import Pagination from "@/components/pagination";
 import toast from "react-hot-toast";
 import { ComplaintAdminResponseDTO } from "@/types/complaintTypes";
-import { TableColumn, UserTable } from "@/components/admin/UserTable";
-
-
-
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import { Table, TableColumn } from "@/components/admin/Table";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const AdminComplaintsPage: React.FC = () => {
   const [complaints, setComplaints] = useState<ComplaintAdminResponseDTO[]>([]);
@@ -290,7 +272,7 @@ const AdminComplaintsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalComplaints, setTotalComplaints] = useState(0);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
@@ -298,13 +280,13 @@ const AdminComplaintsPage: React.FC = () => {
     try {
       setLoading(true);
       
-      // const response = await AdminAuthService.getAllComplaints(
-      //   page,
-      //   itemsPerPage,
-      //   { search: search.trim() }
-      // );
+      const response = await AdminAuthService.getAllComplaints(
+        page,
+        itemsPerPage,
+        { search: search.trim() }
+      );
       
-       const response = await AdminAuthService.getAllComplaints();
+      //  const response = await AdminAuthService.getAllComplaints();
        console.log("response",response)
       
       if (!response) throw new Error("Failed to fetch complaints");
@@ -461,7 +443,7 @@ const AdminComplaintsPage: React.FC = () => {
         )}
       </div>
 
-      <UserTable
+      <Table
         columns={columns}
         data={tableData}
         showViewButton={true}

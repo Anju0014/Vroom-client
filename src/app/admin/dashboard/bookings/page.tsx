@@ -1,29 +1,13 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from "react";
-import { UserTable, TableColumn } from "@/components/admin/UserTable";
+import { TableColumn, Table } from "@/components/admin/Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import BookingDetailsModal from "@/components/admin/BookingDetailsModal";
 import { format } from "date-fns";
 import { IBooking } from "@/types/bookTypes";
 import Pagination from "@/components/pagination";
-
-// Debounce hook for search
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import { useDebounce } from "@/hooks/useDebounce";
 
 const BookingsPage: React.FC = () => {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -163,7 +147,6 @@ const BookingsPage: React.FC = () => {
     }
   };
 
-  // Transform bookings data for the table
   const tableData = bookings.map(booking => ({
     bookingIdDisplay: booking.bookingIdDisplay,
     carNameDisplay: booking.carNameDisplay,
@@ -171,7 +154,6 @@ const BookingsPage: React.FC = () => {
     ownerDisplay: booking.ownerDisplay,
     amountDisplay: booking.amountDisplay,
     statusDisplay: getStatusBadge(booking.status, booking.startDate, booking.endDate),
-    // Keep reference to original booking for view action
     _booking: booking,
   }));
 
@@ -185,7 +167,7 @@ const BookingsPage: React.FC = () => {
   ];
 
   const handleViewBooking = (rowData: any) => {
-     if (clickLocked) return; // block extra clicks
+     if (clickLocked) return; 
      setClickLocked(true);
      setSelectedBooking(rowData._booking);
      setTimeout(() => setClickLocked(false), 500);
@@ -205,7 +187,6 @@ const BookingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Search Input */}
       <div className="mb-6">
         <div className="relative max-w-md">
           <input
@@ -227,7 +208,6 @@ const BookingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Results Summary */}
       <div className="mb-4 text-sm text-gray-600">
         {!isLoading && (
           <>
@@ -240,8 +220,7 @@ const BookingsPage: React.FC = () => {
         )}
       </div>
 
-      {/* Table */}
-      <UserTable
+      <Table
         columns={columns}
         data={tableData}
         showViewButton={true}
@@ -249,7 +228,6 @@ const BookingsPage: React.FC = () => {
         isLoading={isLoading}
       />
 
-      {/* Pagination - Only show if there are multiple pages */}
       {totalPages > 1 && (
         <div className="mt-6 flex justify-center">
           <Pagination
@@ -260,7 +238,6 @@ const BookingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Booking Details Modal */}
       {selectedBooking && (
         <BookingDetailsModal
           booking={selectedBooking}

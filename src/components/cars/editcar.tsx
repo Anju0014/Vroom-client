@@ -578,7 +578,7 @@ export default function EditCarModal({
     setFormData((prev) => ({ ...prev, videos: [] }));
   };
 
-  // proofs are SINGLE STRING URLs
+
   const handleFileInsuranceUpload = (uploadedUrl: string | string[]) => {
     if (typeof uploadedUrl === 'string') {
       setFormData((prev) => ({ ...prev, insuranceProof: uploadedUrl }));

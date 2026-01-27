@@ -294,7 +294,6 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[95vh] overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold mb-1">Car Owner Verification</h2>
@@ -308,10 +307,8 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1">
-          {/* Status and ID Section */}
-          <div className="mb-6">
+             <div className="p-6 overflow-y-auto flex-1">
+                <div className="mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <InfoCard icon={Hash} label="User ID" value={updatedUser.id} />
               <div className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-100 rounded-lg p-4">
@@ -327,8 +324,7 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
             </div>
           </div>
 
-          {/* Personal Information */}
-          <div className="mb-6">
+           <div className="mb-6">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <User size={20} />
               Personal Information
@@ -339,7 +335,6 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
             </div>
           </div>
 
-          {/* Contact Information */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <Phone size={20} />
@@ -359,7 +354,6 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
             </div>
           </div>
 
-          {/* Address Information */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <MapPin size={20} />
@@ -375,7 +369,6 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
             </div>
           </div>
 
-          {/* Document Proof */}
           {updatedUser.document && (
             <div className="mb-6">
               <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
@@ -411,7 +404,6 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
             </div>
           )}
           
-          {/* Verification Actions */}
           <div className="pt-4 border-t-2 border-gray-200">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <Shield size={20} />
@@ -498,33 +490,6 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
 };
 
 export default UserVerifyModal;
-
-// const getStatusText = (verifyStatus: number) => {
-//   const statusConfig = {
-//     '-1': { 
-//       text: "Rejected", 
-//       color: "bg-red-100 text-red-700 border-2 border-red-300",
-//       icon: <X size={16} />
-//     },
-//     '0': { 
-//       text: "Not Verified", 
-//       color: "bg-yellow-100 text-yellow-700 border-2 border-yellow-300",
-//       icon: <AlertCircle size={16} />
-//     },
-//     '1': { 
-//       text: "Fully Verified", 
-//       color: "bg-green-100 text-green-700 border-2 border-green-300",
-//       icon: <Shield size={16} />
-//     }
-//   };
-  
-//   return statusConfig[verifyStatus as keyof typeof statusConfig] || { 
-//     text: "Unknown", 
-//     color: "bg-gray-100 text-gray-700 border-2 border-gray-300",
-//     icon: <AlertCircle size={16} />
-//   };
-// };
-
 
 const getStatusText = (verifyStatus: number) => {
   switch (verifyStatus) {

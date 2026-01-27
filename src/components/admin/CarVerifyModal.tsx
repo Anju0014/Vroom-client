@@ -352,49 +352,6 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
               <Camera size={20} />
               Vehicle Gallery
             </h3>
-            {/* {car.images && car.images.length > 0 ? (
-              <div>
-                {/* Main Image */}
-                {/* <div className="relative aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 shadow-lg border-2 border-blue-100">
-                  <img
-                    src={car.images[selectedImageIndex]}
-                    alt={`${car.carName} main`}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    {selectedImageIndex + 1} / {car.images.length}
-                  </div>
-                </div> */}
-
-                {/* Thumbnail Grid */}
-                {/* <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                  {car.images.map((image: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImageIndex(index)}
-                      className={`relative aspect-video rounded-lg overflow-hidden transition-all ${
-                        selectedImageIndex === index
-                          ? 'ring-4 ring-blue-500 scale-95'
-                          : 'hover:ring-2 hover:ring-blue-300 opacity-70 hover:opacity-100'
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="p-8 bg-blue-50 rounded-xl text-center border-2 border-blue-100">
-                <Camera size={48} className="text-blue-300 mx-auto mb-2" />
-                <p className="text-gray-500">No images provided</p>
-              </div>
-            )} */} 
-
-
 
             {car.images && car.images.length > 0 ? (
   <div>
@@ -423,7 +380,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
 
           </div>
 
-          {/* Car Videos */}
+         
           {car.videos && car.videos.length > 0 && (
             <div className="mb-6">
               <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
@@ -444,9 +401,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
             </div>
           )}
 
-          {/* Documents Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Insurance Proof */}
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {car.insuranceProof && (
               <div className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-xl p-5 hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2 mb-3">
@@ -465,7 +420,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
               </div>
             )}
 
-            {/* RC Book Proof */}
+       
             {car.rcBookProof && (
               <div className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-xl p-5 hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2 mb-3">
@@ -485,7 +440,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
             )}
           </div>
 
-          {/* Live Verification */}
+      
           <div className="mb-6">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <Video size={20} />
@@ -510,7 +465,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
             )}
           </div>
 
-          {/* Reject Form */}
+       
           {showRejectForm && (
             <div className="mb-6 bg-red-50 border-2 border-red-200 rounded-xl p-5">
               <h3 className="text-lg font-bold text-red-700 mb-2 flex items-center gap-2">
@@ -532,7 +487,6 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex justify-end items-center gap-3 border-t-2 border-gray-200 p-5 bg-gray-50">
           {showRejectForm ? (
             <>

@@ -222,12 +222,10 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
   const timeStatus = getBookingTimeStatus();
 
   return (
-    // <div className="fixed inset-0 bg-transparent bg-opacity-60 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4
                 bg-black/30 backdrop-blur-md">
 
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header with gradient */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
           <div className="flex justify-between items-center">
             <div>
@@ -243,9 +241,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
           </div>
         </div>
 
-        {/* Scrollable content */}
         <div className="overflow-y-auto flex-1 p-6">
-          {/* Booking ID and Status */}
           <div className="flex flex-wrap justify-between items-center mb-6 pb-4 border-b border-gray-200">
             <div>
               <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold">Booking ID</p>
@@ -264,7 +260,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
             </div>
           </div>
 
-          {/* Car Details - Featured */}
+
           <div className="mb-6 p-5 bg-gradient-to-br from-blue-50 to-white rounded-xl border border-blue-100 shadow-sm">
             <div className="flex items-start gap-4">
               <div className="bg-blue-600 p-3 rounded-lg">
@@ -279,7 +275,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
             </div>
           </div>
 
-          {/* Customer and Owner Grid */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start gap-3">
@@ -310,7 +306,6 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
             </div>
           </div>
 
-          {/* Booking Period */}
           <div className="mb-6 p-5 bg-white rounded-xl border border-gray-200 shadow-sm">
             <div className="flex items-start gap-3">
               <div className="bg-purple-100 p-2 rounded-lg">
@@ -338,7 +333,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
             </div>
           </div>
 
-          {/* Payment Details */}
+
           <div className="mb-6 p-5 bg-gradient-to-br from-green-50 to-white rounded-xl border border-green-100 shadow-sm">
             <div className="flex items-start gap-3">
               <div className="bg-green-600 p-2 rounded-lg">
@@ -352,7 +347,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
             </div>
           </div>
 
-          {/* Booking Created */}
+
           <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-sm">
             <div className="flex items-start gap-3">
               <div className="bg-gray-100 p-2 rounded-lg">
@@ -366,7 +361,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
           </div>
         </div>
 
-        {/* Footer */}
+
         <div className="border-t border-gray-200 p-6 bg-gray-50 flex justify-end gap-3">
           <button
             onClick={onClose}

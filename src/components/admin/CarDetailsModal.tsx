@@ -229,11 +229,11 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
   );
 
   return (
-    // <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+  
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4
                 bg-black/30 backdrop-blur-md">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[95vh] overflow-hidden flex flex-col">
-        {/* Header */}
+
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-center">
           <div>
             <h2 className="text-3xl font-bold mb-1">{updatedCar.carName}</h2>
@@ -247,7 +247,7 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
+
         <div className="overflow-y-auto flex-1">
           <div className="p-6">
      
@@ -258,7 +258,7 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
       <h3 className="text-xl font-bold text-gray-800">Gallery</h3>
     </div>
 
-    {/* Small Image Grid */}
+
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
       {updatedCar.images.map((image: string, index: number) => (
         <div
@@ -283,7 +283,6 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
 
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              {/* Car Information Card */}
               <div className="bg-white border-2 border-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="text-xl font-bold text-blue-700 mb-4 pb-3 border-b-2 border-blue-200">
                   Vehicle Details
@@ -314,7 +313,7 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
                 </div>
               </div>
 
-              {/* Owner Information Card */}
+
               <div className="bg-white border-2 border-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="text-xl font-bold text-blue-700 mb-4 pb-3 border-b-2 border-blue-200">
                   Owner Details
@@ -349,7 +348,7 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
               </div>
             </div>
 
-            {/* Videos Section */}
+
             {updatedCar.videos && updatedCar.videos.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-blue-700 mb-4">Videos</h3>
@@ -367,7 +366,7 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
               </div>
             )}
 
-            {/* Action Button */}
+
             <button
               onClick={() => onToggleBlock(updatedCar)}
               disabled={isProcessing}
@@ -389,7 +388,6 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-end">
           <button
             onClick={onClose}

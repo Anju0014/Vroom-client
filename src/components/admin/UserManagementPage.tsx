@@ -1,28 +1,29 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from "react";
-import { UserTable, TableColumn } from "./UserTable";
+import { TableColumn, Table } from "./Table";
 import { AdminAuthService } from "@/services/admin/adminService";
 import toast from "react-hot-toast";
 import UserDetailsModal from "@/components/admin/UserDetailsModal";
 import { Shield, ShieldOff, Eye } from "lucide-react";
 import Pagination from "../pagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+// const useDebounce = (value: string, delay: number) => {
+//   const [debouncedValue, setDebouncedValue] = useState(value);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+//   useEffect(() => {
+//     const handler = setTimeout(() => {
+//       setDebouncedValue(value);
+//     }, delay);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
+//     return () => {
+//       clearTimeout(handler);
+//     };
+//   }, [value, delay]);
 
-  return debouncedValue;
-};
+//   return debouncedValue;
+// };
 
 interface User {
   id: string;
@@ -49,7 +50,6 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<{ [key: string]: boolean }>({});
 
-  // const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
         const [currentPage, setCurrentPage] = useState(1);
         const [totalUsers, setTotalUsers] = useState(0);
@@ -68,7 +68,6 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
       if (!response || !response.data) throw new Error("Failed to fetch users");
 
       const filteredUsers = response.data
-        // .filter((user: any) => user.processStatus > 1 && user.verifyStatus === 1)
         .map((user: any) => ({
           id: user._id,
           name: user.fullName,
@@ -162,7 +161,6 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
     );
   };
 
-  // Format date to readable string
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
@@ -203,12 +201,11 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
         </button>
       </div>
     ),
-    // Keep reference to original user for actions and row styling
-    _user: user,
+       _user: user,
     _isBlocked: user.blockStatus === 1
   }));
 
-  // Define table columns
+
   const columns: TableColumn[] = [
     { header: "Name", key: "name" },
     { header: "Email", key: "email" },
@@ -219,7 +216,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
   ];
 
   const handleRowView = (rowData: any) => {
-    if (clickLocked) return; // block extra clicks
+    if (clickLocked) return;
      setClickLocked(true);
     setSelectedUser(rowData._user);
     setTimeout(() => setClickLocked(false), 500);
@@ -250,7 +247,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
         </div>
       )}
 
-      {/* Search Input */}
+
       <div className="mb-6">
         <div className="relative max-w-md">
           <input
@@ -279,7 +276,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
           </>
       </div>
 
-      <UserTable
+                    <Table
                        columns={columns}
                        data={tableData}
                        showViewButton={true}

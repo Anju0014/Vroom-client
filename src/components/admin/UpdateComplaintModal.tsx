@@ -318,7 +318,6 @@ export default function UpdateComplaintModal({
       onClick={handleBackdropClick}
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5 text-white">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -339,9 +338,7 @@ export default function UpdateComplaintModal({
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto px-6 py-6">
-          {/* Status and Priority Badges */}
           <div className="flex gap-3 mb-6">
             <div className={`${currentStatusConfig.bg} ${currentStatusConfig.text} ${currentStatusConfig.border} border-2 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-sm`}>
               <StatusIcon className="w-4 h-4" />
@@ -353,7 +350,7 @@ export default function UpdateComplaintModal({
             </div>
           </div>
 
-          {/* Complaint Information Card */}
+
           <div className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-xl p-5 mb-6 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <FileText className="w-5 h-5 text-blue-600" />
@@ -408,7 +405,7 @@ export default function UpdateComplaintModal({
             )}
           </div>
 
-          {/* User Information Card */}
+
           {complaint.raisedByUser && (
             <div className="bg-white border-2 border-blue-100 rounded-xl p-5 mb-6 shadow-sm">
               <h3 className="font-bold text-blue-700 mb-4 text-lg flex items-center gap-2">
@@ -434,7 +431,7 @@ export default function UpdateComplaintModal({
             </div>
           )}
 
-          {/* Update Form */}
+
           <div className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-xl p-5 shadow-sm">
             <h3 className="font-bold text-blue-700 mb-4 text-lg flex items-center gap-2">
               <MessageSquare className="w-5 h-5" />
@@ -494,7 +491,7 @@ export default function UpdateComplaintModal({
           </div>
         </div>
 
-        {/* Footer */}
+
         <div className="bg-gray-50 border-t-2 border-gray-200 px-6 py-4 flex justify-end gap-3">
           <button
             onClick={onClose}

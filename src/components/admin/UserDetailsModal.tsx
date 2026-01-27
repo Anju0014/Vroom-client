@@ -196,13 +196,10 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
   );
 
   return (
-    // <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
        <div className="fixed inset-0 z-50 flex items-center justify-center p-4
                 bg-black/30 backdrop-blur-md">
-      {/* <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden"> */}
-         <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[95vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-center">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold mb-1">Car Owner Details</h2>
             <p className="text-blue-100 text-sm">Review owner information and status</p>
@@ -215,9 +212,9 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
+      
           <div className="p-6 overflow-y-auto flex-1">
-          {/* Status Badge */}
+        
           <div className="mb-6 flex items-center gap-3">
             <Shield size={24} className="text-blue-600" />
             <div>
@@ -229,7 +226,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             </div>
           </div>
 
-          {/* Personal Information */}
+      
           <div className="mb-6">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <User size={20} />
@@ -241,7 +238,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             </div>
           </div>
 
-          {/* Contact Information */}
+      
           <div className="mb-6">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <Phone size={20} />
@@ -261,7 +258,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             </div>
           </div>
 
-          {/* Address Information */}
+   
           <div className="mb-6">
             <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
               <MapPin size={20} />
@@ -277,7 +274,6 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             </div>
           </div>
 
-          {/* Document Proof */}
           {updatedUser.document && (
             <div className="mb-6">
               <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
@@ -313,7 +309,6 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             </div>
           )}
 
-          {/* Block/Unblock Action */}
           <div className="pt-4 border-t-2 border-gray-200">
             <button 
               onClick={handleToggleBlock}
