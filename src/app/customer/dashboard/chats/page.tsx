@@ -121,7 +121,7 @@ export default function CustomerChatsPage() {
                 return (
                   <Link
                     key={roomId}
-                    href={`/carOwner/dashboard/chats/${ownerId}/${encodeURIComponent(
+                    href={`/customer/dashboard/chats/${ownerId}/${encodeURIComponent(
                       ownerName
                     )}`}
                     className="block"
@@ -132,9 +132,9 @@ export default function CustomerChatsPage() {
                           <h3 className="font-semibold text-lg text-blue-700">
                             {ownerName}
                           </h3>
-                          <span className="text-xs text-blue-500 font-medium">
+                          {/* <span className="text-xs text-blue-500 font-medium">
                             {isOwner ?  "car owner":"customer"}
-                          </span>
+                          </span> */}
                         </div>
                         <span className="text-xs text-blue-400 font-medium">
                           {formatTimestamp(lastMessage.timestamp)}

@@ -125,6 +125,7 @@ export default function OwnerChatsPage() {
                       customerName
                     )}`}
                     className="block"
+                    
                   >
                     <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg hover:bg-blue-50/50 transition-all duration-200 border border-blue-100/50">
                       <div className="flex justify-between items-start mb-2">
@@ -132,9 +133,9 @@ export default function OwnerChatsPage() {
                           <h3 className="font-semibold text-lg text-blue-700">
                             {customerName}
                           </h3>
-                          <span className="text-xs text-blue-500 font-medium">
+                          {/* <span className="text-xs text-blue-500 font-medium">
                             {isCustomer ? "customer" : "car owner"}
-                          </span>
+                          </span> */}
                         </div>
                         <span className="text-xs text-blue-400 font-medium">
                           {formatTimestamp(lastMessage.timestamp)}
