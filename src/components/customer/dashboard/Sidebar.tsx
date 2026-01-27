@@ -60,7 +60,7 @@ const Sidebar: React.FC = () => {
     { name: "Report & Complaint", path: "/customer/dashboard/complaints", icon: <AlertTriangle size={18} /> },
     { name: "Wallet", path: "/customer/dashboard/wallets", icon: <WalletIcon size={18} /> },
     // { name: "Revenue", path: "/dashboard/revenue", icon: <DollarSign size={18} /> },
-    { name: "Chat", path: "/customer/dashboard/chat", icon: <MessageSquare size={18} /> },
+    { name: "Chat", path: "/customer/dashboard/chats", icon: <MessageSquare size={18} /> },
     // { name: "Settings", path: "/dashboard/settings", icon: <Settings size={18} /> },
     
   ];

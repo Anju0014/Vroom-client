@@ -63,6 +63,9 @@ const BookingsPage = () => {
   const [error, setError] = useState("");
     const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalBookings, setTotalBookings] = useState<number>(0);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelledBookingId, setCancelledBookingId] = useState<string | null>(null);
+
   const itemsPerPage = 5;
 
   const handleCancelBooking = async (bookingId: string) => {
@@ -73,17 +76,32 @@ const BookingsPage = () => {
       setBookingData((prev) =>
         prev.map((b) => (b._id === bookingId ? { ...b, status: "cancelled" } : b))
       );
+      setCancelledBookingId(bookingId);
+    setShowCancelModal(true);
     } catch (err) {
       console.error("Cancel error", err);
       toast.error("Failed to cancel booking");
     }
   };
 
-  const handleContactOwner = (bookingId: string|undefined) => {
-    toast.success(`Connecting you with the owner`);
-    if(bookingId){
-     router.push(`/bookings/${bookingId}/chat`);}
-  };
+  // const handleContactOwner = (bookingId: string|undefined) => {
+  //   toast.success(`Connecting you with the owner`);
+  //   if(bookingId){
+  //    router.push(`/bookings/${bookingId}/chat`);}
+  // };
+
+  const handleContactOwner = (
+  ownerId: string | undefined,
+  ownerName: string | undefined
+) => {
+  toast.success("Connecting you with the owner");
+
+  if (!ownerId || !ownerName) return;
+
+  router.push(
+    `/customer/dashboard/chats/${ownerId}/${encodeURIComponent(ownerName)}`
+  );
+};
 
   useEffect(() => {
     const fetchBookingData = async () => {
@@ -231,7 +249,7 @@ const BookingsPage = () => {
                       <div className="flex items-start gap-2 mt-2">
   {status !== "cancelled" && (
     <button
-      onClick={() => handleContactOwner(booking.bookingId)}
+      onClick={() => handleContactOwner(booking.carOwnerId,booking.ownerName)}
       className="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition"
     >
       Chat with Owner
@@ -260,6 +278,26 @@ const BookingsPage = () => {
       <p className="text-xs text-gray-600 mt-1">Cancellation cost included</p>
     </div>
   )}
+
+  {showCancelModal && (
+  <div className="modal-overlay">
+    <div className="modal">
+      <h2>Booking Cancelled</h2>
+      <p>Your booking has been cancelled successfully.</p>
+
+      <button
+        onClick={() => {
+          setShowCancelModal(false);
+          setCancelledBookingId(null);
+        }}
+        className="modal-btn"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
+
 </div>
 
 
