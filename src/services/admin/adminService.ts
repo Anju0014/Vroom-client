@@ -474,9 +474,9 @@ export const AdminAuthService = {
 
 
     getAllComplaints: async (
-    // page: number,
-    // limit: number,
-    // filters: { status?: string; search?: string }
+    page: number,
+    limit: number,
+    filters: { status?: string; search?: string }
   ) => {
     const response = await adminApi.get(
       API_ROUTES.admin.getAllComplaints,
