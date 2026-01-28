@@ -258,6 +258,7 @@
 
 import React, { useState } from "react";
 import { X, Check, Eye, Video, FileText, Shield, Calendar, Fuel, Hash, DollarSign, MapPin, Camera } from "lucide-react";
+import VideoCall from "../common/VideoCall";
 
 interface CarVerifyModalProps {
   car: any;
@@ -446,7 +447,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
               <Video size={20} />
               Live Verification
             </h3>
-            {!showVideoCall ? (
+            {/* {!showVideoCall ? (
               <button
                 onClick={() => setShowVideoCall(true)}
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-semibold shadow-md"
@@ -462,7 +463,28 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
                   <p className="text-xs text-gray-400 mt-2">Role: Admin</p>
                 </div>
               </div>
-            )}
+            )} */}
+             {!showVideoCall ? (
+    <button
+      onClick={() => setShowVideoCall(true)}
+      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+    >
+      <Video className="mr-1" size={18}/>
+       Start Video Verification
+    </button>
+  ) : (
+    <div className="border rounded-lg p-3 bg-gray-50">
+  {/* <VideoCall
+    roomId={`car-verification-${car.id}`}
+    currentUserId={user.id}
+    currentUserRole="admin"
+  /> */}
+  <VideoCall
+        roomId={`car-verification-${car.id}`}
+        role="admin"
+      />
+    </div>
+  )}
           </div>
 
        

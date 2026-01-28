@@ -2,46 +2,46 @@
 export const API_ROUTES = {
   auth: {
     customer: {
-      signup: "/signup",
-      verifyOtp: "/verifyotp",
-      resendOtp: "/resendotp",
+      signup: "/sign-up",
+      verifyOtp: "/verify-otp",
+      resendOtp: "/resend-otp",
       login: "/login",
-      forgotPassword: "/forgotpassword",
-      resetPassword: "/resetpassword",
-      logout: "/logout",
-      googleSignIn: "/googleSignIn",
+      forgotPassword: "/forgot-password",
+      resetPassword: "/reset-password",
+      logout: "/auth/logout",
+      googleSignIn: "/auth/google",
     },
     admin: {
-      login: "/admin/login",
-      logout: "/admin/logout",
+      login: "/admin/auth/login",
+      logout: "/admin/auth/logout",
     },
     owner: {
-      signup: "/owner/signup",
-      verifyOtp: "/owner/verifyotp",
-      resendOtp: "/owner/resendotp",
+      signup: "/owner/sign-up",
+      verifyOtp: "/owner/verify-otp",
+      resendOtp: "/owner/resend-otp",
       login: "/owner/login",
-      forgotPassword: "/owner/forgotpassword",
-      resetPassword: "/resetpassword",
+      forgotPassword: "/owner/forgot-password",
+      resetPassword: "/reset-password",
       logout: "/owner/logout",
-      googleSignIn: "/owner/googleSignIn",
-      completeRegistration: "/owner/completeregistration",
+      googleSignIn: "/owner/auth/google",
+      completeRegistration: "/owner/complete-registration",
     },
   },
   profile: {
     customer: {
-      getProfile: "/getCustomerProfile",
-      updateProfile: "/updateProfile",
-      updateIdProof: "/updateProfileIdProof",
-      changePassword: "/changepassword",
+      getProfile: "/me",
+      updateProfile: "/me",
+      updateIdProof: "/me/id-proof",
+      changePassword: "/me/password",
     },
     admin: {
       getProfile: "/owner/getAdminProfile", // Note: Possible typo in your original code
     },
     owner: {
-      getProfile: "/owner/getOwnerProfile",
-      updateProfile: "/owner/updateProfile",
-      updateIdProof: "/owner/updateProfileIdProof",
-      changePassword: "/owner/changepassword",
+      getProfile: "/owner/me",
+      updateProfile: "/owner/me",
+      updateIdProof: "/owner/me/id-proof",
+      changePassword: "/owner/me/password",
     },
   },
   admin: {
@@ -52,29 +52,29 @@ export const API_ROUTES = {
     toggleBlockOwner: (ownerId: string) => `/owner/${ownerId}/toggle-block`,
     updateBlockStatus: (userId: string, userType: "customer" | "owner") =>
       userType === "customer"
-        ? `/admin/customers/updateblockstatus/${userId}`
-        : `/admin/owners/updateblockstatus/${userId}`,
-    updateCarBlockStatus: (carId: string) => `/admin/cars/updateblockstatus/${carId}`,
+        ? `/admin/customers/block-status/${userId}`
+        : `/admin/owners/block-status/${userId}`,
+    updateCarBlockStatus: (carId: string) => `/admin/cars/block-status/${carId}`,
     updateUserStatus: (userId: string, userType: "customer" | "owner") =>
       userType === "customer"
         ? `/admin/customers/updatestatus/${userId}`
         : `/admin/owners/updatestatus/${userId}`,
     updateVerifyStatus: (userId: string, userType: "customer" | "owner") =>
       userType === "customer"
-        ? `/admin/customers/updateverifystatus/${userId}`
-        : `/admin/owners/updateverifystatus/${userId}`,
+        ? `/admin/customers/verify-status/${userId}`
+        : `/admin/owners/verify-status/${userId}`,
     getAllUnverifiedCars: "/admin/pendingcars",
     getAllVerifiedCars: "/admin/verifiedcars",
     getAllBookings: "/admin/bookings",
-    updateCarVerifyStatus: (carId: string) => `/admin/cars/updateverifystatus/${carId}`,
+    updateCarVerifyStatus: (carId: string) => `/admin/cars/verify-status/${carId}`,
     getAllComplaints: "/complaints/admin",
     updateComplaint: (id: string) => `/complaints/admin/${id}`,
   },
   owner: {
-    addCar: "/owner/carupload",
-    getCars: "/owner/getcars",
-    updateCar: (carId: string) => `/owner/updatecars/${carId}`,
-    deleteCar: (carId: string) => `/owner/deletecars/${carId}`,
+    addCar: "/owner/car",
+    getCars: "/owner/cars",
+    updateCar: (carId: string) => `/owner/cars/${carId}`,
+    deleteCar: (carId: string) => `/owner/cars/${carId}`,
     getBookingList: "/owner/bookings",
     getBookingsForCar: (carId: string) => `/owner/cars/${carId}/bookings`,
     updateCarAvailability: (carId: string) => `/owner/cars/${carId}/availability`,
@@ -84,14 +84,14 @@ export const API_ROUTES = {
   },
   customer: {
     nearByCars: "/car/nearby",
-    getAllCars: "/car/getAllCars",
+    getAllCars: "/cars",
     featuredCarList: "/car/featured",
-    findCarDetails: (carId: string) => `/car/getCarDetails/${carId}`,
-    findBookingDetails: (carId: string) => `/car/getBookingDetails/${carId}`,
-    checkBookingAvailability:"/bookings/checkBookingAvailability",
-    findCustomerBookingDetails: "/getCustomerBookingDetails",
-    findCustomerWalletDetails: "/getCustomerWalletDetails",
-    updatePendingBooking:(bookingId:string)=>`/bookings/${bookingId}/updatePendingBooking`,
+    findCarDetails: (carId: string) => `/car/car-details/${carId}`,
+    findBookingDetails: (carId: string) => `/car/booking-details/${carId}`,
+    checkBookingAvailability:"/bookings/availability",
+    findCustomerBookingDetails: "/me/bookings",
+    findCustomerWalletDetails: "/me/wallet",
+    updatePendingBooking:(bookingId:string)=>`/bookings/${bookingId}/pendingBooking`,
     createPendingBooking: "/bookings/create",
     confirmBooking: (bookingId: string) => `/bookings/${bookingId}/confirm`,
     failBooking: (bookingId: string) => `/bookings/${bookingId}/fail`,
@@ -99,7 +99,7 @@ export const API_ROUTES = {
     
   },
   chat: {
-    ownerChats: "/chats/ownerchats",
+    ownerChats: "/chats/owner-chats",
     chatHistory: (roomId: string) => `/chats/room/${roomId}`,
   },
   stripe: {

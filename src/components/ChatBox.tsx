@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import socket from "@/services/common/socketService";
 import { fetchChatHistory } from "@/services/common/chatService";
-import VideoCall from "./common/VideoCall";
+// import VideoCall from "./common/VideoCall";
 import { UserRole } from "@/types/authTypes";
+import PeerVideoCall from "./common/VideoCall";
 
 interface ChatMessage {
   _id: string;
@@ -101,7 +102,7 @@ export default function ChatBox({
               {decodeURIComponent(otherUserName)}
             </h1>
 
-            {/* <button
+            <button
               onClick={() => setShowVideoCall(true)}
               className="p-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
               aria-label="Start Video Call"
@@ -120,7 +121,7 @@ export default function ChatBox({
                   d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
                 />
               </svg>
-            </button> */}
+            </button>
           </div>
         </div>
 
@@ -130,7 +131,7 @@ export default function ChatBox({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 relative">
             <button
-              onClick={() => setShowVideoCall(false)}
+              onClick={() => setShowVideoCall(true)}
               className="absolute top-4 right-4 p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition z-10"
               aria-label="Close Video Call"
             >
@@ -154,6 +155,12 @@ export default function ChatBox({
               Video Call with {decodeURIComponent(otherUserName)}
             </h3>
             
+            <PeerVideoCall
+    roomId={roomId}
+    onClose={() => setShowVideoCall(false)}
+    myName={currentUserName}
+    otherName={decodeURIComponent(otherUserName)}
+  />
             {/* <VideoCall
               roomId={roomId}
               currentUserId={currentUserId}
