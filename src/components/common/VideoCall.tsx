@@ -666,18 +666,17 @@
 // }
 
 
-
 "use client";
 import { useEffect, useRef, useState } from "react";
 import socket from "@/services/common/socketService";
 
 interface VideoCallProps {
   roomId: string;
-  role?: "admin" | "owner"; // Optional for admin-owner flow
-  myName?: string; // For peer-to-peer
-  otherName?: string; // For peer-to-peer
-  onClose?: () => void; // For peer-to-peer modal
-  isAdminOwner?: boolean; // Flag to distinguish between the two modes
+  role?: "admin" | "owner";
+  myName?: string;
+  otherName?: string;
+  onClose?: () => void;
+  isAdminOwner?: boolean;
 }
 
 export default function VideoCall({
@@ -698,12 +697,10 @@ export default function VideoCall({
   const [inCall, setInCall] = useState(false);
   const [incomingOffer, setIncomingOffer] = useState<RTCSessionDescriptionInit | null>(null);
   const [calling, setCalling] = useState(false);
-  const [localStreamReady, setLocalStreamReady] = useState(false); // 🆕 Track if preview is ready
-  const [connecting, setConnecting] = useState(false); // 🆕 For receiver after accepting
+  const [localStreamReady, setLocalStreamReady] = useState(false);
+  const [connecting, setConnecting] = useState(false);
 
-  /* -------------------- START LOCAL PREVIEW ON MOUNT -------------------- */
   useEffect(() => {
-    // 🆕 Start local video preview immediately when component mounts
     const initializeLocalStream = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -723,7 +720,6 @@ export default function VideoCall({
 
     initializeLocalStream();
 
-    // Cleanup on unmount
     return () => {
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach((track) => track.stop());
@@ -731,37 +727,23 @@ export default function VideoCall({
     };
   }, []);
 
-  /* -------------------- SOCKET SETUP -------------------- */
   useEffect(() => {
-    console.log("🔌 Joining room:", roomId, "Role:", role, "isAdminOwner:", isAdminOwner);
     socket.emit("join-room", roomId);
 
     const handleOffer = async (data: { offer: RTCSessionDescriptionInit }) => {
-      console.log("📞 Received offer", data);
-      console.log("📞 Current state - isAdminOwner:", isAdminOwner, "role:", role);
-      
-      // For admin-owner: only owner accepts
       if (isAdminOwner && role !== "owner") {
-        console.log("⏭️ Ignoring offer - admin-owner mode and not owner");
         return;
       }
       
-      // 🔴 FIX: Clear calling state if we were calling and received an offer
-      // This handles the case where both users click "Start Call" at the same time
-      console.log("✅ Setting incoming offer");
       setCalling(false);
-      
       setIncomingOffer(data.offer);
       
-      // Auto-accept for admin-owner flow when owner receives offer
       if (isAdminOwner && role === "owner") {
-        console.log("🤖 Auto-accepting (admin-owner mode)");
         await acceptCall(data.offer);
       }
     };
 
     const handleAnswer = async (data: { answer: RTCSessionDescriptionInit }) => {
-      console.log("Received answer", data);
       if (!peerRef.current) return;
 
       try {
@@ -769,12 +751,10 @@ export default function VideoCall({
           new RTCSessionDescription(data.answer)
         );
 
-        // 🆕 Set inCall when answer is received (for caller side)
         setCalling(false);
-        setConnecting(false); // 🆕 Clear connecting state
+        setConnecting(false);
         setInCall(true);
 
-        // Process any pending ICE candidates
         for (const candidate of pendingCandidatesRef.current) {
           await peerRef.current.addIceCandidate(new RTCIceCandidate(candidate));
         }
@@ -785,7 +765,6 @@ export default function VideoCall({
     };
 
     const handleIceCandidate = async (data: { candidate: RTCIceCandidateInit }) => {
-      console.log("Received ICE candidate", data);
       if (peerRef.current && peerRef.current.remoteDescription) {
         try {
           await peerRef.current.addIceCandidate(new RTCIceCandidate(data.candidate));
@@ -793,18 +772,15 @@ export default function VideoCall({
           console.error("Error adding ICE candidate:", err);
         }
       } else {
-        // Queue candidates if remote description not set yet
         pendingCandidatesRef.current.push(data.candidate);
       }
     };
 
     const handleRemoteEndCall = () => {
-      console.log("Remote ended the call");
       endCall(false);
     };
 
     const handleCallDeclined = () => {
-      console.log("❌ Call was declined");
       setCalling(false);
       setIncomingOffer(null);
       alert("Call was declined");
@@ -817,7 +793,6 @@ export default function VideoCall({
     socket.on("call-declined", handleCallDeclined);
 
     return () => {
-      // Only end call if actually in a call
       if (peerRef.current) {
         endCall(false);
       }
@@ -830,7 +805,6 @@ export default function VideoCall({
     };
   }, [roomId, role, isAdminOwner]);
 
-  /* -------------------- PEER SETUP -------------------- */
   const createPeer = () => {
     const peer = new RTCPeerConnection({
       iceServers: [
@@ -840,11 +814,10 @@ export default function VideoCall({
     });
 
     peer.ontrack = (event) => {
-      console.log("Received remote track");
       if (remoteVideoRef.current && event.streams[0]) {
         remoteVideoRef.current.srcObject = event.streams[0];
         setCalling(false);
-        setConnecting(false); 
+        setConnecting(false);
         setInCall(true);
       }
     };
@@ -852,7 +825,6 @@ export default function VideoCall({
     peer.onicecandidate = (event) => {
       if (!peer.localDescription) return;
       if (event.candidate) {
-        console.log("Sending ICE candidate");
         socket.emit("ice-candidate", {
           roomId,
           candidate: event.candidate,
@@ -861,25 +833,17 @@ export default function VideoCall({
     };
 
     peer.onconnectionstatechange = () => {
-      console.log("Connection state:", peer.connectionState);
       if (peer.connectionState === "failed" || peer.connectionState === "disconnected") {
-        console.log("Connection failed/disconnected");
         endCall();
       }
     };
 
-    peer.oniceconnectionstatechange = () => {
-      console.log("ICE connection state:", peer.iceConnectionState);
-    };
+    peer.oniceconnectionstatechange = () => {};
 
     return peer;
   };
 
-  /* -------------------- CALL FUNCTIONS -------------------- */
   const startCall = async () => {
-    console.log("📞 Starting call...");
-    
-    // 🆕 Use existing stream if available
     const stream = localStreamRef.current;
     if (!stream) {
       alert("Please allow camera/microphone access first");
@@ -896,7 +860,6 @@ export default function VideoCall({
     const offer = await peer.createOffer();
     await peer.setLocalDescription(offer);
 
-    console.log("📤 Sending offer to room:", roomId);
     socket.emit("offer", { roomId, offer });
 
     setCalling(true);
@@ -906,9 +869,6 @@ export default function VideoCall({
     const offerToUse = offer || incomingOffer;
     if (!offerToUse) return;
 
-    console.log("Accepting call...");
-    
-    
     const stream = localStreamRef.current;
     if (!stream) {
       alert("Please allow camera/microphone access first");
@@ -924,7 +884,6 @@ export default function VideoCall({
 
     await peer.setRemoteDescription(new RTCSessionDescription(offerToUse));
 
-   
     for (const candidate of pendingCandidatesRef.current) {
       await peer.addIceCandidate(new RTCIceCandidate(candidate));
     }
@@ -933,35 +892,28 @@ export default function VideoCall({
     const answer = await peer.createAnswer();
     await peer.setLocalDescription(answer);
 
-    console.log("Sending answer");
     socket.emit("answer", { roomId, answer });
 
     setIncomingOffer(null);
-    setConnecting(true); 
+    setConnecting(true);
   };
 
   const endCall = (emit = true) => {
     if (endingRef.current) return;
     endingRef.current = true;
 
-    console.log("Ending call...");
-
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
       localStreamRef.current = null;
     }
 
-
     peerRef.current?.close();
     peerRef.current = null;
 
-   
     if (localVideoRef.current) localVideoRef.current.srcObject = null;
     if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
 
-  
     pendingCandidatesRef.current = [];
-
 
     if (emit) {
       socket.emit("end-call", roomId);
@@ -969,26 +921,22 @@ export default function VideoCall({
 
     setInCall(false);
     setCalling(false);
-    setConnecting(false); 
+    setConnecting(false);
     setIncomingOffer(null);
-    setLocalStreamReady(false); 
+    setLocalStreamReady(false);
 
-   
     setTimeout(() => {
       endingRef.current = false;
     }, 1000);
-
 
     if (onClose) {
       onClose();
     }
   };
 
-
   if (isAdminOwner) {
     return (
       <div className="space-y-3">
-    
         {role === "admin" && !inCall && !calling && (
           <button
             onClick={startCall}
@@ -999,7 +947,6 @@ export default function VideoCall({
           </button>
         )}
 
-    
         {calling && (
           <div className="text-center text-sm text-gray-600">
             Connecting...
@@ -1015,9 +962,7 @@ export default function VideoCall({
           </button>
         )}
 
-  
         <div className="grid grid-cols-2 gap-2">
-
           <div className="relative">
             <span className="absolute top-1 left-1 text-xs bg-black/70 text-white px-2 rounded z-10">
               {role === "admin" ? "Admin (You)" : "Owner (You)"}
@@ -1052,7 +997,6 @@ export default function VideoCall({
     );
   }
 
-
   return (
     <div className="bg-gray-900 rounded-2xl p-6 w-full max-w-5xl relative">
       <button
@@ -1066,7 +1010,6 @@ export default function VideoCall({
         Video Call with {otherName}
       </h2>
 
-
       {!inCall && !incomingOffer && !calling && (
         <div className="flex justify-center gap-6 mb-6">
           <button
@@ -1079,7 +1022,6 @@ export default function VideoCall({
         </div>
       )}
 
-  
       {calling && !inCall && !incomingOffer && (
         <div className="text-center mb-6">
           <p className="text-white text-xl mb-4">
@@ -1095,7 +1037,6 @@ export default function VideoCall({
         </div>
       )}
 
-  
       {incomingOffer && !inCall && (
         <div className="text-center mb-6">
           <p className="text-white text-xl mb-4">
@@ -1163,7 +1104,6 @@ export default function VideoCall({
         </div>
       </div>
 
-   
       {inCall && (
         <div className="mt-6 text-center">
           <button
