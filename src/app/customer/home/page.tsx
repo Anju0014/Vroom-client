@@ -9,6 +9,7 @@ import { getReverseGeocode } from "@/services/common/mapService";
 import { useRouter } from 'next/navigation';
 import { AuthService } from '@/services/customer/authService';
 import { useAuthStore } from '@/store/customer/authStore';
+import toast from 'react-hot-toast';
 
 interface Coordinates {
   type: string;
@@ -152,8 +153,24 @@ const LandingPage = () => {
          
           try {
             const data = await getReverseGeocode(latitude, longitude);
-            const address = data?.features?.[0]?.place_name || "";
-            setLocation(address);
+            const locality = data.features.find((f: any) =>
+  f.place_type.includes("locality")
+);
+
+const place = data.features.find((f: any) =>
+  f.place_type.includes("place")
+);
+
+const location = [
+  locality?.text,
+  place?.text
+].filter(Boolean).join(", ");
+
+            const address = formatShortAddress( data?.features?.[0]?.place_name || "")
+
+setLocation(location || address);
+
+            // setLocation(address);
           } catch (error) {
             console.error("Error getting address:", error);
           } finally {
@@ -181,6 +198,7 @@ const LandingPage = () => {
 
   // Handle book now function
   const handleBookNow = (carId: string) => {
+   
     router.push(`/cars/${carId}?startDate=${startDate}&endDate=${endDate}`);
   };
   
@@ -192,10 +210,12 @@ const LandingPage = () => {
   // Search function
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+     if(!startDate && !endDate){
+      toast.error('Dates has to be selected')
+    }else{
       router.push(
-    `/customer/cars?location=${encodeURIComponent(location)}&startDate=${startDate}&endDate=${endDate}`
-  );
-  
+    `/customer/cars?location=${encodeURIComponent(location)}&startDate=${startDate}&endDate=${endDate}`);
+    }
   };
 
   // Show loading or hidden state during hydration or when not authenticated
