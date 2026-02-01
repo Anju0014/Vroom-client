@@ -197,10 +197,10 @@ setLocation(location || address);
   };
 
   // Handle book now function
-  const handleBookNow = (carId: string) => {
+  // const handleBookNow = (carId: string) => {
    
-    router.push(`/cars/${carId}?startDate=${startDate}&endDate=${endDate}`);
-  };
+  //   router.push(`/cars/${carId}?startDate=${startDate}&endDate=${endDate}`);
+  // };
   
   // View details function
   const viewDetailsPage = (carId: string) => {
@@ -369,7 +369,7 @@ setLocation(location || address);
                       className="w-full py-2 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition-all"
                       onClick={() => viewDetailsPage(car._id)}
                     >
-                      Book Now
+                      View Details
                     </button>
                   </div>
                 </div>
@@ -450,7 +450,7 @@ setLocation(location || address);
                         className="w-full py-2 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition-all"
                         onClick={() => viewDetailsPage(car._id)}
                       >
-                        Book Now
+                        View Details
                       </button>
                     </div>
                   </div>

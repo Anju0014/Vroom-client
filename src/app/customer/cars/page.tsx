@@ -86,7 +86,7 @@ const AllCarsPage: React.FC = () => {
     }
   };
 
-  const handleBookNow = (carId: string) => {
+  const viewDetailsNow = (carId: string) => {
     router.push(`/cars/${carId}`);
   };
 
@@ -250,10 +250,10 @@ const AllCarsPage: React.FC = () => {
                         </div>
                         <p className="text-sm text-gray-500 mt-1">{car.location.address}</p>
                         <button
-                          onClick={() => handleBookNow(car._id || car.id!)}
+                          onClick={() => viewDetailsNow(car._id || car.id!)}
                           className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
                         >
-                          Book Now
+                          View Details
                         </button>
                       </div>
                     </div>

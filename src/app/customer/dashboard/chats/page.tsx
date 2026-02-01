@@ -55,9 +55,14 @@ export default function CustomerChatsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-blue-200 to-yellow-200 p-6">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 shadow-xl mb-6">
+            <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
+             Active Chats
+            </h1>
+      </div>
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-blue-600 mb-6">Active Chats</h1>
+        {/* <h1 className="text-3xl font-bold text-blue-600 mb-6">Active Chats</h1> */}
 
         {isLoading ? (
           <div className="flex items-center justify-center py-12">

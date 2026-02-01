@@ -87,7 +87,7 @@ const ComplaintPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-yellow-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br  from-blue-200 to-yellow-200 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl mb-8">
