@@ -9,14 +9,9 @@ import { useAuthStore } from '@/store/customer/authStore';
 import StripeCheckoutForm from '@/components/common/StripeCheckoutForm';
 import Stepper from '@/components/common/StepperBooking';
 import LoadingButton from '@/components/common/LoadingButton';
+import { PaymentCar } from '@/types/carTypes';
 
-interface Car {
-  _id: string;
-  carName: string;
-  brand: string;
-  expectedWage: string;
-  ownerId: string;
-}
+
 
 const PaymentPage = () => {
   const router = useRouter();
@@ -31,7 +26,7 @@ const PaymentPage = () => {
   const { data: session, status } = useSession();
   const { user, accessToken } = useAuthStore();
 
-  const [car, setCar] = useState<Car | null>(null);
+  const [car, setCar] = useState<PaymentCar | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);

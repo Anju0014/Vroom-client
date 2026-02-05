@@ -5,7 +5,6 @@ const BookingSkeleton: React.FC = () => {
     <div className="bg-white rounded-xl shadow-md overflow-hidden border border-slate-200 animate-pulse">
       <div className="p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          {/* Left Section */}
           <div className="flex-1">
             <div className="flex items-start gap-4">
               <div className="w-16 h-16 bg-slate-200 rounded-lg"></div>
@@ -16,7 +15,7 @@ const BookingSkeleton: React.FC = () => {
             </div>
           </div>
 
-          {/* Middle Section */}
+
           <div className="flex-1 border-l border-slate-200 pl-6">
             <div className="space-y-2">
               <div className="h-4 bg-slate-200 rounded w-40"></div>
@@ -24,7 +23,7 @@ const BookingSkeleton: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Section */}
+
           <div className="flex flex-col items-end gap-3">
             <div className="h-8 bg-slate-200 rounded w-32"></div>
             <div className="h-8 bg-slate-200 rounded-full w-24"></div>

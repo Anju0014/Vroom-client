@@ -5,17 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchOwnerChats } from "@/services/common/chatService";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
-
-interface ChatMessage {
-  roomId: string;
-  senderId: string;
-  senderName: string;
-  senderRole: string;
-  receiverId: string;
-  receiverName: string;
-  message: string;
-  timestamp: string;
-}
+import { ChatMessage } from "@/types/chatTypes";
 
 export default function OwnerChatsPage() {
   const { user } = useAuthStoreOwner();

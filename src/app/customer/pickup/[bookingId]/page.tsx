@@ -92,8 +92,6 @@ export default function PickupPage() {
       setActionLoading(false);
     }
   };
-
-  /* ---------------- Guards ---------------- */
   if (!user) {
     router.replace("/login");
     return null;

@@ -161,7 +161,7 @@ const AllCarsPage: React.FC = () => {
     <option value="VAN/MPV">VAN/MPV</option>
   </select>
 
-  {/* Location Search */}
+
   <input
     type="text"
     placeholder="Search by location..."
@@ -175,7 +175,6 @@ const AllCarsPage: React.FC = () => {
 </div>
 
 <div className="flex gap-4">
-  {/* Start Date */}
   <input
     type="date"
     min={today}

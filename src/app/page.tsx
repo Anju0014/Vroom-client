@@ -11,36 +11,9 @@ import { AuthService } from '@/services/customer/authService';
 import { useAuthStore } from '@/store/customer/authStore';
 import { useAuthStoreOwner } from '@/store/carOwner/authStore';
 import LoadingButton from '@/components/common/LoadingButton';
+import { Car,Coordinates,Location } from '@/types/locationTypes';
 
 
-interface Coordinates {
-  type: string;
-  coordinates: number[];
-}
-
-interface Location {
-  address: string;
-  landmark: string;
-  coordinates: Coordinates;
-}
-
-interface Car {
-  _id:string;
-  carName: string;
-  brand: string;
-  year: string;
-  fuelType: string;
-  rcBookNo: string;
-  expectedWage: string;
-  location: Location;
-  verifyStatus:number;
-  images: string[];
-  videos: string[];
-  owner: string;
-  available: boolean;
-  isDeleted: boolean;
-  distance?: number;
-}
 
 const LandingPage = () => {
   const router = useRouter();

@@ -9,22 +9,6 @@ import { Shield, ShieldOff, Eye } from "lucide-react";
 import Pagination from "../pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 
-// const useDebounce = (value: string, delay: number) => {
-//   const [debouncedValue, setDebouncedValue] = useState(value);
-
-//   useEffect(() => {
-//     const handler = setTimeout(() => {
-//       setDebouncedValue(value);
-//     }, delay);
-
-//     return () => {
-//       clearTimeout(handler);
-//     };
-//   }, [value, delay]);
-
-//   return debouncedValue;
-// };
-
 interface User {
   id: string;
   name: string;

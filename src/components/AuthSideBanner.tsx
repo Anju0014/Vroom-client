@@ -1,10 +1,6 @@
+import { AuthSideBannerProps } from "@/types/authTypes";
 import Image from "next/image";
 
-interface AuthSideBannerProps {
-  heading?: string;
-  subText: string;
-  bottomText: string;
-}
 
 const AuthSideBanner: React.FC<AuthSideBannerProps> = ({
   heading = "Vroom",

@@ -70,7 +70,6 @@ export default function ResetPasswordPage() {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           placeholder="Enter your New password"
-          // required 
           suppressHydrationWarning
         />
         <InputField
@@ -80,11 +79,9 @@ export default function ResetPasswordPage() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Re-enter your password"
-          // required
           suppressHydrationWarning
         />
-      {/* <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-      <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}  /> */}
+
       <LoadingButton type="submit" className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
             >Reset Password</LoadingButton>
     </form>

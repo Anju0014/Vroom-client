@@ -72,12 +72,10 @@ const OTPVerification = () => {
           } else {
                   response = await OwnerAuthService.verifyotpCarOwner({ email, otp });
           }
-      // const response = await AuthService.verifyotpCustomer({ email, otp });
       console.log(response);
       toast.success("OTP Verified! Redirecting...");
       const redirectPath = role === "customer" ? "/login" : "/login";
        setTimeout(() => router.push(redirectPath), 2000);
-      // setTimeout(() => router.push("/login"), 2000); 
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Invalid OTP");
     } finally {

@@ -120,13 +120,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             </div>
           </div>
 
-          {/* File Upload */}
           <label className="block text-sm font-medium text-gray-700">Profile Image</label>
           <div className="text-center">
             <FileUpload onUploadComplete={handleImageUploadComplete} accept="image/*" multiple={false} />
           </div>
 
-          {/* Phone Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Phone Number</label>
             <input
@@ -137,7 +135,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             />
           </div>
 
-          {/* Address Fields */}
+  
           {Object.entries(address).map(([key, value]) => (
             <div key={key}>
               <label className="block text-sm font-medium text-gray-700">
@@ -153,7 +151,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             </div>
           ))}
 
-          {/* Action Buttons */}
+    
           <div className="flex justify-end space-x-2 mt-4">
             <LoadingButton type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">
               Cancel

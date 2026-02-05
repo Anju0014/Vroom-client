@@ -1,4 +1,4 @@
-// components/Stepper.tsx
+
 import React from 'react';
 import { CarFront } from 'lucide-react';
 
@@ -11,10 +11,7 @@ interface StepperProps {
 const Stepper: React.FC<StepperProps> = ({ steps, currentStep, useCarIcon = true }) => {
   return (
     <div className="relative w-full py-4">
-      {/* The line */}
       <div className="absolute top-1/2 w-full h-0.5 bg-gray-300 -translate-y-1/2"></div>
-      
-      {/* Steps */}
       <div className="relative flex justify-between">
         {steps.map((step, index) => {
           const isActive = index <= currentStep;
@@ -22,7 +19,6 @@ const Stepper: React.FC<StepperProps> = ({ steps, currentStep, useCarIcon = true
           
           return (
             <div key={index} className="flex flex-col items-center">
-              {/* Step indicator */}
               <div className={`relative flex items-center justify-center w-6 h-6 rounded-full z-10 
                               ${isActive ? 'bg-yellow-400' : 'bg-gray-300'}`}>
                 {isCurrentStep && useCarIcon ? (
@@ -32,7 +28,6 @@ const Stepper: React.FC<StepperProps> = ({ steps, currentStep, useCarIcon = true
                 )}
               </div>
               
-              {/* Step label (optional) */}
               {step && (
                 <span className={`mt-2 text-xs ${isActive ? 'text-gray-900' : 'text-gray-500'}`}>
                   {step}

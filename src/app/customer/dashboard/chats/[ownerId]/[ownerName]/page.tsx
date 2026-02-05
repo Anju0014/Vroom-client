@@ -13,9 +13,6 @@ export default function CustomerChatPage() {
   const ownerId = params.ownerId as string;
   const ownerName = params.ownerName as string;
 
-  // Person-to-person room
-//   const roomId = [user.id, ownerId].sort().join("_");
-
   return (
     
     <ChatBox
@@ -28,14 +25,3 @@ export default function CustomerChatPage() {
     />
   );
 }
-
-
-// export default function Page({ params }: any) {
-//   return (
-//     <div>
-//       <h1>ROUTE WORKING</h1>
-//       <p>{params.ownerId}</p>
-//       <p>{params.ownerName}</p>
-//     </div>
-//   );
-// }

@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
-import { Booking } from '@/app/customer/dashboard/bookings/page';
+// import { Booking } from '@/app/customer/dashboard/bookings/page';
 import { useRouter } from 'next/navigation';
 import LoadingButton from '@/components/common/LoadingButton';
-
+import { BookingDetail } from '@/types/bookTypes';
 interface BookingCardProps {
-  booking: Booking;
-  onViewDetails: (booking: Booking) => void;
+  booking: BookingDetail;
+  onViewDetails: (booking: BookingDetail) => void;
 }
 
 const getBookingStatus = (startDate: string, endDate: string, status: string) => {

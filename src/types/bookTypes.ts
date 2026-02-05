@@ -88,3 +88,25 @@ export interface BookingType {
 //     model: string;
 //   };
 // }
+
+export interface BookingDetail {
+  _id?: string;
+  bookingId?: string;
+  carId: string;
+  userId?: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: string;
+  createdAt?: string;
+  carName: string;
+  ownerName: string;
+  ownerContact: string;
+  carOwnerId?: string;
+  pickupLocation?: string;
+  pickupCoordinates: [number, number];
+  carNumber?: string;
+  brand?: string;
+  receiptUrl?: string;
+  pickupVerified?:boolean;
+}

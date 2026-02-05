@@ -5,17 +5,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchCustomerChats } from "@/services/common/chatService";
 import { useAuthStore } from "@/store/customer/authStore";
+import { ChatMessage } from "@/types/chatTypes";
 
-interface ChatMessage {
-  roomId: string;
-  senderId: string;
-  senderName: string;
-  senderRole: string;
-  receiverId: string;
-  receiverName: string;
-  message: string;
-  timestamp: string;
-}
 
 export default function CustomerChatsPage() {
   const { user } = useAuthStore();

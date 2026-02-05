@@ -11,58 +11,20 @@ import { useSession } from 'next-auth/react';
 import { useAuthStore } from '@/store/customer/authStore';
 import LocationMapView from '@/components/maps/LocationMapView';
 import LoadingButton from '@/components/common/LoadingButton';
+import { BookingDetail, CarDetail } from '@/types/carTypes';
 
-interface Location {
-  address?: string;
-  city?: string;
-  state?: string;
-  coordinates?:{
-    type?:string,
-    coordinates?:[number,number]
-  };
-}
-
-interface Car {
-  _id: string;
-  carName: string;
-  brand: string;
-  year: string;
-  fuelType: string;
-  rcBookNo: string;
-  expectedWage: string;
-  location: Location;
-  verifyStatus: number;
-  images: string[];
-  videos: string[];
-  owner: string;
-  available: boolean;
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Booking {
-  _id?: string;
-  carId: string;
-  userId?: string;
-  startDate: Date;
-  endDate: Date;
-  totalPrice: number;
-  status: string;
-  createdAt?: Date;
-}
 
 const CarBookingPage = () => {
   const router = useRouter();
   const params = useParams();
   const carId = params?.carId as string;
   const { user, accessToken } = useAuthStore();
-  const [car, setCar] = useState<Car | null>(null);
+  const [car, setCar] = useState<CarDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showVideo, setShowVideo] = useState(false);
-  const [existingBookings, setExistingBookings] = useState<Booking[]>([]);
+  const [existingBookings, setExistingBookings] = useState<BookingDetail[]>([]);
  const [showLoginModal, setShowLoginModal] = useState(false);
   const { data: session, status } = useSession();
   const [carUnavailableDates, setCarUnavailableDates] = useState<Date[]>([]);
@@ -484,21 +446,12 @@ const lng = coordinates?.[0];
             </h2>
 
             <div className="mb-6">
-              {/* <Calendar
-                onChange={() => {}}
-                value={null}
-                tileClassName={tileClassName}
-                minDate={new Date()}
-                className="rounded-lg shadow-sm border-none w-full"
-                tileDisabled={() => false}
-                key={existingBookings.length}
-              /> */}
               <Calendar
   onChange={() => {}}
   value={null}
   minDate={new Date()}
   tileClassName={tileClassName}
-  tileDisabled={({ view }) => view === "month"} // disable days only
+  tileDisabled={({ view }) => view === "month"} 
 />
 
               <style jsx global>{`

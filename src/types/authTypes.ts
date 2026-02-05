@@ -227,3 +227,10 @@ export interface SignupData {
     reason?:string
   }
   
+
+  
+export interface AuthSideBannerProps {
+  heading?: string;
+  subText: string;
+  bottomText: string;
+}

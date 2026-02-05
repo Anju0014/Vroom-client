@@ -2,11 +2,8 @@
 
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
+import { LocationMapViewProps } from "@/types/locationTypes";
 
-interface LocationMapViewProps {
-  lat: number;
-  lng: number;
-}
 
 const LocationMapView: React.FC<LocationMapViewProps> = ({ lat, lng }) => {
   return (

@@ -6,13 +6,14 @@ import { AuthService } from '@/services/customer/authService';
 import Stepper from '@/components/common/StepperBooking';
 import toast from 'react-hot-toast';
 import LoadingButton from '@/components/common/LoadingButton';
+import { AgreeementCar } from '@/types/carTypes';
 
-interface Car {
-  _id: string;
-  carName: string;
-  brand: string;
-  expectedWage: string;
-}
+// interface Car {
+//   _id: string;
+//   carName: string;
+//   brand: string;
+//   expectedWage: string;
+// }
 const AgreementPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,7 +24,7 @@ const AgreementPage = () => {
   const totalPrice = searchParams.get('totalPrice');
  const bookingId = searchParams.get('bookingId');
 
-  const [car, setCar] = useState<Car | null>(null);
+  const [car, setCar] = useState< AgreeementCar | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAgreed, setIsAgreed] = useState(false);

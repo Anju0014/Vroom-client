@@ -7,9 +7,6 @@ import Pagination from '@/components/pagination';
 import {ITransaction ,IWalletData, IWalletResponse }  from '@/types/walletTypes'
 import LoadingButton from '@/components/common/LoadingButton';
 
-
-
-
 const WalletPage: React.FC = () => {
   const [walletData, setWalletData] = useState<IWalletData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);

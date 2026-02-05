@@ -12,35 +12,7 @@ import { useAuthStore } from '@/store/customer/authStore';
 import toast from 'react-hot-toast';
 import { CarSearchForm } from '@/components/customer/carSearchForm';
 import LoadingButton from '@/components/common/LoadingButton';
-
-interface Coordinates {
-  type: string;
-  coordinates: number[];
-}
-
-interface Location {
-  address: string;
-  landmark: string;
-  coordinates: Coordinates;
-}
-
-interface Car {
-  _id: string;
-  carName: string;
-  brand: string;
-  year: string;
-  fuelType: string;
-  rcBookNo: string;
-  expectedWage: string;
-  location: Location;
-  verifyStatus: number;
-  images: string[];
-  videos: string[];
-  owner: string;
-  available: boolean;
-  isDeleted: boolean;
-  distance?: number;
-}
+import { Coordinates ,Car,Location} from '@/types/locationTypes';
 
 const LandingPage = () => {
   const router = useRouter();
@@ -254,63 +226,6 @@ setLocation(location || address);
             <p className="text-white text-lg mb-8">
               Book from our wide selection of vehicles for any occasion at the best prices.
             </p>
-
-            {/* <div className="bg-white p-4 rounded-lg shadow-lg max-w-3xl">
-              <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-2">
-                <div className="flex-1">
-                  <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-                    Location {loadingLocation && <span className="text-xs text-blue-500">(detecting...)</span>}
-                  </label>
-                  <input
-                    type="text"
-                    id="location"
-                    placeholder="Enter or wait for auto-detect"
-                    className="w-full p-2 border rounded-md"
-                    value={location}
-                    onChange={(e) => {
-                      setLocation(e.target.value);
-                      setManualOverride(true);
-                    }}
-                  />
-                </div>
-                <div className="flex-1">
-                  <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
-                  <input
-                    type="date"
-                    id="start-date"
-                    className="w-full p-2 border rounded-md"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
-                  />
-                </div>
-                <div className="flex-1">
-                  <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                  <input
-                    type="date"
-                    id="end-date"
-                    className="w-full p-2 border rounded-md"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    min={startDate || new Date().toISOString().split('T')[0]}
-                  />
-                </div>
-              </form>
-
-              <button
-                type="submit"
-                onClick={handleSearch}
-                className="mt-3 w-full py-3 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition-all"
-              >
-                <span className="flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  Search Available Cars
-                </span>
-              </button> */}
-            {/* </div> */}
-           
 
 <CarSearchForm
   location={location}

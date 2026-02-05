@@ -57,7 +57,6 @@ const debouncedSearchTerm = useDebounce(searchTerm, 500);
           owner: car.owner,
           available: car.available,
           createdAt: new Date(car.createdAt),
-          // Add formatted fields for table display
           locationAddress: car.location?.address ?? "No address",
           statusBadge: getStatusBadge(car.verifyStatus),
           formattedDate: formatDate(new Date(car.createdAt)),
@@ -158,7 +157,7 @@ const debouncedSearchTerm = useDebounce(searchTerm, 500);
   ];
 
   const handleViewCar = (car: Car) => {
-     if (clickLocked) return; // block extra clicks
+     if (clickLocked) return; 
      setClickLocked(true);
     setSelectedCar(car);
     setTimeout(() => setClickLocked(false), 500);

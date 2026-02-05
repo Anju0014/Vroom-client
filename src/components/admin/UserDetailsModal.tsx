@@ -21,8 +21,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
     setUpdatedUser(user);
   }, [user]);
 
-  // Helper function to format address
-  const formatAddress = (address: any) => {
+    const formatAddress = (address: any) => {
     if (!address) return "Not provided";
     return [
       address.addressLine1,

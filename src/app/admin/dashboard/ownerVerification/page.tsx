@@ -103,9 +103,7 @@ const OwnerVerifyPage: React.FC<OwnerVerifyProps> = ({ userType }) => {
   const handleVerifyUser = async (userId: string, reason?: string) => {
     try {
       setIsProcessing((prev) => ({ ...prev, [userId]: true }));
-      
-      // If reason is provided, we're rejecting the user (status: -1)
-      // Otherwise, we're verifying the user (status: 1)
+
       const newStatus = reason ? -1 : 1;
       
       const response = await AdminAuthService.updateVerifyStatus(

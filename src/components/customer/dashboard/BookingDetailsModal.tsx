@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Booking } from '@/app/customer/dashboard/bookings/page';
+// import { Booking } from '@/app/customer/dashboard/bookings/page';
 import LocationMapView from '@/components/maps/LocationMapView';
 import toast from 'react-hot-toast';
 import LoadingButton from '@/components/common/LoadingButton';
+import { BookingDetail } from '@/types/bookTypes';
 
 interface BookingDetailsModalProps {
-  booking: Booking;
+  booking: BookingDetail;
   onClose: () => void;
   onCancel: (bookingId: string) => Promise<void>;
   onContactOwner: (ownerId: string | undefined, ownerName: string | undefined) => void;

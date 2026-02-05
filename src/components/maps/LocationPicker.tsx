@@ -6,16 +6,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-lea
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import { getReverseGeocode } from "@/services/common/mapService";
-
-interface LocationPickerProps {
-  onSelectLocation: (
-    lat: number,
-    lng: number,
-    address?: string,
-    landmark?: string
-  ) => void;
-  initialCoordinates?: { lat: number; lng: number };
-}
+import { LocationPickerProps } from "@/types/locationTypes";
 
 const LocationPicker: React.FC<LocationPickerProps> = ({
   onSelectLocation,
@@ -70,7 +61,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
     const map = useMap();
     useEffect(() => {
       if (lat && lng) {
-        map.setView([lat, lng], 14); // zoom in a bit on edit
+        map.setView([lat, lng], 14); 
       }
     }, [lat, lng, map]);
     return null;

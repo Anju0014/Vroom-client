@@ -93,7 +93,6 @@ export const CarSearchForm=({
           {/* </Autocomplete> */}
         </div>
 
-        {/* Start Date */}
         <div className="flex-1">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Pickup Date
@@ -107,7 +106,7 @@ export const CarSearchForm=({
           />
         </div>
 
-        {/* End Date */}
+  
         <div className="flex-1">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             End Date

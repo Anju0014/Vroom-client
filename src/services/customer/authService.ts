@@ -294,7 +294,7 @@ getWalletBalance: async () => {
     return response.data;
   } catch (error: any) {
     console.error("Error fetching wallet balance:", error.response?.data || error.message);
-    throw error; // optional, rethrow if needed
+    throw error; 
   }
 }
 

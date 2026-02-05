@@ -10,40 +10,21 @@ import BookingCard from '@/components/customer/dashboard/BookingCard';
 import BookingSkeleton from '@/components/skeleton/BookingSkeleton';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import LoadingButton from "@/components/common/LoadingButton";
+import { BookingDetail } from "@/types/bookTypes";
 
 const BookingDetailsModal = lazy(() => import('@/components/customer/dashboard/BookingDetailsModal'));
 
-export interface Booking {
-  _id?: string;
-  bookingId?: string;
-  carId: string;
-  userId?: string;
-  startDate: string;
-  endDate: string;
-  totalPrice: number;
-  status: string;
-  createdAt?: string;
-  carName: string;
-  ownerName: string;
-  ownerContact: string;
-  carOwnerId?: string;
-  pickupLocation?: string;
-  pickupCoordinates: [number, number];
-  carNumber?: string;
-  brand?: string;
-  receiptUrl?: string;
-  pickupVerified?:boolean;
-}
+
 
 const BookingsPage = () => {
   const router = useRouter();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(true);
-  const [bookingData, setBookingData] = useState<Booking[]>([]);
+  const [bookingData, setBookingData] = useState<BookingDetail[]>([]);
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalBookings, setTotalBookings] = useState(0);
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<BookingDetail | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   
   const itemsPerPage = 5;
@@ -68,7 +49,7 @@ const BookingsPage = () => {
     fetchBookingData();
   }, [currentPage]);
 
-  const handleViewDetails = (booking: Booking) => {
+  const handleViewDetails = (booking: BookingDetail) => {
     setSelectedBooking(booking);
     setShowDetailsModal(true);
   };

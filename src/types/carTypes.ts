@@ -44,8 +44,8 @@ export interface Booking {
   carId: string;
   userId: string;
   carOwnerId: string;
-  startDate: string; // ISO date string (e.g., "2025-08-20T00:00:00.000Z")
-  endDate: string; // ISO date string
+  startDate: string; 
+  endDate: string;
   totalPrice: number;
   status: 'confirmed' | 'pending' | 'cancelled' | 'failed';
   paymentIntentId?: string;
@@ -59,4 +59,61 @@ export interface Booking {
     lat:number,
     lng:number,
   };
+}
+
+export interface AgreeementCar {
+  _id: string;
+  carName: string;
+  brand: string;
+  expectedWage: string;
+}
+
+
+export interface PaymentCar {
+  _id: string;
+  carName: string;
+  brand: string;
+  expectedWage: string;
+  ownerId: string;
+}
+
+
+export interface Location {
+  address?: string;
+  city?: string;
+  state?: string;
+  coordinates?:{
+    type?:string,
+    coordinates?:[number,number]
+  };
+}
+
+export interface CarDetail {
+  _id: string;
+  carName: string;
+  brand: string;
+  year: string;
+  fuelType: string;
+  rcBookNo: string;
+  expectedWage: string;
+  location: Location;
+  verifyStatus: number;
+  images: string[];
+  videos: string[];
+  owner: string;
+  available: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BookingDetail {
+  _id?: string;
+  carId: string;
+  userId?: string;
+  startDate: Date;
+  endDate: Date;
+  totalPrice: number;
+  status: string;
+  createdAt?: Date;
 }

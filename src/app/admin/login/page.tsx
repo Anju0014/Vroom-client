@@ -97,12 +97,6 @@ export default function AdminLogin() {
             />
           </div>
           
-          {/* <div className="flex items-center justify-between">
-           <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-              Forgot your password?
-            </a>
-          </div> */}
-          
           <div>
             <LoadingButton
               type="submit"
