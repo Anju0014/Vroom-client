@@ -8,6 +8,7 @@ import { SignupData } from "@/types/authTypes";
 import { AuthService } from "@/services/customer/authService";
 import { OwnerAuthService } from "@/services/carOwner/authService";
 import { signIn } from "next-auth/react";
+import LoadingButton from "./common/LoadingButton";
 
 interface RegistrationFormProps {
   role: "customer" | "carOwner";
@@ -126,7 +127,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
           suppressHydrationWarning
         />
 
-        <button
+        <LoadingButton
           type="submit"
           className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
           disabled={loading}
@@ -143,17 +144,17 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
           ) : (
             "Sign Up"
           )}
-        </button>
+        </LoadingButton>
       </form>
 
-      <button
+      <LoadingButton
         type="button"
         onClick={handleGoogleSignup}
         className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all"
         suppressHydrationWarning
       >
         Sign up with Google
-      </button>
+      </LoadingButton>
     </>
   );
 };

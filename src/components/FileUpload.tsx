@@ -4,6 +4,7 @@
 import React, { useState, useRef, useId } from "react";
 import { S3Service } from "@/services/common/s3Service";
 import { Upload, FileText, Video, Image, Loader2, XCircle } from "lucide-react";
+import LoadingButton from "./common/LoadingButton";
 
 interface FileUploadProps {
   onUploadComplete: (uploadedUrls: string[] | string) => void;
@@ -238,13 +239,13 @@ export default function FileUpload({
           </div>
         </div>
 
-        <button
+        <LoadingButton
           onClick={() => removeFile(index)}
           className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
           title="Remove"
         >
           <XCircle className="w-4 h-4" />
-        </button>
+        </LoadingButton>
       </div>
     );
   };

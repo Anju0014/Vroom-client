@@ -142,6 +142,7 @@
 
 import React, { useEffect, useState } from "react";
 import { X, User, Mail, Phone, MapPin, FileText, Shield, AlertCircle } from "lucide-react";
+import LoadingButton from "../common/LoadingButton";
 
 interface UserDetailsModalProps {
   user: any;
@@ -204,12 +205,12 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             <h2 className="text-2xl font-bold mb-1">Car Owner Details</h2>
             <p className="text-blue-100 text-sm">Review owner information and status</p>
           </div>
-          <button 
+          <LoadingButton
             onClick={onClose} 
             className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all"
           >
             <X size={24} />
-          </button>
+          </LoadingButton>
         </div>
 
       
@@ -310,7 +311,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
           )}
 
           <div className="pt-4 border-t-2 border-gray-200">
-            <button 
+            <LoadingButton
               onClick={handleToggleBlock}
               disabled={isProcessing}
               className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg flex items-center justify-center gap-2
@@ -339,7 +340,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                   )}
                 </>
               )}
-            </button>
+            </LoadingButton>
           </div>
         </div>
       </div>

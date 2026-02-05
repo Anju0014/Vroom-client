@@ -11,6 +11,7 @@ import { useAuthStore } from '@/store/customer/authStore';
 import { Location, Car, Booking, DateRange } from '@/types/bookTypes';
 import InputField from '@/components/InputField';
 import Stepper from '@/components/common/StepperBooking';
+import LoadingButton from '@/components/common/LoadingButton';
 
 const DateSelectionPage = () => {
   const router = useRouter();
@@ -336,7 +337,7 @@ const isDateRangeUnavailable = (startDate: Date, endDate: Date): boolean => {
                   <p><strong>Total Price:</strong> ₹{totalPrice}</p>
                 </>
               )}
-              <button
+              <LoadingButton
                 onClick={handleProceed}
                 disabled={currentStep < 2}
                 className={`w-full mt-4 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
@@ -346,7 +347,7 @@ const isDateRangeUnavailable = (startDate: Date, endDate: Date): boolean => {
                 }`}
               >
                 Proceed to Agreement
-              </button>
+              </LoadingButton>
               {currentStep < 2 && (
                 <p className="text-xs text-gray-500 text-center mt-2">Please check availability first</p>
               )}

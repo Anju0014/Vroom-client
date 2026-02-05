@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { FaExclamationTriangle } from 'react-icons/fa';
+import LoadingButton from '../common/LoadingButton';
 
 interface DeleteCarModalProps {
   isOpen: boolean;
@@ -35,20 +36,20 @@ const DeleteCarModal: React.FC<DeleteCarModalProps> = ({ isOpen, onClose, onConf
         </div>
         
         <div className="flex justify-center space-x-4 mt-6">
-          <button
+          <LoadingButton
             type="button"
             onClick={onClose}
             className="bg-gray-100 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-200 transition-colors font-medium"
           >
             Cancel
-          </button>
-          <button
+          </LoadingButton>
+          <LoadingButton
             type="button"
             onClick={onConfirm}
             className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors font-medium"
           >
             Delete
-          </button>
+          </LoadingButton>
         </div>
       </div>
     </div>,

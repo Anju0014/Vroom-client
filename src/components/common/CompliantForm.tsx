@@ -5,6 +5,7 @@ import { Send, X, AlertCircle } from "lucide-react";
 import { CreateComplaintDTO } from "@/types/complaintTypes";
 import toast from "react-hot-toast";
 import FileUpload from "../FileUpload";
+import LoadingButton from "./LoadingButton";
 
 interface Props {
   formData: CreateComplaintDTO;
@@ -45,12 +46,12 @@ const ComplaintForm: React.FC<Props> = ({
           </div>
           <h2 className="text-2xl font-bold text-gray-800">Submit Complaint</h2>
         </div>
-        <button
+        <LoadingButton
           onClick={onCancel}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <X className="w-5 h-5 text-gray-500" />
-        </button>
+        </LoadingButton>
       </div>
 
       <div className="space-y-5">
@@ -124,20 +125,20 @@ const ComplaintForm: React.FC<Props> = ({
         </div>
 
         <div className="flex gap-3 pt-2">
-          <button
+          <LoadingButton
             disabled={loading}
             onClick={onSubmit}
             className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <Send size={18} />
             {loading ? "Submitting..." : "Submit"}
-          </button>
-          <button 
+          </LoadingButton>
+          <LoadingButton
             onClick={onCancel} 
             className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all"
           >
             Cancel
-          </button>
+          </LoadingButton>
         </div>
       </div>
     </div>

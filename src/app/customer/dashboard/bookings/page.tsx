@@ -9,6 +9,7 @@ import Pagination from '@/components/pagination';
 import BookingCard from '@/components/customer/dashboard/BookingCard';
 import BookingSkeleton from '@/components/skeleton/BookingSkeleton';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+import LoadingButton from "@/components/common/LoadingButton";
 
 const BookingDetailsModal = lazy(() => import('@/components/customer/dashboard/BookingDetailsModal'));
 
@@ -127,15 +128,14 @@ const BookingsPage = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-red-100">
         <div className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md">
-          {/* <div className="text-6xl mb-4">⚠️</div> */}
           <h2 className="text-2xl font-bold text-red-800 mb-2">Error Loading Bookings</h2>
           <p className="text-slate-600 mb-4">{error}</p>
-          <button
+          <LoadingButton
             onClick={() => window.location.reload()}
             className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
             Retry
-          </button>
+          </LoadingButton>
         </div>
       </div>
     );
@@ -190,12 +190,12 @@ const BookingsPage = () => {
               <p className="text-slate-600 mb-6 max-w-md mx-auto">
                 Start your journey by booking your first car rental
               </p>
-              <button
+              <LoadingButton
                 onClick={() => router.push('/cars')}
                 className="px-8 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 shadow-lg font-semibold"
               >
                 Browse Available Cars
-              </button>
+              </LoadingButton>
             </div>
           )}
 

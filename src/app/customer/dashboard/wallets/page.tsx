@@ -5,6 +5,7 @@ import { Wallet, ArrowUpRight, ArrowDownLeft, RefreshCw, X, ChevronLeft, Chevron
 import { AuthService } from '@/services/customer/authService'; 
 import Pagination from '@/components/pagination';
 import {ITransaction ,IWalletData, IWalletResponse }  from '@/types/walletTypes'
+import LoadingButton from '@/components/common/LoadingButton';
 
 
 
@@ -120,12 +121,12 @@ setCurrentPage(response.data.page);
         <div className="bg-white rounded-lg p-8 shadow-lg text-center">
           <X className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <p className="text-red-600 font-semibold mb-4">{error}</p>
-          <button
+          <LoadingButton
             onClick={() => fetchWalletData(currentPage)}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             Retry
-          </button>
+          </LoadingButton>
         </div>
       </div>
     );

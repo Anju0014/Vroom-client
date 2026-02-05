@@ -259,6 +259,7 @@
 import React, { useState } from "react";
 import { X, Check, Eye, Video, FileText, Shield, Calendar, Fuel, Hash, DollarSign, MapPin, Camera } from "lucide-react";
 import VideoCall from "../common/VideoCall";
+import LoadingButton from "../common/LoadingButton";
 
 interface CarVerifyModalProps {
   car: any;
@@ -318,13 +319,13 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
             <h2 className="text-2xl font-bold mb-1">Car Verification</h2>
             <p className="text-blue-100 text-sm">Review and verify vehicle details</p>
           </div>
-          <button
+          <LoadingButton
             onClick={onClose}
             className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all"
             disabled={processing}
           >
             <X size={24} />
-          </button>
+          </LoadingButton>
         </div>
 
         {/* Content */}
@@ -465,13 +466,13 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
               </div>
             )} */}
              {!showVideoCall ? (
-    <button
+    <LoadingButton
       onClick={() => setShowVideoCall(true)}
       className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
     >
       <Video className="mr-1" size={18}/>
        Start Video Verification
-    </button>
+    </LoadingButton>
   ) : (
     <div className="border rounded-lg p-3 bg-gray-50">
   {/* <VideoCall
@@ -512,14 +513,14 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
         <div className="flex justify-end items-center gap-3 border-t-2 border-gray-200 p-5 bg-gray-50">
           {showRejectForm ? (
             <>
-              <button
+              <LoadingButton
                 onClick={() => setShowRejectForm(false)}
                 className="px-6 py-2.5 text-gray-700 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition-all font-semibold"
                 disabled={processing}
               >
                 Cancel
-              </button>
-              <button
+              </LoadingButton>
+              <LoadingButton
                 onClick={handleReject}
                 className="px-6 py-2.5 text-white bg-gradient-to-r from-red-500 to-red-600 rounded-lg hover:from-red-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold shadow-md flex items-center gap-2"
                 disabled={processing || !rejectReason.trim()}
@@ -535,19 +536,19 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
                     Confirm Rejection
                   </>
                 )}
-              </button>
+              </LoadingButton>
             </>
           ) : (
             <>
-              <button
+              <LoadingButton
                 onClick={() => setShowRejectForm(true)}
                 className="px-6 py-2.5 text-white bg-gradient-to-r from-red-500 to-red-600 rounded-lg hover:from-red-600 hover:to-red-700 disabled:opacity-50 transition-all font-semibold shadow-md flex items-center gap-2"
                 disabled={processing}
               >
                 <X size={16} />
                 Reject
-              </button>
-              <button
+              </LoadingButton>
+              <LoadingButton
                 onClick={handleVerify}
                 className="px-6 py-2.5 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-lg hover:from-green-600 hover:to-green-700 disabled:opacity-50 transition-all font-semibold shadow-md flex items-center gap-2"
                 disabled={processing}
@@ -563,7 +564,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
                     Verify Car
                   </>
                 )}
-              </button>
+              </LoadingButton>
             </>
           )}
         </div>

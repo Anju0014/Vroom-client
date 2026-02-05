@@ -11,6 +11,7 @@ import FileUpload from "@/components/FileUpload";
 import { Address, CarOwner } from "@/types/authTypes";
 import ChangePasswordModal from "@/components/Changepassword";
 import CompleteRegistrationForm from "@/components/carOwner/dashboard/CompleteRegistrationForm";
+import LoadingButton from "@/components/common/LoadingButton";
 
 const ProfilePage = () => {
   const [ownerDetails, setOwnerDetails] = useState<CarOwner | null>(null);
@@ -134,20 +135,20 @@ const ProfilePage = () => {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Car Owner Profile</h1>
           <div className="flex space-x-3">
-            <button 
+            <LoadingButton
               onClick={() => setIsEditing(true)} 
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center"
             >
               <Edit className="mr-2 h-4 w-4" />
               Edit Profile
-            </button>
-            <button 
+            </LoadingButton>
+            <LoadingButton
               onClick={() => setIsChange(true)} 
               className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center"
             >
               <Lock className="mr-2 h-4 w-4" />
               Change Password
-            </button>
+            </LoadingButton>
           </div>
         </div>
 

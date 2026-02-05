@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { OwnerAuthService } from "@/services/carOwner/authService";
+import LoadingButton from "@/components/common/LoadingButton";
 
 
 
@@ -93,13 +94,13 @@ const Sidebar: React.FC = () => {
             </li>
           ))}
           <li>
-           <button
+           <LoadingButton
                onClick={handleLogout}
                 className="w-full flex items-center py-2 px-3 rounded-md hover:bg-blue-200 transition-colors duration-200 "
               >
               <LogOut size={18} className="mr-3 text-blue-700" />
               <span className="text-sm">Logout</span>
-            </button>
+            </LoadingButton>
           </li>
         </ul>
       </nav>

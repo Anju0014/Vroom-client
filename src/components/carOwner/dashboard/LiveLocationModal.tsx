@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from 'leaflet'
 import socket from "@/services/common/socketService";
+import LoadingButton from "@/components/common/LoadingButton";
 
 interface LiveLocationModalProps {
   isOpen: boolean;
@@ -55,7 +56,7 @@ export default function LiveLocationModal({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg w-4/5 h-4/5 p-4 relative">
-        <button onClick={onClose} className="absolute top-2 right-2 p-2">❌</button>
+        <LoadingButton onClick={onClose} className="absolute top-2 right-2 p-2">❌</LoadingButton>
         <h2 className="text-xl font-semibold mb-2">Live Location</h2>
 
         {location ? (

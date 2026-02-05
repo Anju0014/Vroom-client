@@ -473,6 +473,7 @@ import LocationPicker from '@/components/maps/LocationPicker';
 import toast from 'react-hot-toast';
 
 import { Car, CarFormData } from '@/types/authTypes';
+import LoadingButton from '../common/LoadingButton';
 
 interface EditCarModalProps {
   isOpen: boolean;
@@ -622,13 +623,13 @@ export default function EditCarModal({
         {/* header */}
         <div className="flex justify-between items-center mb-6 pb-3 border-b">
           <h2 className="text-2xl font-bold">Edit Car Details</h2>
-          <button
+          <LoadingButton
             type="button"
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 rounded-full p-1"
           >
             <X className="w-6 h-6" />
-          </button>
+          </LoadingButton>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -810,14 +811,14 @@ export default function EditCarModal({
                         alt={`img-${idx + 1}`}
                         className="w-full h-32 object-cover rounded-md border"
                       />
-                      <button
+                      <LoadingButton
                         type="button"
                         onClick={() => handleRemoveImage(idx)}
                         className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100"
                         title="Remove image"
                       >
                         <Trash className="w-4 h-4" />
-                      </button>
+                      </LoadingButton>
                     </div>
                   ))}
                 </div>
@@ -856,13 +857,13 @@ export default function EditCarModal({
                     controls
                     className="w-full h-48 object-cover rounded-md border"
                   />
-                  <button
+                  <LoadingButton
                     type="button"
                     onClick={handleRemoveVideo}
                     className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100"
                   >
                     <Trash className="w-4 h-4" />
-                  </button>
+                  </LoadingButton>
                 </div>
               ) : null}
 
@@ -950,19 +951,19 @@ export default function EditCarModal({
 
           
           <div className="flex justify-end gap-3 border-t pt-6">
-            <button
+            <LoadingButton
               type="button"
               onClick={onClose}
               className="bg-gray-100 text-gray-800 px-5 py-2 rounded-md hover:bg-gray-200"
             >
               Cancel
-            </button>
-            <button
+            </LoadingButton>
+            <LoadingButton
               type="submit"
               className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800"
             >
               Update Car
-            </button>
+            </LoadingButton>
           </div>
         </form>
       </motion.div>

@@ -19,6 +19,7 @@ import {
   CreditCard,
   Pen
 } from "lucide-react";
+import LoadingButton from "../common/LoadingButton";
 
 const Sidebar: React.FC = () => {
   const { user,logout } = useAuthStoreAdmin();
@@ -134,13 +135,13 @@ const Sidebar: React.FC = () => {
             </li>
           ))}
           <li>
-            <button
+            <LoadingButton
               onClick={handleLogout}
               className="w-full flex items-center py-2 px-3 rounded-md hover:bg-blue-300 transition-colors duration-200 "
             >
               <LogOut size={18} className="mr-3 text-blue-700" />
               <span className="text-sm">Logout</span>
-            </button>
+            </LoadingButton>
           </li>
         </ul>
       </nav>

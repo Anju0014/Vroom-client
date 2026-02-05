@@ -10,6 +10,7 @@ import { AuthService } from '@/services/customer/authService';
 import { getReverseGeocode } from '@/services/common/mapService'
 import Pagination from '@/components/pagination';
 import { useSearchParams } from 'next/navigation';
+import LoadingButton from '@/components/common/LoadingButton';
 
 const AllCarsPage: React.FC = () => {
   const router = useRouter();
@@ -249,12 +250,12 @@ const AllCarsPage: React.FC = () => {
                           <span className="font-medium">₹{car.expectedWage}/day</span>
                         </div>
                         <p className="text-sm text-gray-500 mt-1">{car.location.address}</p>
-                        <button
+                        <LoadingButton
                           onClick={() => viewDetailsNow(car._id || car.id!)}
                           className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
                         >
                           View Details
-                        </button>
+                        </LoadingButton>
                       </div>
                     </div>
                   ))

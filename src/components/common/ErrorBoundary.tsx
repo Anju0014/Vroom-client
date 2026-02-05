@@ -1,5 +1,6 @@
 import { Frown } from 'lucide-react';
 import React, { Component, ReactNode } from 'react';
+import LoadingButton from './LoadingButton';
 
 interface Props {
   children: ReactNode;
@@ -59,12 +60,12 @@ class ErrorBoundary extends Component<Props, State> {
             )}
 
             <div className="flex gap-3 justify-center">
-              <button
+              <LoadingButton
                 onClick={this.handleReset}
                 className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 Try Again
-              </button>
+              </LoadingButton>
               
               <button
                 onClick={() => window.location.href = '/'}

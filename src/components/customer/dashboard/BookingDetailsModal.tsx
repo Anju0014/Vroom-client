@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Booking } from '@/app/customer/dashboard/bookings/page';
 import LocationMapView from '@/components/maps/LocationMapView';
 import toast from 'react-hot-toast';
+import LoadingButton from '@/components/common/LoadingButton';
 
 interface BookingDetailsModalProps {
   booking: Booking;
@@ -264,12 +265,12 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 pt-6 border-t border-slate-200">
             {booking.status !== "cancelled" && (
-              <button
+              <LoadingButton
                 onClick={() => onContactOwner(booking.carOwnerId, booking.ownerName)}
                 className="flex-1 min-w-[200px] px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                💬 Chat with Owner
-              </button>
+                 Chat with Owner
+              </LoadingButton>
             )}
 
             {booking.receiptUrl && (
@@ -324,14 +325,14 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
               </div>
               
               <div className="flex gap-3">
-                <button
+                <LoadingButton
                   onClick={() => setShowCancelConfirm(false)}
                   disabled={isCancelling}
                   className="flex-1 px-6 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 transition-colors font-semibold disabled:opacity-50"
                 >
                   Keep Booking
-                </button>
-                <button
+                </LoadingButton>
+                <LoadingButton
                   onClick={handleCancelBooking}
                   disabled={isCancelling}
                   className="flex-1 px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
@@ -347,7 +348,7 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
                   ) : (
                     'Yes, Cancel'
                   )}
-                </button>
+                </LoadingButton>
               </div>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { AuthService } from '@/services/customer/authService';
 import Stepper from '@/components/common/StepperBooking';
 import toast from 'react-hot-toast';
+import LoadingButton from '@/components/common/LoadingButton';
 
 interface Car {
   _id: string;
@@ -99,18 +100,18 @@ const handleAgree = async () => {
                 </p>
               </div>
               <div className="flex justify-between gap-4">
-                <button
+                <LoadingButton
                   onClick={handleDisagree}
                   className="py-2 px-6 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
                 >
                   Disagree
-                </button>
-                <button
+                </LoadingButton>
+                <LoadingButton
                   onClick={handleAgree}
                   className="py-2 px-6 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
                 >
                   Agree & Continue
-                </button>
+                </LoadingButton>
               </div>
             </div>
           </div>

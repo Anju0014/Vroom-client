@@ -111,6 +111,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import InputField from "./InputField";
 import { changePasswordSchema } from "@/lib/validation";
+import LoadingButton from "./common/LoadingButton";
 
 const ChangePasswordModal = ({
   isOpen,
@@ -204,19 +205,19 @@ const ChangePasswordModal = ({
           />
 
           <div className="flex justify-between pt-4">
-            <button
+            <LoadingButton
               type="button"
               className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
               onClick={onClose}
             >
               Cancel
-            </button>
-            <button 
+            </LoadingButton>
+            <LoadingButton
               type="submit" 
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Submit
-            </button>
+            </LoadingButton>
           </div>
         </form>
       </div>

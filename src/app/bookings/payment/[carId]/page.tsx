@@ -8,6 +8,7 @@ import { AuthService } from '@/services/customer/authService';
 import { useAuthStore } from '@/store/customer/authStore';
 import StripeCheckoutForm from '@/components/common/StripeCheckoutForm';
 import Stepper from '@/components/common/StepperBooking';
+import LoadingButton from '@/components/common/LoadingButton';
 
 interface Car {
   _id: string;
@@ -179,12 +180,12 @@ const PaymentPage = () => {
     return (
       <div className="text-red-500 text-center p-8 max-w-lg mx-auto">
         {error}
-        <button
+        <LoadingButton
           onClick={handleBack}
           className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
         >
           Go Back
-        </button>
+        </LoadingButton>
       </div>
     );
   }
@@ -193,12 +194,12 @@ const PaymentPage = () => {
     return (
       <div className="text-red-500 text-center p-8 max-w-lg mx-auto">
         Incomplete booking data or booking not initialized
-        <button
+        <LoadingButton
           onClick={handleBack}
           className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
         >
           Go Back
-        </button>
+        </LoadingButton>
       </div>
     );
   }
@@ -219,12 +220,12 @@ const PaymentPage = () => {
             <h2 className="text-2xl font-bold text-indigo-700">
               Payment for {car.carName}
             </h2>
-            <button
+            <LoadingButton
               onClick={handleBack}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
             >
               Back
-            </button>
+            </LoadingButton>
           </div>
 
           <div className="space-y-8">
@@ -311,7 +312,7 @@ const PaymentPage = () => {
 
               {paymentMethod === 'wallet' ? (
                 <div className="space-y-4">
-                  <button
+                  <LoadingButton
                     onClick={handleWalletPayment}
                     disabled={hasInsufficientBalance || processingPayment}
                     className={`w-full py-3 rounded-lg font-semibold text-white transition-all ${
@@ -333,7 +334,7 @@ const PaymentPage = () => {
                     ) : (
                       `Pay ₹${totalPrice} using Wallet`
                     )}
-                  </button>
+                  </LoadingButton>
 
                   {hasInsufficientBalance && (
                     <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -342,15 +343,6 @@ const PaymentPage = () => {
                       </p>
                     </div>
                   )}
-
-                  <div className="text-center">
-                    <button
-                      onClick={() => router.push('/wallet')}
-                      className="text-indigo-600 hover:text-indigo-700 text-sm font-medium underline"
-                    >
-                      Add funds to wallet
-                    </button>
-                  </div>
                 </div>
               ) : (
                 <StripeCheckoutForm

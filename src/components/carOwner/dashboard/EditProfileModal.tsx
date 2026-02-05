@@ -11,6 +11,7 @@ import FileUpload from "@/components/FileUpload";
 import { IUser, UserRole } from "@/types/authTypes";
 import { profileSchema } from "@/lib/validation";
 import { EditProfileModalProps,Address } from "@/types/authTypes";
+import LoadingButton from "@/components/common/LoadingButton";
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({
   currentPhoneNumber = "",
@@ -157,12 +158,12 @@ const partialUser: IUser = {
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-2 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">
+            <LoadingButton type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">
               Cancel
-            </button>
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" disabled={loading}>
+            </LoadingButton>
+            <LoadingButton type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" disabled={loading}>
               {loading ? "Saving..." : "Save"}
-            </button>
+            </LoadingButton>
           </div>
         </form>
       </div>

@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Booking } from '@/app/customer/dashboard/bookings/page';
 import { useRouter } from 'next/navigation';
+import LoadingButton from '@/components/common/LoadingButton';
 
 interface BookingCardProps {
   booking: Booking;
@@ -146,12 +147,12 @@ const BookingCard: React.FC<BookingCardProps> = memo(({ booking, onViewDetails }
               {label}
             </span>
             
-            <button
+            <LoadingButton
               onClick={() => onViewDetails(booking)}
               className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all font-medium text-sm shadow-md hover:shadow-lg transform hover:scale-105"
             >
-              View Details →
-            </button>
+              View Details 
+            </LoadingButton>
           </div>
         </div>
       </div>

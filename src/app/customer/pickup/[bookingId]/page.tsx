@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { AuthService } from "@/services/customer/authService";
 import { useAuthStore } from "@/store/customer/authStore";
+import LoadingButton from "@/components/common/LoadingButton";
 
 type Step = "START" | "OTP" | "DONE";
 
@@ -118,13 +119,13 @@ export default function PickupPage() {
           </p> */}
         </div>
         {step === "START" && (
-          <button
+          <LoadingButton
             onClick={requestOtp}
             disabled={actionLoading}
             className="w-full py-4 bg-green-600 rounded-xl font-bold"
           >
             {actionLoading ? "Requesting OTP..." : "I'm at Pickup Location"}
-          </button>
+          </LoadingButton>
         )}
 
         {step === "OTP" && (

@@ -11,6 +11,7 @@ import { AuthService } from '@/services/customer/authService';
 import { useAuthStore } from '@/store/customer/authStore';
 import toast from 'react-hot-toast';
 import { CarSearchForm } from '@/components/customer/carSearchForm';
+import LoadingButton from '@/components/common/LoadingButton';
 
 interface Coordinates {
   type: string;
@@ -378,12 +379,12 @@ setLocation(location || address);
                       </span>
                     </div>
                     <p className="text-xs text-gray-500 mb-4 truncate">{formatShortAddress(car.location.address)}</p>
-                    <button 
+                    <LoadingButton
                       className="w-full py-2 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition-all"
                       onClick={() => viewDetailsPage(car._id)}
                     >
                       View Details
-                    </button>
+                    </LoadingButton>
                   </div>
                 </div>
               ))}
@@ -396,12 +397,12 @@ setLocation(location || address);
           
           {featuredCars.length > 4 && (
             <div className="text-center mt-8">
-              <button 
+              <LoadingButton
                 className="px-6 py-2 bg-white text-gray-900 font-semibold rounded-md border border-gray-300 hover:bg-gray-50 transition-all"
                 onClick={() => router.push('/customer/cars')}
               >
                 View All Cars
-              </button>
+              </LoadingButton>
             </div>
           )}
         </div>
@@ -459,12 +460,12 @@ setLocation(location || address);
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 mb-4">{car.location.landmark}</p>
-                      <button 
+                      <LoadingButton
                         className="w-full py-2 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition-all"
                         onClick={() => viewDetailsPage(car._id)}
                       >
                         View Details
-                      </button>
+                      </LoadingButton>
                     </div>
                   </div>
                 ))}
@@ -481,12 +482,12 @@ setLocation(location || address);
             
             {nearbyCars.length > 3 && (
               <div className="text-center mt-8">
-                <button 
+                <LoadingButton
                   className="px-6 py-2 bg-white text-gray-900 font-semibold rounded-md border border-gray-300 hover:bg-gray-50 transition-all"
                   onClick={() => router.push(`/cars/nearby?lat=${coordinates.lat}&lng=${coordinates.lng}`)}
                 >
                   View All Nearby Cars
-                </button>
+                </LoadingButton>
               </div>
             )}
           </div>

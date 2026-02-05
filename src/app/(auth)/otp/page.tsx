@@ -8,6 +8,7 @@ import { OwnerAuthService } from "@/services/carOwner/authService";
 import Image from "next/image";
 import AuthSideBanner from "@/components/AuthSideBanner";
 import InputField from "@/components/InputField";
+import LoadingButton from "@/components/common/LoadingButton";
 
 
 const OTPVerification = () => {
@@ -143,18 +144,18 @@ const OTPVerification = () => {
             className="w-full px-4 py-2 border rounded-lg text-center text-xl  focus:ring-red-500 focus:border-red-500 tracking-widest"
             placeholder="123456"
           />
-          <button
+          <LoadingButton
             type="submit"
             className="w-full py-3 text-white font-semibold rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
             disabled={loading}
           >
             {loading ? "Verifying..." : "Verify OTP"}
-          </button>
+          </LoadingButton>
         </form>
 
         <p className="text-center text-sm mt-4">
           Didn't receive OTP?{" "}
-          <button
+          <LoadingButton
             type="button"
             disabled={timeLeft > 0 || resending}
             onClick={handleResendOTP}
@@ -165,7 +166,7 @@ const OTPVerification = () => {
             }`}
           >
             {resending ? "Resending..." : "Resend OTP"}
-          </button>
+          </LoadingButton>
         </p>
       </div>
     </div>

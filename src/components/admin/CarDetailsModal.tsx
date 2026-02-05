@@ -195,6 +195,7 @@
 
 import React, { useState, useEffect } from "react";
 import { X, Calendar, MapPin, Phone, Mail, User, DollarSign, Fuel, Hash, Camera } from "lucide-react";
+import LoadingButton from "../common/LoadingButton";
 
 interface CarDetailsModalProps {
   car: any;
@@ -239,12 +240,12 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
             <h2 className="text-3xl font-bold mb-1">{updatedCar.carName}</h2>
             <p className="text-blue-100 text-sm">{updatedCar.brand} • {updatedCar.year}</p>
           </div>
-          <button 
+          <LoadingButton
             onClick={onClose} 
             className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all"
           >
             <X size={24} />
-          </button>
+          </LoadingButton>
         </div>
 
 
@@ -367,7 +368,7 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
             )}
 
 
-            <button
+            <LoadingButton
               onClick={() => onToggleBlock(updatedCar)}
               disabled={isProcessing}
               className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg
@@ -384,17 +385,17 @@ const CarDetailsModal: React.FC<CarDetailsModalProps> = ({
               ) : (
                 updatedCar.blockStatus === 0 ? "🚫 Block Car" : "✓ Unblock Car"
               )}
-            </button>
+            </LoadingButton>
           </div>
         </div>
 
         <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-end">
-          <button
+          <LoadingButton
             onClick={onClose}
             className="px-6 py-2.5 bg-white text-blue-600 border-2 border-blue-200 rounded-lg hover:bg-blue-50 transition-all font-semibold"
           >
             Close
-          </button>
+          </LoadingButton>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client"; 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import LoadingButton from "./common/LoadingButton";
 
 interface InputProps {
   label: string;
@@ -54,13 +55,13 @@ const InputField: React.FC<InputProps> = ({
           } ${className || "focus:ring-red-500 focus:border-red-500"}`}
         />
         {isPassword && (
-          <button
+          <LoadingButton
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
             className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
+          </LoadingButton>
         )}
       </div>
     </div>

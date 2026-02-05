@@ -1,5 +1,6 @@
 'use client';
 
+import LoadingButton from '@/components/common/LoadingButton';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -44,12 +45,12 @@ const ConfirmationPage = () => {
         <p className="text-gray-600 mb-4">
           Your booking has been confirmed. You will be redirected to your bookings shortly.
         </p>
-        <button
+        <LoadingButton
           onClick={() => router.push('/customer/dashboard/bookings')}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
         >
           View Bookings
-        </button>
+        </LoadingButton>
       </div>
     </div>
   );

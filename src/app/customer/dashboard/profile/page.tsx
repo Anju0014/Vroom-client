@@ -239,6 +239,7 @@ import Image from "next/image";
 import { FileText, Eye, Edit, Lock } from 'lucide-react';
 import FileUpload from "@/components/FileUpload";
 import ChangePasswordModal from "@/components/Changepassword";
+import LoadingButton from "@/components/common/LoadingButton";
 
 interface Address {
   addressLine1: string;
@@ -338,20 +339,20 @@ const ProfilePage = () => {
         <div className="max-w-4xl mx-auto mt-6 p-6 bg-white shadow-lg rounded-lg">
           <div className="flex justify-end items-center mb-6">
             <div className="flex space-x-3">
-              <button 
+              <LoadingButton
                 onClick={() => setIsEditing(true)} 
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center shadow-sm"
               >
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Profile
-              </button>
-              <button 
+              </LoadingButton>
+              <LoadingButton
                 onClick={() => setIsChangePassword(true)} 
                 className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center shadow-sm"
               >
                 <Lock className="mr-2 h-4 w-4" />
                 Change Password
-              </button>
+              </LoadingButton>
             </div>
           </div>
 

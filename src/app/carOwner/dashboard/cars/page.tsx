@@ -19,6 +19,7 @@ import Pagination from '@/components/pagination';
 import LiveLocationModal from '@/components/carOwner/dashboard/LiveLocationModal';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import LoadingButton from '@/components/common/LoadingButton';
 
 
 const YourCarsPage: React.FC = () => {
@@ -256,12 +257,12 @@ const handleAvailabilityClick = async (carId: string) => {
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-semibold">Your Cars</h1>
             <div className="flex space-x-4">
-              <button
+              <LoadingButton
                 className="bg-gray-800 text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-700 transition-colors"
                 onClick={handleAddCarClick}
               >
                 <FaPlus className="mr-2" /> Add New Car
-              </button>
+              </LoadingButton>
             </div>
           </div>
 
@@ -301,27 +302,27 @@ const handleAvailabilityClick = async (carId: string) => {
                         <div className="absolute top-2 right-2 z-10 flex space-x-2">
                           {carId && (
                             <>
-                              <button
+                              <LoadingButton
                                 onClick={() => handleEditCar(carId)}
                                 className="bg-white p-2 rounded-full shadow-md hover:bg-blue-50 transition-colors"
                                 title="Edit"
                               >
                                 <FaPencilAlt className="text-blue-600" size={14} />
-                              </button>
-                              <button
+                              </LoadingButton>
+                              <LoadingButton
                                 onClick={() => handleAvailabilityClick(carId)}
                                 className="bg-white p-2 rounded-full shadow-md hover:bg-green-50 transition-colors"
                                 title="Manage Availability"
                               >
                                 <Calendar className="text-green-600" size={14} />
-                              </button>
-                              <button
+                              </LoadingButton>
+                              <LoadingButton
                                 onClick={() => handleDeleteCar(carId)}
                                 className="bg-white p-2 rounded-full shadow-md hover:bg-red-50 transition-colors"
                                 title="Delete"
                               >
                                 <FaTrashAlt className="text-red-600" size={14} />
-                              </button>
+                              </LoadingButton>
                             </>
                           )}
                         </div>
@@ -357,12 +358,12 @@ const handleAvailabilityClick = async (carId: string) => {
                               <FaClock className="mr-1" size={12} />
                               Awaiting verification
                             </span>
-                            <button
+                            <LoadingButton
                               onClick={() => router.push(`/carOwner/carVerification/${carId}`)}
                               className="text-xs bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 transition-colors"
                             >
                               Join Call
-                            </button>
+                            </LoadingButton>
                           </div>
                         )}
 
@@ -375,12 +376,12 @@ const handleAvailabilityClick = async (carId: string) => {
                           </div>
                         )}
                         {car.hasBookingToday && (
-                        <button
+                        <LoadingButton
                           onClick={() => handleViewLiveLocation(car._id!)}
                           className="mt-3 w-full bg-white border border-gray-300 p-2 rounded hover:bg-gray-50 transition-colors text-sm"
                         >
-                          📍 View Live Location
-                        </button>
+                           View Live Location
+                        </LoadingButton>
 )}
                       </div>
                     </div>

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Info, CheckCircle, XCircle } from 'lucide-react';
 import { Car,Booking,AvailabilityModalProps } from '@/types/miniTypes';
+import LoadingButton from '../common/LoadingButton';
 
 
 const AvailabilityModal: React.FC<AvailabilityModalProps> = ({ 
@@ -199,14 +200,14 @@ const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
             <h2 className="text-xl font-semibold text-gray-900">Manage Availability</h2>
             <p className="text-sm text-gray-600 mt-1">{car.carName}</p>
           </div>
-          <button
+          <LoadingButton
             onClick={handleClose}
             disabled={isLoading}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
             aria-label="Close modal"
           >
             <X size={20} className="text-gray-500" />
-          </button>
+          </LoadingButton>
         </div>
 
       
@@ -247,23 +248,23 @@ const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
           {/* Calendar */}
           <div className="border rounded-lg p-4">
             <div className="flex justify-between items-center mb-4">
-              <button
+              <LoadingButton
                 onClick={handlePrevMonth}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 disabled={isLoading}
               >
                 ←
-              </button>
+              </LoadingButton>
               <h3 className="font-medium">
                 {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
               </h3>
-              <button
+              <LoadingButton
                 onClick={handleNextMonth}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 disabled={isLoading}
               >
                 →
-              </button>
+              </LoadingButton>
             </div>
 
 
@@ -291,14 +292,14 @@ const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
 
 
         <div className="flex justify-end space-x-3 p-6 border-t bg-gray-50">
-          <button
+          <LoadingButton
             onClick={handleClose}
             disabled={isLoading}
             className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
           >
             Cancel
-          </button>
-          <button
+          </LoadingButton>
+          <LoadingButton
             onClick={handleSave}
             disabled={isLoading}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors flex items-center"
@@ -311,7 +312,7 @@ const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
             ) : (
               'Save Changes'
             )}
-          </button>
+          </LoadingButton>
         </div>
       </div>
     </div>

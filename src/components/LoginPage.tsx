@@ -17,6 +17,7 @@ import { LoginData } from '@/types/authTypes';
 import { useHasHydrated } from '@/hooks/useHasHydrated';
 import InputField from './InputField';
 import AuthSideBanner from './AuthSideBanner';
+import LoadingButton from './common/LoadingButton';
 
 interface LoginComponentProps {
   defaultRole?: 'customer' | 'carOwner';
@@ -342,22 +343,22 @@ const isOwner = ownerUser && accessTokenOwner;
       </div>
 
       {/* Submit Button */}
-      <button
+      <LoadingButton
         type="submit"
         className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
         disabled={loading}
       >
         {loading ? `Signing In as ${formData.role}...` : `Sign In as ${formData.role}`}
-      </button>
+      </LoadingButton>
     </form>
-          <button
+          <LoadingButton
             type="button"
             onClick={handleGoogleLogin}
             className="w-full py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 transition-all flex justify-center items-center"
             disabled={loading}
           >
             {loading ? 'Processing...' : 'Login through Google'}
-          </button>
+          </LoadingButton>
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}

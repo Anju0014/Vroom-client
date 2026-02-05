@@ -1,5 +1,6 @@
 
 import React from 'react';
+import LoadingButton from './common/LoadingButton';
 
 
 interface PaginationProps {
@@ -19,15 +20,15 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
   return (
     <div className="flex justify-center items-center mt-8 space-x-2">
       
-      <button
+      <LoadingButton
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md disabled:opacity-50 hover:bg-gray-300"
       >
         Previous
-      </button>
+      </LoadingButton>
       {pageNumbers.map((number) => (
-        <button
+        <LoadingButton
           key={number}
           onClick={() => onPageChange(number)}
           className={`px-4 py-2 rounded-md ${
@@ -35,15 +36,15 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
           }`}
         >
           {number}
-        </button>
+        </LoadingButton>
       ))}
-      <button
+      <LoadingButton
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md disabled:opacity-50 hover:bg-gray-300"
       >
         Next
-      </button>
+      </LoadingButton>
     </div>
   );
 };

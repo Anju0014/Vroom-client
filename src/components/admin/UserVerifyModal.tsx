@@ -211,6 +211,7 @@
 
 import React, { useEffect, useState } from "react";
 import { X, User, Mail, Phone, MapPin, FileText, Shield, AlertCircle, Check, Hash } from "lucide-react";
+import LoadingButton from "../common/LoadingButton";
 
 interface UserVerifyModalProps {
   user: any;
@@ -299,12 +300,12 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
             <h2 className="text-2xl font-bold mb-1">Car Owner Verification</h2>
             <p className="text-blue-100 text-sm">Review and verify owner information</p>
           </div>
-          <button 
+          <LoadingButton
             onClick={onClose} 
             className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all"
           >
             <X size={24} />
-          </button>
+          </LoadingButton>
         </div>
 
              <div className="p-6 overflow-y-auto flex-1">
@@ -412,7 +413,7 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
             
             {!showRejectReason ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button 
+                <LoadingButton
                   onClick={handleVerifyUser}
                   disabled={isProcessing}
                   className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl transition-all font-bold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
@@ -428,15 +429,15 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
                       Verify Owner
                     </>
                   )}
-                </button>
-                <button 
+                </LoadingButton>
+                <LoadingButton 
                   onClick={handleRejectUser}
                   disabled={isProcessing}
                   className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl transition-all font-bold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <X size={20} />
                   Reject Owner
-                </button>
+                </LoadingButton>
               </div>
             ) : (
               <div className="bg-red-50 border-2 border-red-200 rounded-xl p-5">
@@ -455,14 +456,14 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
                   rows={4}
                 />
                 <div className="flex gap-3 mt-4">
-                  <button
+                  <LoadingButton
                     onClick={handleCancelReject}
                     disabled={isProcessing}
                     className="flex-1 py-3 rounded-lg bg-white border-2 border-gray-300 hover:bg-gray-100 text-gray-700 font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </LoadingButton>
+                  <LoadingButton
                     onClick={handleRejectSubmit}
                     disabled={isProcessing || !rejectReason.trim()}
                     className="flex-1 py-3 rounded-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -478,7 +479,7 @@ const UserVerifyModal: React.FC<UserVerifyModalProps> = ({
                         Confirm Rejection
                       </>
                     )}
-                  </button>
+                  </LoadingButton>
                 </div>
               </div>
             )}

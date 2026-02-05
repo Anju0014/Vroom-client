@@ -463,6 +463,7 @@ import { carSchema } from '@/lib/validation';
 import LocationPicker from "@/components/maps/LocationPicker";
 import { MapPin } from 'lucide-react';
 import { transformGeoCoordinates } from '@/utils/transformGeoCoordinates';
+import LoadingButton from '../common/LoadingButton';
 
 interface AddNewCarModalProps {
   isOpen: boolean;
@@ -662,14 +663,14 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
         
         <div className="flex justify-between items-center mb-6 pb-3 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-gray-800">Add New Car</h2>
-          <button 
+          <LoadingButton
             type="button" 
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-2xl font-bold hover:bg-gray-100 h-8 w-8 rounded-full flex items-center justify-center transition-colors"
             aria-label="Close"
           >
             ×
-          </button>
+          </LoadingButton>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white p-5 rounded-lg shadow-sm">
@@ -888,7 +889,7 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
           <span className="text-green-800 text-sm font-medium">
             {formData.images.length} image(s) uploaded ({5 - formData.images.length} remaining)
           </span>
-          <button 
+          <LoadingButton
             type="button"
             onClick={() => {
               setFormData(prev => ({ ...prev, images: [] }));
@@ -897,7 +898,7 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
             className="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded"
           >
             Reset All
-          </button>
+          </LoadingButton>
         </div>
         
         {/* Image previews grid */}
@@ -911,7 +912,7 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
               />
               
               {/* Individual image remove button */}
-              <button
+              <LoadingButton
                 type="button"
                 onClick={() => {
                   setFormData(prev => ({
@@ -926,7 +927,7 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-              </button>
+              </LoadingButton>
               
               {/* Image number indicator */}
               <div className="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-xs px-1 rounded">
@@ -970,7 +971,7 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
       <div className="mb-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-green-800 text-sm font-medium">Video uploaded successfully!</span>
-          <button 
+          <LoadingButton
             type="button"
             onClick={() => {
               setFormData(prev => ({ ...prev, videos: [] }));
@@ -979,7 +980,7 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
             className="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded"
           >
             Reset
-          </button>
+          </LoadingButton>
         </div>
         
         {/* Video preview */}
@@ -1025,21 +1026,21 @@ const AddNewCarModal: React.FC<AddNewCarModalProps> = ({ isOpen, onClose, onCarA
 
 
           <div className="flex justify-end space-x-4 mt-8 pt-4 border-t border-gray-100">
-            <button
+            <LoadingButton
               type="button"
               onClick={onClose}
               className="bg-gray-100 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-200 transition-colors font-medium"
               disabled={isSubmitting}
             >
               Cancel
-            </button>
-            <button
+            </LoadingButton>
+            <LoadingButton
               type="submit"
               className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors font-medium"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Adding...' : 'Add Car'}
-            </button>
+            </LoadingButton>
           </div>
         </form>
       </div>

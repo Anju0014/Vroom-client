@@ -11,6 +11,7 @@ import { useAuthStore } from "@/store/customer/authStore";
 import { useAuthStoreOwner } from "@/store/carOwner/authStore";
 import RegistrationForm from "@/components/RegistrationForm";
 import AuthSideBanner from "./AuthSideBanner";
+import LoadingButton from "./common/LoadingButton";
 
 interface SignUpRoleProps {
   role: "customer" | "carOwner";
@@ -125,14 +126,14 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
               <div className="text-center ">
                 <p className="text-sm text-gray-600">
                   Already have an account?{" "}
-                  <button
+                  <LoadingButton
                     type="button"
                     onClick={() => router.push("/login")}
                     className="text-red-600 hover:text-red-800 font-medium"
                     suppressHydrationWarning
                   >
                     Sign In as {role === "customer" ? "Customer" : "Car Owner"}
-                  </button>
+                  </LoadingButton>
                 </p>
               </div>
             </>

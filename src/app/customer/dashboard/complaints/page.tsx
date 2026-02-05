@@ -4,6 +4,7 @@ import { AlertCircle, Plus, X, Clock, CheckCircle, AlertTriangle } from "lucide-
 import { complaintService } from "@/services/common/complaintService";
 import ComplaintForm from "@/components/common/CompliantForm";
 import { Complaint,CreateComplaintDTO } from "@/types/complaintTypes";
+import LoadingButton from "@/components/common/LoadingButton";
 // import { useAuth } from "@/hooks/useAuth";
 
 const ComplaintPage: React.FC = () => {
@@ -101,13 +102,13 @@ const ComplaintPage: React.FC = () => {
                 <p className="text-blue-100 mt-1">Track and manage your service complaints</p>
               </div>
             </div>
-            <button
+            <LoadingButton
               onClick={() => setShowForm(!showForm)}
               className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl"
             >
               {showForm ? <X className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
               {showForm ? "Cancel" : "New Complaint"}
-            </button>
+            </LoadingButton>
           </div>
         </div>
 

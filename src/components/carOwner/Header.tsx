@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import NotificationBell from '../common/NotificationBell';
+import LoadingButton from '../common/LoadingButton';
 
 const Header = () => {
   const router = useRouter();
@@ -56,9 +57,9 @@ const Header = () => {
                 My Dashboard
               </Link>
               <span className="text-sm text-gray-700">Hi, {user?.fullName}</span>
-              <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-1 rounded">
+              <LoadingButton onClick={handleLogout} className="bg-red-500 text-white px-3 py-1 rounded">
                 Sign Out
-              </button>
+              </LoadingButton>
             </>
           ) : (
             <Link href="/login" className="bg-gray-900 text-white px-4 py-2 rounded-md">

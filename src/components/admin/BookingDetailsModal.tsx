@@ -179,6 +179,7 @@
 
 import React from 'react';
 import { XCircle, User, Car, Calendar, DollarSign, Clock } from 'lucide-react';
+import LoadingButton from '../common/LoadingButton';
 
 interface BookingModalProps {
   booking: any;
@@ -232,12 +233,12 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
               <h2 className="text-2xl font-bold">Booking Details</h2>
               <p className="text-blue-100 text-sm mt-1">Complete information about the booking</p>
             </div>
-            <button
+            <LoadingButton
               onClick={onClose}
               className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all"
             >
               <XCircle size={24} />
-            </button>
+            </LoadingButton>
           </div>
         </div>
 
@@ -363,12 +364,12 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
 
 
         <div className="border-t border-gray-200 p-6 bg-gray-50 flex justify-end gap-3">
-          <button
+          <LoadingButton
             onClick={onClose}
             className="px-6 py-2.5 bg-white border border-gray-300 hover:bg-blue-400 text-gray-700 rounded-lg font-semibold transition-colors shadow-sm"
           >
             Close
-          </button>
+          </LoadingButton>
          
         </div>
       </div>

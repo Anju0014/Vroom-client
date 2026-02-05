@@ -110,6 +110,7 @@ import { Notification } from '@/types/notificationTypes';
 import { io } from 'socket.io-client';
 import { NotificationService } from '@/services/common/notificationService';
 import { notificationIconMap, severityStyles } from '@/code/constants/notificationIcons';
+import LoadingButton from './LoadingButton';
 
 export default function NotificationBell({ userId }: { userId: string }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -152,14 +153,14 @@ export default function NotificationBell({ userId }: { userId: string }) {
 
   return (
     <div className="relative">
-      <button onClick={() => setOpen(!open)} className="relative p-2">
+      <LoadingButton onClick={() => setOpen(!open)} className="relative p-2">
         <Bell className="w-6 h-6" />
         {unread > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {unread}
           </span>
         )}
-      </button>
+      </LoadingButton>
 
       {open && (
         <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border z-50">

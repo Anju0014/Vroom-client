@@ -242,6 +242,7 @@
 import { useState } from "react";
 import { X, User, Mail, Calendar, Tag, AlertCircle, Clock, FileText, MessageSquare, CheckCircle, XCircle, Eye } from "lucide-react";
 import { ComplaintStatus,ComplaintPriority,UpdateComplaintModalProps } from "@/types/complaintTypes";
+import LoadingButton from "../common/LoadingButton";
 
 
 export default function UpdateComplaintModal({
@@ -322,12 +323,12 @@ export default function UpdateComplaintModal({
                 <p className="text-blue-100 text-sm mt-0.5">Review and update complaint status</p>
               </div>
             </div>
-            <button 
+            <LoadingButton
               onClick={onClose} 
               className="text-white hover:bg-white/20 rounded-full p-2 transition-all"
             >
               <X className="w-6 h-6" />
-            </button>
+            </LoadingButton>
           </div>
         </div>
 
@@ -504,14 +505,14 @@ export default function UpdateComplaintModal({
 
 
         <div className="bg-gray-50 border-t-2 border-gray-200 px-6 py-4 flex justify-end gap-3">
-          <button
+          <LoadingButton
             onClick={onClose}
             disabled={isSubmitting}
             className="px-6 py-2.5 text-sm text-gray-700 font-semibold bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition-all disabled:opacity-50"
           >
             Cancel
-          </button>
-          <button
+          </LoadingButton>
+          <LoadingButton
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="px-6 py-2.5 text-sm bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 flex items-center gap-2 shadow-md"
@@ -520,7 +521,7 @@ export default function UpdateComplaintModal({
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             )}
             {isSubmitting ? 'Saving Changes...' : 'Save Changes'}
-          </button>
+          </LoadingButton>
         </div>
       </div>
   

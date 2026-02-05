@@ -1,6 +1,7 @@
 
 'use client';
 import React from 'react';
+import LoadingButton from '../common/LoadingButton';
 
 export type TableColumn = {
   header: string;
@@ -115,12 +116,12 @@ export function Table({
                   ))}
                   {showViewButton && (
                     <td className="px-4 py-3 border border-gray-200">
-                      <button
+                      <LoadingButton
                         onClick={() => onView && onView(item)}
                         className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
                       >
                         View
-                      </button>
+                      </LoadingButton>
                     </td>
                   )}
                 </tr>

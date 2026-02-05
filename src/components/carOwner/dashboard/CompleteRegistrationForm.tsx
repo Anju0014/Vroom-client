@@ -8,6 +8,7 @@ import { OwnerAuthService } from "@/services/carOwner/authService";
 import InputField from "@/components/InputField";
 import FileUpload from "@/components/FileUpload";
 import { Address, CarOwner } from "@/types/authTypes";
+import LoadingButton from "@/components/common/LoadingButton";
 
 interface CompleteRegistrationFormProps {
   ownerDetails: CarOwner;
@@ -98,9 +99,9 @@ const CompleteRegistrationForm: React.FC<CompleteRegistrationFormProps> = ({ own
         <InputField label="Postal Code" name="address.postalCode" type="text" value={formData.address.postalCode} onChange={handleChange} placeholder="e.g., 123456" className="focus:ring-blue-500 focus:border-blue-500"/>
         <InputField label="Country *" name="address.country" type="text" value={formData.address.country} onChange={handleChange} placeholder="Enter your country" className="focus:ring-blue-500 focus:border-blue-500"/>
 
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition" disabled={loading}>
+        <LoadingButton type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition" disabled={loading}>
           {loading ? "Submitting..." : "Complete Registration"}
-        </button>
+        </LoadingButton>
       </form>
     </div>
   );

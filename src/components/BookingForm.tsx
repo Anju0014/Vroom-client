@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Car } from "@/types/workTypes";
+import LoadingButton from "./common/LoadingButton";
 
 interface Props {
   car: Car;
@@ -53,12 +54,12 @@ export default function BookingForm({ car, onConfirm }: Props) {
           className="border p-2 rounded"
         />
       </div>
-      <button
+      <LoadingButton
         onClick={handleSubmit}
         className="mt-4 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600"
       >
         Confirm Booking
-      </button>
+      </LoadingButton>
     </div>
   );
 }

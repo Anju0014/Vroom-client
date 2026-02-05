@@ -10,6 +10,7 @@ import { AuthService } from '@/services/customer/authService';
 import { useSession } from 'next-auth/react';
 import { useAuthStore } from '@/store/customer/authStore';
 import LocationMapView from '@/components/maps/LocationMapView';
+import LoadingButton from '@/components/common/LoadingButton';
 
 interface Location {
   address?: string;
@@ -567,12 +568,12 @@ const lng = coordinates?.[0];
               `}</style>
             </div>
 
-            <button
+            <LoadingButton
               onClick={handleCheckAvailability}
               className="w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 bg-gradient-to-r from-brand-orange to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 shadow-lg hover:shadow-xl"
             >
               Book Your Ride
-            </button>
+            </LoadingButton>
           </div>
         </div>
         

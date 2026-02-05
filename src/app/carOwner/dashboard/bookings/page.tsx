@@ -787,6 +787,7 @@ import { OwnerAuthService } from '@/services/carOwner/authService';
 import Pagination from '@/components/pagination';
 import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
+import LoadingButton from '@/components/common/LoadingButton';
 
 interface User {
   _id: string;
@@ -971,12 +972,12 @@ export default function CarOwnerDashboard() {
         <div className="bg-white border-2 border-red-200 p-8 rounded-xl shadow-lg">
           <h2 className="text-red-800 text-lg font-bold">Error</h2>
           <p className="text-red-700 mt-2">{error}</p>
-          <button 
+          <LoadingButton
             className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
             onClick={() => window.location.reload()}
           >
             Try Again
-          </button>
+          </LoadingButton>
         </div>
       </div>
     );
@@ -1048,31 +1049,31 @@ export default function CarOwnerDashboard() {
               {searchTerm && (
                 <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-blue-100 text-blue-800 font-medium">
                   Search: "{searchTerm}"
-                  <button
+                  <LoadingButton
                     onClick={() => setSearchTerm('')}
                     className="ml-2 hover:text-blue-900 text-lg"
                   >
                     ×
-                  </button>
+                  </LoadingButton>
                 </span>
               )}
               {statusFilter !== 'all' && (
                 <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-yellow-100 text-yellow-800 font-medium">
                   Status: {statusFilter}
-                  <button
+                  <LoadingButton
                     onClick={() => setStatusFilter('all')}
                     className="ml-2 hover:text-yellow-900 text-lg"
                   >
                     ×
-                  </button>
+                  </LoadingButton>
                 </span>
               )}
-              <button
+              <LoadingButton
                 onClick={handleClearFilters}
                 className="text-sm text-blue-600 hover:text-blue-800 font-semibold"
               >
                 Clear all
-              </button>
+              </LoadingButton>
             </div>
           )}
         </div>
@@ -1182,7 +1183,7 @@ export default function CarOwnerDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           <div className="flex items-center justify-center gap-2">
-                            <button
+                            <LoadingButton
                               onClick={() => handleDownloadReceipt(booking._id)}
                               className="inline-flex items-center px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm"
                               title="Download Receipt"
@@ -1191,9 +1192,9 @@ export default function CarOwnerDashboard() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>
                               Receipt
-                            </button>
+                            </LoadingButton>
                             {booking.status.toLowerCase() !== 'cancelled' && (
-                              <button
+                              <LoadingButton
                                 onClick={() => handleContactCustomer(booking.bookingId)}
                                 className="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm"
                                 title="Chat with Customer"
@@ -1202,10 +1203,10 @@ export default function CarOwnerDashboard() {
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                                 Chat
-                              </button>
+                              </LoadingButton>
                             )}
                             {isAllowedToCancel && (
-                              <button
+                              <LoadingButton
                                 onClick={() => handleCancelBooking(booking._id)}
                                 className="inline-flex items-center px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm"
                                 title="Cancel Booking"
@@ -1214,7 +1215,7 @@ export default function CarOwnerDashboard() {
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                                 Cancel
-                              </button>
+                              </LoadingButton>
                             )}
                           </div>
                         </td>
