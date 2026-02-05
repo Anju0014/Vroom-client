@@ -15,6 +15,7 @@ import {
   BookingResponse,
   ConfirmBookingResponse,
 } from "@/types/workTypes";
+import axios from "axios";
 
 // const customerApi = axiosCustomer;
 
@@ -201,13 +202,14 @@ export const AuthService = {
 
   confirmBooking: async (
     bookingId: string,
-    paymentIntentId: string
+    transactionId: string,
+    paymentMethod:string,
   ): Promise<ConfirmBookingResponse> => {
     try {
-      console.log("Confirming booking:", { bookingId, paymentIntentId });
+      console.log("Confirming booking:", { bookingId, transactionId,paymentMethod });
       const response = await customerApi.patch<ConfirmBookingResponse>(
         API_ROUTES.customer.confirmBooking(bookingId),
-        { paymentIntentId }
+        { transactionId,paymentMethod  }
       );
       console.log("Booking confirmed:", response.data);
       if (!response.data.success || !response.data.bookingId) {
@@ -259,4 +261,42 @@ export const AuthService = {
       );
     }
   },
+  getBookingById: async (bookingId: string) => {
+  const response = await customerApi.get(`/bookings/${bookingId}`);
+  return response.data.data;
+},
+
+requestPickupOTP: async (bookingId: string) => {
+  const response = await customerApi.post(
+    `/bookings/${bookingId}/request-pickup-otp`
+  );
+  return response.data;
+},
+
+verifyPickupOTP: async (bookingId: string, otp: string) => {
+  const response = await customerApi.post(
+    `/bookings/${bookingId}/verify-pickup-otp`,
+    { otp }
+  );
+  return response.data;
+},
+
+payWithWallet: async (data: { bookingId: string; amount: number }) => {
+  return customerApi.post(`/bookings/payWithWalletBalance`, data);
+},
+
+getWalletBalance: async () => {
+  console.log("show wallet");
+
+  try {
+    const response = await customerApi.get(`/test`);
+    console.log("response", response);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching wallet balance:", error.response?.data || error.message);
+    throw error; // optional, rethrow if needed
+  }
+}
+
+
 };

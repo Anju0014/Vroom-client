@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { AuthService } from '@/services/customer/authService';
 import { useAuthStore } from '@/store/customer/authStore';
 import toast from 'react-hot-toast';
+import { CarSearchForm } from '@/components/customer/carSearchForm';
 
 interface Coordinates {
   type: string;
@@ -56,7 +57,7 @@ const LandingPage = () => {
   const [loadingNearbyCars, setLoadingNearbyCars] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Authentication effect
+
   useEffect(() => {
     if (!user || !accessToken) {
       console.log('Unauthenticated customer, redirecting to /login');
@@ -68,7 +69,7 @@ const LandingPage = () => {
     }
   }, [user, accessToken, router]);
 
-  // Hydration effect
+  
   useEffect(() => {
     setHydrated(true);
   }, []);
@@ -85,8 +86,6 @@ const LandingPage = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return R * c;
   };
-
-  // Fetch featured cars effect
   useEffect(() => {
     const fetchFeaturedCars = async () => {
       if (!hydrated || !isAuthenticated) return;
@@ -110,7 +109,7 @@ const LandingPage = () => {
     fetchFeaturedCars();
   }, [hydrated, isAuthenticated]);
 
-  // Fetch nearby cars effect
+
   const fetchNearbyCars = async (latitude: number, longitude: number) => {
     if (!hydrated || !isAuthenticated) return;
     
@@ -142,7 +141,6 @@ const LandingPage = () => {
     }
   };
 
-  // Geolocation effect
   useEffect(() => {
     if (hydrated && !manualOverride && isAuthenticated && typeof window !== 'undefined') {
       setLoadingLocation(true);
@@ -187,7 +185,6 @@ setLocation(location || address);
     }
   }, [manualOverride, hydrated, isAuthenticated]);
 
-  // Format address helper function
   const formatShortAddress = (address: string): string => {
     const parts = address.split(',');
     if (parts.length >= 3) {
@@ -218,7 +215,6 @@ setLocation(location || address);
     }
   };
 
-  // Show loading or hidden state during hydration or when not authenticated
   if (!hydrated || !isAuthenticated) {
     return (
       <div style={{ visibility: 'hidden' }}>
@@ -258,7 +254,7 @@ setLocation(location || address);
               Book from our wide selection of vehicles for any occasion at the best prices.
             </p>
 
-            <div className="bg-white p-4 rounded-lg shadow-lg max-w-3xl">
+            {/* <div className="bg-white p-4 rounded-lg shadow-lg max-w-3xl">
               <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-2">
                 <div className="flex-1">
                   <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
@@ -311,8 +307,25 @@ setLocation(location || address);
                   </svg>
                   Search Available Cars
                 </span>
-              </button>
-            </div>
+              </button> */}
+            {/* </div> */}
+           
+
+<CarSearchForm
+  location={location}
+  setLocation={setLocation}
+  startDate={startDate}
+  setStartDate={setStartDate}
+  endDate={endDate}
+  setEndDate={setEndDate}
+  loadingLocation={loadingLocation}
+  onSearch={() => {
+    router.push(
+      `/customer/cars?location=${encodeURIComponent(location)}&startDate=${startDate}&endDate=${endDate}`
+    );
+  }}
+/>
+
           </div>
         </div>
       </div>

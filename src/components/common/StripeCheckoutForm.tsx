@@ -135,11 +135,12 @@ const CheckoutForm = ({
           setError('Payment failed and booking cancellation failed. Please contact support.');
         }
       } else if (paymentIntent?.status === 'succeeded') {
-        setMessage('✅ Payment successful!');
+        setMessage('Payment successful!');
 
         // Confirm booking
         try {
-          const bookingResponse = await AuthService.confirmBooking(bookingId, paymentIntent.id);
+          const transactionId = paymentIntent.id;
+          const bookingResponse = await AuthService.confirmBooking(bookingId, paymentIntent.id,'stripe');
           console.log('Booking confirmed:', bookingResponse);
 
           // Navigate to confirmation page

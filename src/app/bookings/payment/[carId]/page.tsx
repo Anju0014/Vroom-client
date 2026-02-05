@@ -34,33 +34,33 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'wallet' | 'stripe'>('stripe');
+  const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(false);
 
   const isNextAuthUser = status === 'authenticated';
   const isZustandUser = !!user && !!accessToken;
   const isAuthenticated = isNextAuthUser || isZustandUser;
 
   useEffect(() => {
-    
     if (!isAuthenticated) {
       router.push(`/bookings/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
       return;
     }
 
-    
     if (!carId || !startDate || !endDate || !totalPrice) {
       setError('Incomplete booking data');
       setLoading(false);
       return;
     }
 
-    
     if (!session?.user?.email && !user?.email) {
       setError('User email is missing');
       setLoading(false);
       return;
     }
 
-    
     if (!bookingId) {
       setError('Booking ID is missing');
       setLoading(false);
@@ -69,22 +69,39 @@ const PaymentPage = () => {
 
     let isMounted = true;
 
-    const findPendingBooking = async () => {
+    const initializePaymentPage = async () => {
       try {
-        console.log("user", user);
-        console.log("user.id normal ", user?.id);
         setLoading(true);
 
         const carData = await AuthService.findCarDetails(carId);
         if (!isMounted) return;
-
         setCar(carData);
 
         if (!session?.user?.id && !user?.id) {
           throw new Error('User ID is missing');
         }
+        setWalletLoading(true);
+        try {
+          const userId = session?.user?.id || user?.id;
+            console.log("sending data")
+          const walletData = await AuthService.getWalletBalance();
+          console.log(walletData)
+          if (isMounted) {
+            setWalletBalance(walletData.balance || 0);
+          }
+            console.log("balance",walletBalance)
+        } catch (walletErr) {
+          console.error('Error fetching wallet balance:', walletErr);
+          if (isMounted) {
+            setWalletBalance(0);
+          }
+        } finally {
+          if (isMounted) {
+            setWalletLoading(false);
+          }
+        }
 
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error initializing booking:', err);
         if (isMounted) {
           setError('Failed to initialize booking. Please try again later.');
@@ -96,12 +113,55 @@ const PaymentPage = () => {
       }
     };
 
-    findPendingBooking();
+    initializePaymentPage();
 
     return () => {
       isMounted = false;
     };
   }, [carId, startDate, endDate, totalPrice, bookingId, isAuthenticated, session?.user?.email, session?.user?.id, user?.email, user?.id, router]);
+
+  const handleWalletPayment = async () => {
+    const totalAmount = Number(totalPrice);
+    
+    if (walletBalance < totalAmount) {
+      setPaymentError('Insufficient wallet balance');
+      return;
+    }
+
+    if (!bookingId) {
+      setPaymentError('Booking ID is missing');
+      return;
+    }
+
+    try {
+      setProcessingPayment(true);
+      setPaymentError(null);
+      const walletPaymentResponse = await AuthService.payWithWallet({
+        bookingId,
+        amount: totalAmount,
+      });
+
+      console.log('Wallet payment successful:', walletPaymentResponse);
+      try {
+        router.push(`/bookings/confirmation?bookingId=${bookingId}`);
+      } catch (confirmError: any) {
+        console.error('Booking confirmation error:', confirmError);
+        setPaymentError(`Wallet payment succeeded, but booking confirmation failed: ${confirmError.message}. Please contact support.`);
+        router.push(`/bookings/confirmation?bookingId=${bookingId}`);
+      }
+    } catch (err: any) {
+      console.error('Wallet payment error:', err);
+      setPaymentError(err.response?.data?.message || 'Wallet payment failed. Please try again.');
+      try {
+        await AuthService.failBooking(bookingId);
+        console.log('Booking cancelled due to wallet payment failure');
+      } catch (cancelError) {
+        console.error('Failed to cancel booking:', cancelError);
+      }
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
 
   const handleBack = () => {
     router.push(`/bookings/dateselection/${carId}?startDate=${startDate}&endDate=${endDate}`);
@@ -145,6 +205,7 @@ const PaymentPage = () => {
 
   const steps = ['Check Availability', 'Select Dates', 'Agreement', 'Payment'];
   const currentStep = steps.length - 1;
+  const hasInsufficientBalance = walletBalance < Number(totalPrice);
 
   return (
     <div className="bg-gradient-to-b from-blue-200 to-yellow-200 min-h-screen py-8">
@@ -165,6 +226,7 @@ const PaymentPage = () => {
               Back
             </button>
           </div>
+
           <div className="space-y-8">
             <div className="bg-indigo-50 p-6 rounded-lg">
               <h3 className="text-lg font-semibold text-indigo-700 mb-4">
@@ -187,25 +249,122 @@ const PaymentPage = () => {
                   {differenceInCalendarDays(new Date(endDate), new Date(startDate)) + 1}{' '}
                   days
                 </p>
-                <p><strong>Total Price:</strong> ₹{totalPrice}</p>
+                <p className="text-xl font-bold text-indigo-700 pt-2 border-t border-indigo-200">
+                  <strong>Total Price:</strong> ₹{totalPrice}
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Select Payment Method
+              </h3>
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all hover:bg-white hover:border-indigo-300">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    checked={paymentMethod === 'wallet'}
+                    onChange={() => setPaymentMethod('wallet')}
+                    className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
+                    disabled={walletLoading}
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800">Wallet</span>
+                    {walletLoading ? (
+                      <span className="ml-2 text-sm text-gray-500">Loading...</span>
+                    ) : (
+                      <span className={`ml-2 text-sm ${hasInsufficientBalance ? 'text-red-600 font-medium' : 'text-green-600'}`}>
+                        (Balance: ₹{walletBalance.toFixed(2)})
+                      </span>
+                    )}
+                  </div>
+                  {hasInsufficientBalance && (
+                    <span className="text-xs text-red-600 bg-red-50 px-2 py-1 rounded">
+                      Insufficient
+                    </span>
+                  )}
+                </label>
+
+                <label className="flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all hover:bg-white hover:border-indigo-300">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    checked={paymentMethod === 'stripe'}
+                    onChange={() => setPaymentMethod('stripe')}
+                    className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800">Card / UPI</span>
+                    <span className="ml-2 text-sm text-gray-500">(Secure payment via Stripe)</span>
+                  </div>
+                </label>
               </div>
             </div>
 
             <div className="max-w-lg mx-auto">
               {paymentError && (
-                <div className="mb-4 text-red-500 text-center">{paymentError}</div>
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-600 text-center text-sm">{paymentError}</p>
+                </div>
               )}
-              <StripeCheckoutForm
-                carId={car._id}
-                startDate={startDate}
-                endDate={endDate}
-                totalPrice={parseInt(totalPrice)}
-                customerEmail={session?.user?.email || user?.email || ''}
-                userId={session?.user?.id || user?.id || ''}
-                carOwnerId={car.ownerId}
-                dailyRate={car.expectedWage}
-                bookingId={bookingId}
-              />
+
+              {paymentMethod === 'wallet' ? (
+                <div className="space-y-4">
+                  <button
+                    onClick={handleWalletPayment}
+                    disabled={hasInsufficientBalance || processingPayment}
+                    className={`w-full py-3 rounded-lg font-semibold text-white transition-all ${
+                      hasInsufficientBalance
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : processingPayment
+                        ? 'bg-green-400 cursor-wait'
+                        : 'bg-green-600 hover:bg-green-700'
+                    }`}
+                  >
+                    {processingPayment ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                      </span>
+                    ) : (
+                      `Pay ₹${totalPrice} using Wallet`
+                    )}
+                  </button>
+
+                  {hasInsufficientBalance && (
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <p className="text-yellow-800 text-sm text-center">
+                        Insufficient wallet balance. Please choose Card / UPI or add funds to your wallet.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="text-center">
+                    <button
+                      onClick={() => router.push('/wallet')}
+                      className="text-indigo-600 hover:text-indigo-700 text-sm font-medium underline"
+                    >
+                      Add funds to wallet
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <StripeCheckoutForm
+                  carId={car._id}
+                  startDate={startDate}
+                  endDate={endDate}
+                  totalPrice={parseInt(totalPrice)}
+                  customerEmail={session?.user?.email || user?.email || ''}
+                  userId={session?.user?.id || user?.id || ''}
+                  carOwnerId={car.ownerId}
+                  dailyRate={car.expectedWage}
+                  bookingId={bookingId}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Booking } from '@/app/customer/dashboard/bookings/page';
+import { useRouter } from 'next/navigation';
 
 interface BookingCardProps {
   booking: Booking;
@@ -20,6 +21,18 @@ const getBookingStatus = (startDate: string, endDate: string, status: string) =>
   return { label: status, color: "gray" };
 };
 
+const isPickupToday = (startDate: string) => {
+  const today = new Date();
+  const start = new Date(startDate);
+
+  return (
+    start.getDate() === today.getDate() &&
+    start.getMonth() === today.getMonth() &&
+    start.getFullYear() === today.getFullYear()
+  );
+};
+
+
 const statusStyles = {
   red: "bg-red-100 text-red-700 border-red-200",
   yellow: "bg-yellow-100 text-yellow-700 border-yellow-200",
@@ -29,8 +42,16 @@ const statusStyles = {
 };
 
 const BookingCard: React.FC<BookingCardProps> = memo(({ booking, onViewDetails }) => {
+  const router=useRouter()
   const { label, color } = getBookingStatus(booking.startDate, booking.endDate, booking.status);
-  
+  // const isTodayPickup =
+  // (label === "Upcoming" || label === "Ongoing") &&
+  // isPickupToday(booking.startDate);
+  //  && !booking.pickupVerified;
+  const isTodayPickup = 
+  isPickupToday(booking.startDate) &&
+   booking.status === 'confirmed';
+
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200 group">
       <div className="p-6">
@@ -99,6 +120,18 @@ const BookingCard: React.FC<BookingCardProps> = memo(({ booking, onViewDetails }
               </div>
             </div>
           </div>
+
+          {isTodayPickup && (
+  <button
+    onClick={() => router.push(`/customer/pickup/${booking.bookingId}`)}
+    className="px-5 py-2 bg-green-600 text-white rounded-lg
+               hover:bg-green-700 transition-all font-medium text-sm
+               shadow-md hover:shadow-lg"
+  >
+    Start Pickup
+  </button>
+)}
+
 
           {/* Right Section - Price & Status */}
           <div className="flex flex-col items-end gap-3">
