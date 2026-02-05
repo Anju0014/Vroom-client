@@ -53,7 +53,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
 
       const filteredUsers = response.data
         .map((user: any) => ({
-          id: user._id,
+          id: user._id||user.id,
           name: user.fullName,
           email: user.email,
           document: user.idProof,
@@ -98,6 +98,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
       setIsProcessing((prev) => ({ ...prev, [user.id]: true }));
       
       const newStatus = user.blockStatus === 0 ? 1 : 0;
+      console.log(user.id);
       const response = await AdminAuthService.updateBlockStatus(user.id, newStatus, userType);
       
       if (response) {

@@ -92,7 +92,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Vehicle</h3>
                 <p className="text-xl font-bold text-gray-800 mt-1">{booking.car.carName}</p>
                 <p className="text-gray-600 mt-1">{booking.car.brand} • {booking.car.model}</p>
-                <p className="text-xs text-gray-400 mt-2 font-mono">ID: {booking.carId}</p>
+                {/* <p className="text-xs text-gray-400 mt-2 font-mono">ID: {booking.car.id}</p> */}
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
                   <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Customer</h3>
                   <p className="font-bold text-gray-800 mt-2">{booking.customer.fullName}</p>
                   <p className="text-sm text-gray-600 mt-1">{booking.customer.email}</p>
-                  <p className="text-xs text-gray-400 mt-2 font-mono">ID: {booking.customer._id}</p>
+                  {/* <p className="text-xs text-gray-400 mt-2 font-mono">ID: {booking.customer.id}</p> */}
                 </div>
               </div>
             </div>
@@ -122,7 +122,7 @@ const BookingDetailsModal: React.FC<BookingModalProps> = ({ booking, onClose }) 
                   <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Car Owner</h3>
                   <p className="font-bold text-gray-800 mt-2">{booking.carOwner.fullName}</p>
                   <p className="text-sm text-gray-600 mt-1">{booking.carOwner.email}</p>
-                  <p className="text-xs text-gray-400 mt-2 font-mono">ID: {booking.carOwner._id}</p>
+                  {/* <p className="text-xs text-gray-400 mt-2 font-mono">ID: {booking.carOwner.id}</p> */}
                 </div>
               </div>
             </div>

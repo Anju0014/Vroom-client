@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import VideoCall from "@/components/common/VideoCall";
+import VideoCallVerification from "@/components/common/VideoCallVerificattion";
 
 export default function OwnerCarVerificationPage() {
   const { carId } = useParams();
@@ -16,7 +17,7 @@ export default function OwnerCarVerificationPage() {
         Join the call when the admin starts verification.
       </p>
 
-      <VideoCall
+      <VideoCallVerification
         roomId={`car-verification-${carId}`}
         role="owner"
       />

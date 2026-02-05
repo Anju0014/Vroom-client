@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, Check, Eye, Video, FileText, Shield, Calendar, Fuel, Hash, DollarSign, MapPin, Camera } from "lucide-react";
 import VideoCall from "../common/VideoCall";
 import LoadingButton from "../common/LoadingButton";
+import VideoCallVerification from "../common/VideoCallVerificattion";
 
 interface CarVerifyModalProps {
   car: any;
@@ -222,7 +223,7 @@ const CarVerifyModal: React.FC<CarVerifyModalProps> = ({
     currentUserId={user.id}
     currentUserRole="admin"
   /> */}
-  <VideoCall
+  <VideoCallVerification
         roomId={`car-verification-${car.id}`}
         role="admin"
       />

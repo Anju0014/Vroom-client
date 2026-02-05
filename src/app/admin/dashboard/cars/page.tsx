@@ -37,7 +37,7 @@ const VerifiedCarsPage: React.FC = () => {
       
       const verifiedCars = response.data
         .map((car: any) => ({
-          id: car._id,
+          id: car._id||car.id,
           carName: car.carName,
           brand: car.brand,
           year: car.year,
@@ -131,13 +131,13 @@ const VerifiedCarsPage: React.FC = () => {
     }).format(date);
   };
 
-  const getAvailabilityBadge = (available: boolean) => {
-    if (available) {
-      return <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Available</span>;
-    } else {
-      return <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Not Available</span>;
-    }
-  };
+  // const getAvailabilityBadge = (available: boolean) => {
+  //   if (available) {
+  //     return <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Available</span>;
+  //   } else {
+  //     return <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Not Available</span>;
+  //   }
+  // };
 
   const getBlockStatusBadge = (blockStatus: number) => {
     if (blockStatus === 1) {
@@ -153,7 +153,7 @@ const VerifiedCarsPage: React.FC = () => {
     brand: car.brand,
     ownerName: car.owner?.fullName || "Unknown",
     locationAddress: car.location?.address ?? "No address",
-    availabilityText: getAvailabilityBadge(car.available),
+    // availabilityText: getAvailabilityBadge(car.available),
     blockStatusText: getBlockStatusBadge(car.blockStatus),
     expectedWage: `₹${car.expectedWage}`,
     formattedDate: formatDate(new Date(car.createdAt)),
@@ -165,7 +165,7 @@ const VerifiedCarsPage: React.FC = () => {
     { header: "Brand", key: "brand" },
     { header: "Owner", key: "ownerName" },
     { header: "Location", key: "locationAddress" },
-    { header: "Availability", key: "availabilityText" },
+    // { header: "Availability", key: "availabilityText" },
     { header: "Status", key: "blockStatusText" },
     { header: "Price/Day", key: "expectedWage" },
     { header: "Listed On", key: "formattedDate" },

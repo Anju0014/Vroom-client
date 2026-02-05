@@ -29,6 +29,9 @@ export default function AdminLogin() {
 
     try {
       const response = await  AdminAuthService.loginAdmin({email:email,password:password})
+      // const accessTokenAdmin = response.data.data.accessToken;
+      // const user = response.data.data.admin;
+      // console.log(response.data.data)
       const accessTokenAdmin = response.data.adminAccessToken;
       const user = response.data.user;
       if (user && accessTokenAdmin) {

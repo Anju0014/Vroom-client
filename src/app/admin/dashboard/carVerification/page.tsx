@@ -39,7 +39,7 @@ const debouncedSearchTerm = useDebounce(searchTerm, 500);
       const filteredCars = response.data
         // .filter((car: any) => car.verifyStatus === 0 && !car.isDeleted)
         .map((car: any) => ({
-          id: car._id,
+          id: car._id||car.id,
           carName: car.carName,
           brand: car.brand,
           year: car.year,
