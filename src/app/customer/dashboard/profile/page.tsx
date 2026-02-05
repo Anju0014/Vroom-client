@@ -312,10 +312,12 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse">
+       <div className="flex items-center justify-center h-20">
+      <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+    </div>
           <p className="text-lg text-gray-600">Loading...</p>
         </div>
-      </div>
+      
     );
   }
 

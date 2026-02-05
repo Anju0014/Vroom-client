@@ -66,9 +66,12 @@ export default function CustomerChatsPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="text-blue-600 animate-pulse text-lg">
-              Loading chats...
-            </div>
+             <div className="flex items-center justify-center h-20">
+      <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+    </div>
+          
+             <p> Loading chats...</p>
+    
           </div>
         ) : Object.keys(chatsByRoom).length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">

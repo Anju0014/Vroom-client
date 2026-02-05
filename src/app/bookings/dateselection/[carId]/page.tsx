@@ -268,7 +268,11 @@ const isDateRangeUnavailable = (startDate: Date, endDate: Date): boolean => {
     router.push('/login');
   };
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center h-screen"> 
+  <div className="flex items-center justify-center h-20">
+      <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+    </div>
+    </div>;
   if (error) return <div className="text-red-500 text-center p-8">{error}</div>;
   if (!car) return <div className="text-center p-8">Car not found</div>;
 

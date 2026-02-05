@@ -270,6 +270,9 @@ const handleAvailabilityClick = async (carId: string) => {
 
           {loading ? (
             <div className="text-center py-10">
+               <div className="flex items-center justify-center h-20">
+      <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+    </div>
               <p>Loading your cars...</p>
             </div>
           ) : (

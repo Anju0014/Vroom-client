@@ -171,7 +171,9 @@ const PaymentPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-indigo-600"></div>
+         <div className="flex items-center justify-center h-20">
+      <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+    </div>
       </div>
     );
   }

@@ -56,7 +56,7 @@ export default function LiveLocationModal({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg w-4/5 h-4/5 p-4 relative">
-        <LoadingButton onClick={onClose} className="absolute top-2 right-2 p-2">❌</LoadingButton>
+        <LoadingButton onClick={onClose} className="absolute top-2 right-2 p-2">X</LoadingButton>
         <h2 className="text-xl font-semibold mb-2">Live Location</h2>
 
         {location ? (

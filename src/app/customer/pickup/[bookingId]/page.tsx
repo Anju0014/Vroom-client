@@ -101,9 +101,10 @@ export default function PickupPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Loading pickup details...
-      </div>
+         <div className="flex items-center justify-center h-20">
+      <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+       <p>Loading pickup details...</p>
+    </div>
     );
   }
 

@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   description: "Your Journey, Our Cars",
   icons: {
     icon: "/favicon.ico", // The main favicon format
-    shortcut: "/favicon.ico", // iOS/Android shortcut
-    apple: "/apple-touch-icon.png", // Apple Touch Icon
+    shortcut: "/favicon.ico", 
+    apple: "/apple-touch-icon.png", 
   },
 };
 

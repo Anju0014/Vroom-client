@@ -48,5 +48,7 @@ export default function TrackingPage() {
     return () => navigator.geolocation.clearWatch(watcher);
   }, [bookingId, token]);
 
-  return <div>📍 Sharing your live location...</div>;
+  return  <div className="flex items-center justify-center h-20">
+         Sharing your live location...
+    </div>;
 }
