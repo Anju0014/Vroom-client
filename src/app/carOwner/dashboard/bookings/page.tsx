@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 import LoadingButton from '@/components/common/LoadingButton';
 import { Booking } from '@/types/ownerTypes';
+import { useDebounce } from '@/hooks/useDebounce';
 
 
 const formatDate = (dateString: string) => {
@@ -22,33 +23,32 @@ export default function CarOwnerDashboard() {
   const [totalBookings, setTotalBookings] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
   const itemsPerPage = 10;
   const router = useRouter();
-
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   // Debounce search term
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-      setCurrentPage(1);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
 
-        // Call backend API with search params
-        const response = await OwnerAuthService.getBookingList(
-          currentPage,
-          itemsPerPage,
-          // debouncedSearchTerm,
-          // statusFilter === 'all' ? '' : statusFilter
-        );
+        // // Call backend API with search params
+        // const response = await OwnerAuthService.getBookingList(
+        //   currentPage,
+        //   itemsPerPage,
+        //   // { search: search.trim()}
+        //   // statusFilter === 'all' ? '' : statusFilter
+        // );
         
+        
+      const response = await OwnerAuthService.getBookingList(
+        currentPage,
+        itemsPerPage,
+        debouncedSearchTerm.trim(),
+        statusFilter
+      );
+      
         if (response.bookings) {
           setBookings(response.bookings);
           setTotalBookings(response.total || 0);

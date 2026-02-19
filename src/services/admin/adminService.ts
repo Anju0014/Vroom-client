@@ -275,10 +275,10 @@ export const AdminAuthService = {
       API_ROUTES.admin.getAllComplaints,
       {
         params: {
-          // page,
-          // limit,
-          // status: filters.status || "",
-          // search: filters.search || "",
+          page,
+          limit,
+          status: filters.status || "",
+          search: filters.search || "",
         },
       }
     );

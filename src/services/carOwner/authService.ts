@@ -111,9 +111,14 @@ export const OwnerAuthService = {
     return response.data;
   },
 
-  getBookingList: async (page = 1, limit = 9) => {
+  getBookingList: async (page = 1, limit = 9,search?: string,
+  status?: string) => {
     const response = await carOwnerApi.get(API_ROUTES.owner.getBookingList, {
-      params: { page, limit },
+      params: { 
+        page, 
+        limit,
+        search: search || "",
+        status: status && status !== "all" ? status : "" },
     });
     return response.data;
   },

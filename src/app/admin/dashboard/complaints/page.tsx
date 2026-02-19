@@ -36,7 +36,7 @@ const AdminComplaintsPage: React.FC = () => {
       
       if (!response) throw new Error("Failed to fetch complaints");
       
-      setComplaints(response);
+      setComplaints(response.complaints);
       setTotalComplaints(response.total || 0);
     } catch (err) {
       setError("Error fetching complaints");
