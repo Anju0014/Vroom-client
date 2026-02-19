@@ -12,13 +12,13 @@ const instance = axios.create({
 
 
 const getStoreByUrl = (url: string) => {
-  if (url.startsWith('/admin')) return useAuthStoreAdmin.getState();
-  if (url.startsWith('/owner') || url.startsWith('/carOwner')) return useAuthStoreOwner.getState();
+  if (url.startsWith('/admin')|| url.includes('/admin')) return useAuthStoreAdmin.getState();
+  if (url.startsWith('/owner') || url.startsWith('/carOwner') ||url.includes('/owner')||url.includes('/carOwner')) return useAuthStoreOwner.getState();
   return useAuthStore.getState(); 
 };
 
 const getRefreshEndpoint = (url: string) => {
-  if (url.startsWith('/admin')) return '/admin/refreshToken';
+  if (url.startsWith('/admin')||url.includes('/admin')) return '/admin/refreshToken';
   if (url.startsWith('/owner') || url.startsWith('/carOwner')) return '/owner/refreshToken';
   return '/refreshToken'; 
 };

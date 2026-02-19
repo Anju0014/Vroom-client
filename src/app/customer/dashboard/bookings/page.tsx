@@ -34,7 +34,9 @@ const BookingsPage = () => {
       try {
         setLoading(true);
         const data = await AuthService.findCustomerBookingDetails(currentPage, itemsPerPage);
+        console.log("data",data)
         setBookingData(data.bookings || []);
+        console.log(bookingData)
         setTotalBookings(data.total || 0);
         setError("");
       } catch (error) {

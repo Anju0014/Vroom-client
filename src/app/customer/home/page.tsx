@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { CarSearchForm } from '@/components/customer/carSearchForm';
 import LoadingButton from '@/components/common/LoadingButton';
 import { Coordinates ,Car,Location} from '@/types/locationTypes';
+import { useHasHydrated } from '@/hooks/useHasHydrated';
 
 const LandingPage = () => {
   const router = useRouter();
@@ -20,7 +21,8 @@ const LandingPage = () => {
   const [location, setLocation] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [hydrated, setHydrated] = useState(false);
+  // const [hydrated, setHydrated] = useState(false);
+  const hydrated = useHasHydrated();
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const [manualOverride, setManualOverride] = useState(false);
   const [loadingLocation, setLoadingLocation] = useState(false);
@@ -32,6 +34,7 @@ const LandingPage = () => {
 
 
   useEffect(() => {
+      if (!hydrated) return;
     if (!user || !accessToken) {
       console.log('Unauthenticated customer, redirecting to /login');
       router.replace('/login');
@@ -40,12 +43,12 @@ const LandingPage = () => {
       window.history.replaceState(null, '', '/customer/home');
       setIsAuthenticated(true);
     }
-  }, [user, accessToken, router]);
+  }, [hydrated,user, accessToken, router]);
 
   
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  // useEffect(() => {
+  //   setHydrated(true);
+  // }, []);
 
   // Function to calculate distance between two coordinates (in km)
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -174,6 +177,7 @@ setLocation(location || address);
   
   // View details function
   const viewDetailsPage = (carId: string) => {
+    console.log("carI",carId);
     router.push(`/cars/${carId}`);
   };
 
@@ -258,7 +262,7 @@ setLocation(location || address);
           ) : featuredCars.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {featuredCars.slice(0, 4).map(car => (
-                <div key={car._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl">
+                <div key={car.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl">
                   <div className="relative h-48 w-full">
                     <Image 
                       src={car.images[0]} 
@@ -296,7 +300,7 @@ setLocation(location || address);
                     <p className="text-xs text-gray-500 mb-4 truncate">{formatShortAddress(car.location.address)}</p>
                     <LoadingButton
                       className="w-full py-2 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition-all"
-                      onClick={() => viewDetailsPage(car._id)}
+                      onClick={() => viewDetailsPage(car.id)}
                     >
                       View Details
                     </LoadingButton>
@@ -342,7 +346,7 @@ setLocation(location || address);
             ) : nearbyCars.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {nearbyCars.slice(0, 3).map(car => (
-                  <div key={car._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl">
+                  <div key={car.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl">
                     <div className="relative h-48 w-full">
                       <Image 
                         src={car.images[0]} 
@@ -377,7 +381,7 @@ setLocation(location || address);
                       <p className="text-xs text-gray-500 mb-4">{car.location.landmark}</p>
                       <LoadingButton
                         className="w-full py-2 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition-all"
-                        onClick={() => viewDetailsPage(car._id)}
+                        onClick={() => viewDetailsPage(car.id)}
                       >
                         View Details
                       </LoadingButton>

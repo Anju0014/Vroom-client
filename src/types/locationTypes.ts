@@ -10,7 +10,7 @@ export interface Location {
 }
 
 export interface Car {
-  _id: string;
+  id: string;
   carName: string;
   brand: string;
   year: string;

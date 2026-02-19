@@ -85,12 +85,20 @@ export default function CarOwnerDashboard() {
     }
   };
 
-  const handleContactCustomer = (bookingId: string | undefined) => {
-    toast.success(`Connecting you with the customer`);
-    if (bookingId) {
-      router.push(`/carOwner/dashboard/chats/${bookingId}`);
-    }
-  };
+  // const handleContactCustomer = (bookingId: string | undefined) => {
+  //   toast.success(`Connecting you with the customer`);
+  //   if (bookingId) {
+  //     router.push(`/carOwner/dashboard/chats/${bookingId}`);
+  //   }
+  // };
+  
+    const handleContactCustomer = (customerId: string | undefined, customerName: string | undefined) => {
+      if (!customerId || !customerName) {
+        toast.error("Owner information not available");
+        return;
+      }
+      router.push(`/carOwner/dashboard/chats/${customerId}/${encodeURIComponent(customerName)}`);
+    };
 
   const canCancelBooking = (startDate: string, status: string) => {
     if (status !== "confirmed") return false;
@@ -354,7 +362,7 @@ export default function CarOwnerDashboard() {
                               {booking.carId.carName || 'Unknown Car'}
                             </div>
                             <div className="text-sm text-gray-600 font-medium">
-                              {booking.userId.fullName}
+                              {booking?.userId?.fullName}
                             </div>
                           </div>
                         </td>
@@ -388,7 +396,7 @@ export default function CarOwnerDashboard() {
                             </LoadingButton>
                             {booking.status.toLowerCase() !== 'cancelled' && (
                               <LoadingButton
-                                onClick={() => handleContactCustomer(booking.bookingId)}
+                                onClick={() => handleContactCustomer(booking.userId.id,booking.userId.fullName)}
                                 className="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm"
                                 title="Chat with Customer"
                               >

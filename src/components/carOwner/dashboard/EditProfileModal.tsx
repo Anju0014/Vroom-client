@@ -67,13 +67,12 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       return;
     }
       console.log("Validation Passed:", payload);
-      const updatedUser=await OwnerAuthService.updateOwnerProfile(payload);
-      console.log("updated***************************",updatedUser)
-      console.log("Updated User from API:", updatedUser);
-      const updatedOwner = updatedUser.updatedOwner;
+      const data=await OwnerAuthService.updateOwnerProfile(payload);
+     
+      const updatedOwner = data.updatedOwner;
 console.log("Updated Owner:", updatedOwner);
 const partialUser: IUser = {
-  id: updatedOwner._id,
+  id: updatedOwner._id||updatedOwner.id,
   fullName: updatedOwner.fullName,
   email: updatedOwner.email,
   phoneNumber: updatedOwner.phoneNumber,

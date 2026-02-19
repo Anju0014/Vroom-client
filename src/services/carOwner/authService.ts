@@ -52,7 +52,7 @@ export const OwnerAuthService = {
   getOwnerProfile: async () => {
     const response = await carOwnerApi.get(API_ROUTES.profile.owner.getProfile);
     if (response.status !== 200) throw new Error("Failed to fetch profile");
-    return response.data.owner;
+    return response.data;
   },
 
   updateOwnerProfile: async (payload: {

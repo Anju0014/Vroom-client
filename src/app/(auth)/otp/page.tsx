@@ -25,7 +25,10 @@ const OTPVerification = () => {
 
   useEffect(() => {
     const storedEmail = sessionStorage.getItem("userEmail");
-    setRole(sessionStorage.getItem("role"))
+  console.log("storedEmail",storedEmail)
+
+    setRole(sessionStorage.getItem("userRole"))
+    console.log(role)
     if (!storedEmail) {
       setEmailError(true);
       toast.error("Email not found. Please sign up first.");
@@ -33,7 +36,7 @@ const OTPVerification = () => {
     } else {
       setEmail(storedEmail);
     }
-  }, [router]);
+  }, []);
 
 
   useEffect(() => {
@@ -68,6 +71,9 @@ const OTPVerification = () => {
     try {
       let response;
       if (role === "customer") {
+       
+        console.log("email",email)
+        console.log("otp",otp)
                   response = await AuthService.verifyotpCustomer({ email, otp });
           } else {
                   response = await OwnerAuthService.verifyotpCarOwner({ email, otp });

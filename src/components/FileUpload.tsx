@@ -5,6 +5,7 @@ import React, { useState, useRef, useId } from "react";
 import { S3Service } from "@/services/common/s3Service";
 import { Upload, FileText, Video, Image, Loader2, XCircle } from "lucide-react";
 import LoadingButton from "./common/LoadingButton";
+import toast from "react-hot-toast";
 
 interface FileUploadProps {
   onUploadComplete: (uploadedUrls: string[] | string) => void;
@@ -79,11 +80,14 @@ export default function FileUpload({
     try {
       for (let i = 0; i < filesToUpload.length; i++) {
         const file = filesToUpload[i];
-         const { url, key } = await S3Service.getPresignedUrl(file);
-        // const { url, key } = await S3Service.getPresignedUploadUrl(file);
-        await S3Service.uploadToS3(url, file);
-        const uploadedUrl = S3Service.getPublicUrl(key);
-        // const uploadedUrl =await S3Service.getPresignedViewUrl(key);
+        //  const { url, key } = await S3Service.getPresignedUrl(file);
+         const { url, key } = await S3Service.getPresignedUploadUrl(file);
+         console.log(url,key);
+        let response=await S3Service.uploadToS3(url, file);
+        console.log(response)
+        // const uploadedUrl = S3Service.getPublicUrl(key);
+         const uploadedUrl =await S3Service.getPresignedViewUrl(key);
+         console.log(uploadedUrl)
         urls.push(uploadedUrl);
         
         progressArray[i] = 100;
@@ -118,7 +122,7 @@ export default function FileUpload({
       
     } catch (error) {
       console.error("Upload failed:", error);
-      alert("Failed to upload files. Please try again.");
+       toast.error("Failed to upload files. Please try again.");
     } finally {
       setUploading(false);
     }

@@ -26,7 +26,9 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        console.log("calling")
         const data = await OwnerAuthService.getOwnerProfile();
+        console.log("data",data)
         setOwnerDetails(data.carOwner);
         setIdProof(data.carOwner.idProof || null);
         setProcessStatus(data.carOwner.processStatus); 
@@ -136,7 +138,7 @@ const ProfilePage = () => {
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="max-w-4xl mx-auto mt-6 p-6 bg-white shadow-lg rounded-lg">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Car Owner Profile</h1>
+          <h1 className="text-2xl font-bold text-gray-800">My Profile <span> (Car Owner)</span></h1>
           <div className="flex space-x-3">
             <LoadingButton
               onClick={() => setIsEditing(true)} 

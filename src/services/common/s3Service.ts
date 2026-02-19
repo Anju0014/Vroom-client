@@ -58,6 +58,20 @@ export const S3Service = {
     });
   },
 
+   async getPresignedUploadUrl(file: File) {
+    const res = await api.post(API_ROUTES.s3.presignedUpload, {
+      fileName: file.name,
+      fileType: file.type,
+    });
+    return res.data; // { uploadUrl, key }
+  },
+    async getPresignedViewUrl(key: string) {
+    const res = await api.get(
+      `${API_ROUTES.s3.presignedView}?key=${key}`
+    );
+    return res.data.url;
+  },
+
   getPublicUrl(key: string) {
     return `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${key}`;
   },

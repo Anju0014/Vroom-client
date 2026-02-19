@@ -13,7 +13,7 @@ export const fetchOwnerChats = async () => {
 };
 
 export const fetchCustomerChats = async () => {
-  const res = await api.get("/chats/customerChats"); 
+  const res = await api.get("/chats/customerchats"); 
   return res.data;
 };
 export const fetchChatHistory = async (roomId: string, role:string) => {

@@ -71,10 +71,8 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
         if (user) {
           if (role === "customer" && accessToken) {
             setAuth(user, accessToken);
-            // setStorageItem(localStorage, "accessToken", accessToken);
           } else if (accessTokenOwner) {
             setAuthOwner(user, accessTokenOwner);
-            // setStorageItem(localStorage, "accessTokenOwner", accessTokenOwner);
           } else {
             throw new Error("No valid access token found.");
           }
@@ -82,7 +80,7 @@ const SignupPage: React.FC<SignUpRoleProps> = ({ role }) => {
           // Store session-related data in sessionStorage
           setStorageItem(sessionStorage, "provider", "google");
           setStorageItem(sessionStorage, "userEmail", session.user.email ?? "");
-          setStorageItem(sessionStorage, "role", role);
+          setStorageItem(sessionStorage, "userRole", role);
   
           toast.success("Google Signup Successful!");
   

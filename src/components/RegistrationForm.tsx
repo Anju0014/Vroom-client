@@ -56,8 +56,9 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ role, onSuccess }) 
       }
 
       toast.success("Signup Successful!");
-      setStorageItem(sessionStorage, "userEmail", response.data.email);
-      setStorageItem(sessionStorage, "role", role);
+      console.log(response.data.data.email);
+      setStorageItem(sessionStorage, "userEmail", response.data.data.email);
+      setStorageItem(sessionStorage, "userRole", role);
       
       if (onSuccess) {
         onSuccess();

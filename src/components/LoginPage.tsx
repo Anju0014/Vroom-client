@@ -27,7 +27,7 @@ const LoginComponent = ({ defaultRole = 'customer' }: LoginComponentProps) => {
   const router = useRouter();
   const hasHydrated = useHasHydrated();
   const { data: session, status } = useSession();
-  const { user: customerUser, accessToken: customerAccessToken } = useAuthStore();
+  const { user: customerUser, accessToken } = useAuthStore();
   const { user: ownerUser, accessTokenOwner } = useAuthStoreOwner();
   
   const [formData, setFormData] = useState<LoginData>({
@@ -65,8 +65,8 @@ useEffect(() => {
 
   // const storedUserRole = sessionStorage.getItem('userRole');
   // const storedToken = sessionStorage.getItem('accessToken');
-  const isCustomer = customerUser && customerAccessToken;
-const isOwner = ownerUser && accessTokenOwner;
+  const isCustomer = customerUser && accessToken;
+  const isOwner = ownerUser && accessTokenOwner;
 
 
   // Use either stored values or Zustand values to detect auth state
@@ -80,7 +80,7 @@ const isOwner = ownerUser && accessTokenOwner;
     console.log('Car owner authenticated, redirecting to /carOwner/home');
     router.replace('/carOwner/home');
   }
-}, [hasHydrated,customerUser,customerAccessToken,ownerUser,accessTokenOwner,router]);
+}, [hasHydrated,customerUser,accessToken,ownerUser,accessTokenOwner,router]);
 
 
   // Handle Google Sign In
@@ -98,10 +98,10 @@ const isOwner = ownerUser && accessTokenOwner;
     setFormData({ ...formData, role });
   };
 
-  const storeSessionData = (role: string) => {
-    // sessionStorage.setItem('accessToken', accessToken);
+  const storeSessionData = (role: string,email:string) => {
     sessionStorage.setItem('isLoggedIn', 'true');
     sessionStorage.setItem('userRole', role);
+    sessionStorage.setItem('userEmail', email);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -129,15 +129,16 @@ const isOwner = ownerUser && accessTokenOwner;
           email: formData.email,
           password: formData.password,
         });
-        accessToken = response.data.customerAccessToken;
+        accessToken = response.data.accessToken;
         user = response.data.user;
+        console.log("from login page",accessToken, user)
         useAuthStore.getState().setAuth(user, accessToken);
       } else {
         response = await OwnerAuthService.loginCarOwner({
           email: formData.email,
           password: formData.password,
         });
-        accessToken = response.data.ownerAccessToken;
+        accessToken = response.data.accessToken;
         user = response.data.user;
         useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
       }
@@ -150,7 +151,7 @@ const isOwner = ownerUser && accessTokenOwner;
       //     useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
       //   }
 
-        storeSessionData(formData.role);
+        storeSessionData(formData.role,formData.email);
         toast.success(`Login successful as ${formData.role}!`);
         const redirectPath = formData.role === 'customer' ? '/customer/home' : '/carOwner/home';
         console.log(`Redirecting to ${redirectPath}`);
@@ -231,7 +232,7 @@ const isOwner = ownerUser && accessTokenOwner;
           useAuthStoreOwner.getState().setAuthOwner(user, accessToken);
         }
 
-        storeSessionData(storedRole);
+        storeSessionData(storedRole,user.email);
         sessionStorage.setItem('provider', 'google');
         sessionStorage.setItem('userEmail', session.user.email ?? '');
         toast.success('Google Login Successful!');

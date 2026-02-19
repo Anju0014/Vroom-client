@@ -67,19 +67,19 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       }
 
       console.log("Validation Passed:", payload);
-      const updatedUser = await AuthService.updateCustomerProfile(payload);
+      const data = await AuthService.updateCustomerProfile(payload);
 
-      console.log("Updated User from API:", updatedUser);
-      const updatedOwner = updatedUser.updatedCustomer;
+      // console.log("Updated User from API:", updatedUser);
+      const updatedCustomer = data.updatedCustomer;
 
       const partialUser: IUser = {
-        id: updatedOwner._id,
-        fullName: updatedOwner.fullName,
-        email: updatedOwner.email,
-        phoneNumber: updatedOwner.phoneNumber,
-        address: updatedOwner.address,
-        role: updatedOwner.role as UserRole,
-        profileImage: updatedOwner.profileImage ?? "/images/user.png",
+        id: updatedCustomer._id||updatedCustomer.id,
+        fullName: updatedCustomer.fullName,
+        email: updatedCustomer.email,
+        phoneNumber: updatedCustomer.phoneNumber,
+        address: updatedCustomer.address,
+        role: updatedCustomer.role as UserRole,
+        profileImage: updatedCustomer.profileImage ?? "/images/user.png",
       };
 
       console.log("Partial User Before Zustand:", partialUser);

@@ -21,9 +21,13 @@ export default function VideoCallVerification({ roomId, role }: Props) {
   useEffect(() => {
     socket.emit("join-room", roomId);
 
-    socket.on("offer", handleOffer);
-    socket.on("answer", handleAnswer);
-    socket.on("ice-candidate", handleIceCandidate);
+    // socket.on("offer", handleOffer);
+    // socket.on("answer", handleAnswer);
+    // socket.on("ice-candidate", handleIceCandidate);
+    socket.on("offer", ({ offer }) => handleOffer(offer));
+socket.on("answer", ({ answer }) => handleAnswer(answer));
+socket.on("ice-candidate", ({ candidate }) => handleIceCandidate(candidate));
+
     socket.on("end-call", handleRemoteEndCall);
 
     return () => {
