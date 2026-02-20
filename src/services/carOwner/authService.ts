@@ -169,6 +169,12 @@ export const OwnerAuthService = {
   return response.data;
   },
 
+   markCarReturned:async(bookingId: string)=> {
+    console.log("senidng..)")
+    const response = await carOwnerApi.patch(API_ROUTES.owner.markCarReturned(bookingId));
+    console.log("resres", response)
+  return response.data;
+  },
   cancelBooking: async (bookingId: string) => {
     try {
       console.log("Cancelling booking:", bookingId);

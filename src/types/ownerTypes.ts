@@ -22,4 +22,5 @@ export interface Booking {
   totalPrice: number;
   bookingId: string;
   receiptKey?: string;
+  isCarReturned?:boolean;
 }

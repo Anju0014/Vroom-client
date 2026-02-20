@@ -80,7 +80,8 @@ export const API_ROUTES = {
     updateCarAvailability: (carId: string) => `/owner/cars/${carId}/availability`,
     getActiveBookingForCar: (carId: string) => `/owner/activebooking/${carId}`,
     cancelBooking: (bookingId: string) => `/bookings/${bookingId}/cancel`,
-    receiptUrlBooking: (bookingId: string) => `owner/booking/${bookingId}/receipt-url`
+    receiptUrlBooking: (bookingId: string) => `/owner/booking/${bookingId}/receipt-url`,
+    markCarReturned:(bookingId: string) => `/owner/bookings/${bookingId}/markCarReturned`
   },
   customer: {
     nearByCars: "/car/nearby",
