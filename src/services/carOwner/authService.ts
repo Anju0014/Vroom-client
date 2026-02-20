@@ -10,6 +10,7 @@ import {
   RegistrationCarOwner,
 } from "@/types/authTypes";
 import { Booking } from "@/types/carTypes";
+import { Stats } from "@/types/statsTypes";
 
 // const carOwnerApi = axiosOwner;
 
@@ -189,6 +190,15 @@ export const OwnerAuthService = {
       throw new Error(
         `Failed to cancel booking: ${error.response?.data?.error || error.message}`
       );
+    }
+  },
+  getStatsData: async (): Promise<Stats>=> {
+    try {
+      const response = await carOwnerApi.get(API_ROUTES.owner.getOwnerStats);
+      return response.data.data; 
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+      throw new Error("Failed to fetch stats");
     }
   },
 };

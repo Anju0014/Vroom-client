@@ -69,6 +69,8 @@ export const API_ROUTES = {
     updateCarVerifyStatus: (carId: string) => `/admin/cars/verify-status/${carId}`,
     getAllComplaints: "/complaints/admin",
     updateComplaint: (id: string) => `/complaints/admin/${id}`,
+    getStats:"/admin/getStats",
+
   },
   owner: {
     addCar: "/owner/car",
@@ -81,7 +83,8 @@ export const API_ROUTES = {
     getActiveBookingForCar: (carId: string) => `/owner/activebooking/${carId}`,
     cancelBooking: (bookingId: string) => `/bookings/${bookingId}/cancel`,
     receiptUrlBooking: (bookingId: string) => `/owner/booking/${bookingId}/receipt-url`,
-    markCarReturned:(bookingId: string) => `/owner/bookings/${bookingId}/markCarReturned`
+    markCarReturned:(bookingId: string) => `/owner/bookings/${bookingId}/markCarReturned`,
+    getOwnerStats:"/owner/getStats",
   },
   customer: {
     nearByCars: "/car/nearby",

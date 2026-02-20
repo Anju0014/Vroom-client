@@ -26,22 +26,11 @@ export default function CarOwnerDashboard() {
   const itemsPerPage = 10;
   const router = useRouter();
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  // Debounce search term
- 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
 
-        // // Call backend API with search params
-        // const response = await OwnerAuthService.getBookingList(
-        //   currentPage,
-        //   itemsPerPage,
-        //   // { search: search.trim()}
-        //   // statusFilter === 'all' ? '' : statusFilter
-        // );
-        
-        
       const response = await OwnerAuthService.getBookingList(
         currentPage,
         itemsPerPage,
@@ -109,13 +98,6 @@ const handleCarReturned = async (bookingId: string) => {
     }
   };
 
-  // const handleContactCustomer = (bookingId: string | undefined) => {
-  //   toast.success(`Connecting you with the customer`);
-  //   if (bookingId) {
-  //     router.push(`/carOwner/dashboard/chats/${bookingId}`);
-  //   }
-  // };
-  
     const handleContactCustomer = (customerId: string | undefined, customerName: string | undefined) => {
       if (!customerId || !customerName) {
         toast.error("Owner information not available");

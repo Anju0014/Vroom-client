@@ -3,6 +3,7 @@
 // import { axiosAdmin } from "@/code/axiosAdmin";
 import adminApi from "@/code/axiosInstance";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
+import { Stats } from "@/types/statsTypes";
 export type ComplaintStatus =
   | "open"
   | "in_review"
@@ -199,7 +200,7 @@ export const AdminAuthService = {
     }
   },
 
-  getAllBookings: async (page: number, limit: number, filters: { search: string }) => {
+  getAllBookings: async (page: number, limit: number, filters: { search?: string }) => {
     try {
       const response = await adminApi.get(API_ROUTES.admin.getAllBookings, {
         params: {
@@ -300,4 +301,14 @@ export const AdminAuthService = {
       throw new Error("Failed to update complaint");
     }
   },
+getStatsData: async (): Promise<Stats> => {
+  try {
+    const response = await adminApi.get(API_ROUTES.admin.getStats);
+    return response.data.data; 
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    throw new Error("Failed to fetch stats");
+  }
+},
+
 };

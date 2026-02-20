@@ -45,7 +45,7 @@ const Sidebar: React.FC = () => {
   };
 
   const navItems = [
-    { name: "DashBoard", path: "/carOwner/dashboard/documents", icon: <CreditCard size={18} /> },
+    { name: "DashBoard", path: "/carOwner/dashboard", icon: <CreditCard size={18} /> },
     { name: "Personal Details", path: "/carOwner/dashboard/profile", icon: <User size={18} /> },
     { name: "Your Cars", path: "/carOwner/dashboard/cars", icon: <Car size={18} /> },
     { name: "Bookings", path: "/carOwner/dashboard/bookings", icon: <Calendar size={18} /> },
