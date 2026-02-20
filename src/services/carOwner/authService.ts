@@ -10,7 +10,7 @@ import {
   RegistrationCarOwner,
 } from "@/types/authTypes";
 import { Booking } from "@/types/carTypes";
-import { Stats } from "@/types/statsTypes";
+import { StatsData } from "@/types/statsTypes";
 
 // const carOwnerApi = axiosOwner;
 
@@ -192,7 +192,7 @@ export const OwnerAuthService = {
       );
     }
   },
-  getStatsData: async (): Promise<Stats>=> {
+  getStatsData: async (): Promise<StatsData>=> {
     try {
       const response = await carOwnerApi.get(API_ROUTES.owner.getOwnerStats);
       return response.data.data; 

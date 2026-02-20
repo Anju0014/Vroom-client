@@ -87,3 +87,10 @@ export interface UpdateComplaintModalProps {
   onClose: () => void;
   onUpdated: () => void;
 }
+
+
+export interface UpdateComplaintPayload {
+  status: ComplaintStatus;
+  priority: ComplaintPriority;
+  adminResponse?: string;
+}

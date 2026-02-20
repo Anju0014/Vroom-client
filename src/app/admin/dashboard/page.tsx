@@ -22,7 +22,7 @@ const formatDate = (dateStr: string) =>
     minute: "2-digit",
   }).format(new Date(dateStr));
 
-const page = () => {
+const Page = () => {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,4 +139,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

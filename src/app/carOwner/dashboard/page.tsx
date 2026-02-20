@@ -33,7 +33,7 @@ const getStatusBadge = (booking: Booking) => {
   return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">Completed</span>;
 };
 
-const page = () => {
+const Page = () => {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -149,4 +149,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

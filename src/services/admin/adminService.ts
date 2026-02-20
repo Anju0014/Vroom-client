@@ -3,23 +3,8 @@
 // import { axiosAdmin } from "@/code/axiosAdmin";
 import adminApi from "@/code/axiosInstance";
 import { API_ROUTES } from "@/code/constants/apiRoutes";
-import { Stats } from "@/types/statsTypes";
-export type ComplaintStatus =
-  | "open"
-  | "in_review"
-  | "resolved"
-  | "rejected";
-
-export type ComplaintPriority =
-  | "low"
-  | "medium"
-  | "high";
-
-export interface UpdateComplaintPayload {
-  status: ComplaintStatus;
-  priority: ComplaintPriority;
-  adminResponse?: string;
-}
+import { UpdateComplaintPayload } from "@/types/complaintTypes";
+import {  StatsData } from "@/types/statsTypes";
 
 // const adminApi = axiosAdmin;
 
@@ -301,7 +286,7 @@ export const AdminAuthService = {
       throw new Error("Failed to update complaint");
     }
   },
-getStatsData: async (): Promise<Stats> => {
+getStatsData: async (): Promise<StatsData> => {
   try {
     const response = await adminApi.get(API_ROUTES.admin.getStats);
     return response.data.data; 
