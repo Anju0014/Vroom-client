@@ -12,8 +12,8 @@ export const complaintService = {
     await api.post("/complaints", data);
   },
 
-  getMyComplaints: async (): Promise<Complaint[]> => {
-    const res = await api.get("/complaints");
+  getMyComplaints: async (page = 1, limit = 5) => {
+    const res = await api.get("/complaints",{ params: { page, limit },});
     return res.data;
   },
 };

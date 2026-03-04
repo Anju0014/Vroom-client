@@ -37,7 +37,7 @@ const UserManagementPage: React.FC<UserManagementProps> = ({ userType }) => {
   const [searchTerm, setSearchTerm] = useState('');
         const [currentPage, setCurrentPage] = useState(1);
         const [totalUsers, setTotalUsers] = useState(0);
-        const itemsPerPage = 5;
+        const itemsPerPage = 3;
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [clickLocked, setClickLocked] = useState(false);
 

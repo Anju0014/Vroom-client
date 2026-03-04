@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { AlertCircle, Plus, X, Clock, CheckCircle, AlertTriangle } from "lucide-react";
+import { AlertCircle, Plus, X, Clock, CheckCircle, AlertTriangle, Eye, Download } from "lucide-react";
 import { complaintService } from "@/services/common/complaintService";
 import ComplaintForm from "@/components/common/CompliantForm";
 import { Complaint,CreateComplaintDTO } from "@/types/complaintTypes";
 import LoadingButton from "@/components/common/LoadingButton";
+import Pagination from "@/components/pagination";
 // import { useAuth } from "@/hooks/useAuth";
 
 const ComplaintPage: React.FC = () => {
@@ -12,7 +13,9 @@ const ComplaintPage: React.FC = () => {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalComplaints, setTotalComplaints] = useState(0);
+   const itemsPerPage = 3;
   const [formData, setFormData] = useState<CreateComplaintDTO>({
     bookingId: "",
     title: "",
@@ -22,19 +25,20 @@ const ComplaintPage: React.FC = () => {
   });
 
   useEffect(() => {
-    loadComplaints();
-  }, []);
+    loadComplaints(currentPage);
+  }, [currentPage]);
 
-  const loadComplaints = async () => {
-    const data = await complaintService.getMyComplaints();
-    setComplaints(data);
+  const loadComplaints = async (page:number) => {
+    const response= await complaintService.getMyComplaints(currentPage, itemsPerPage);
+    setComplaints(response.complaints);
+    setTotalComplaints(response.total||0)
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
       await complaintService.createComplaint(formData);
-      await loadComplaints();
+      await loadComplaints(currentPage);
       setShowForm(false);
       setFormData({
         bookingId: "",
@@ -65,6 +69,13 @@ const ComplaintPage: React.FC = () => {
     }
   };
 
+  const totalPages = Math.ceil(totalComplaints / itemsPerPage);
+  
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
   const getStatusColor = (status: string) => {
     switch (status) {
       case "resolved":
@@ -90,7 +101,7 @@ const ComplaintPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br  from-blue-200 to-yellow-200 p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+  
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl mb-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
@@ -112,7 +123,7 @@ const ComplaintPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Form */}
+      
         {showForm && (
           <ComplaintForm
             formData={formData}
@@ -132,59 +143,90 @@ const ComplaintPage: React.FC = () => {
           </div>
 
           {complaints.length === 0 ? (
-            <div className="bg-white p-12 rounded-2xl shadow-lg text-center border-2 border-gray-100">
-              <AlertCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">No complaints yet</p>
-              <p className="text-gray-400 text-sm mt-2">Click "New Complaint" to submit one</p>
+            <div className="text-center py-16">
+              <AlertCircle className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 font-medium">No complaints yet</p>
+              <p className="text-gray-400 text-sm">Click "New Complaint" to submit one</p>
             </div>
           ) : (
-            <div className="grid gap-6">
+            <div className="space-y-4">
               {complaints.map((c) => (
                 <div
                   key={c._id}
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-gray-100 overflow-hidden"
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-gray-100 overflow-hidden p-5"
                 >
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          {getStatusIcon(c.status)}
-                          <h3 className="text-xl font-bold text-gray-800">{c.title}</h3>
-                        </div>
-                        <p className="text-gray-600 leading-relaxed">{c.description}</p>
+                  
+                  <div className="flex items-start gap-4">
+                    
+                    <div className={`mt-0.5 p-2 rounded-lg border flex-shrink-0 ${getStatusColor(c.status)}`}>
+                      {getStatusIcon(c.status)}
+                    </div>
+
+                
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold text-gray-800 text-sm truncate">{c.title}</h3>
+                        <span className={`text-xs px-2 py-0.5 rounded-full border font-medium flex-shrink-0 flex items-center gap-1 ${getStatusColor(c.status)}`}>
+                          {c.status.toUpperCase()}
+                        </span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full border font-medium flex-shrink-0 ${getPriorityColor(c.priority)}`}>
+                          {c.priority.toUpperCase()}
+                        </span>
                       </div>
+                      <p className="text-gray-500 text-xs mt-1 line-clamp-1">{c.description}</p>
+
+                      
+                      {c.adminResponse && (
+                        <p className="text-xs text-indigo-600 mt-1 bg-indigo-50 px-2 py-1 rounded-lg line-clamp-1">
+                          <span className="font-semibold">Admin:</span> {c.adminResponse}
+                        </p>
+                      )}
                     </div>
 
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(c.status)}`}>
-                        {c.status.toUpperCase()}
-                      </span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getPriorityColor(c.priority)}`}>
-                        {c.priority.toUpperCase()} PRIORITY
-                      </span>
-                    </div>
-
-                    {c.adminResponse && (
-                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border-l-4 border-blue-500">
-                        <div className="flex items-start gap-3">
-                          <div className="bg-blue-500 p-2 rounded-lg">
-                            <AlertCircle className="w-4 h-4 text-white" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-semibold text-blue-900 mb-1">Admin Response</p>
-                            <p className="text-sm text-blue-800">{c.adminResponse}</p>
-                          </div>
-                        </div>
+                    
+                    {c.complaintProof && (
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <a
+                          href={c.complaintProof}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 transition-colors font-medium"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          View
+                        </a>
+                        <a
+                          href={c.complaintProof}
+                          download
+                          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors font-medium"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          Download
+                        </a>
                       </div>
                     )}
                   </div>
                 </div>
               ))}
-            </div>
+          
+              {/* {totalPages > 1 && ( */}
+                              <div className="flex justify-center">
+                                <Pagination
+                                  currentPage={currentPage}
+                                  totalPages={totalPages}
+                                  onPageChange={handlePageChange}
+                                />
+                              </div>
+                            {/* )} */}
+                              </div>
           )}
+
+            </div>
+            
+          
         </div>
       </div>
-    </div>
+    
   );
 };
 
