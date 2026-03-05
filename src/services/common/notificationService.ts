@@ -13,15 +13,18 @@ export const NotificationService = {
   },
 
   async getUnreadCount(userId: string) {
-    const { data } = await api.get(API_ROUTES.notification.getUnreadCount, {
-      params: { userId }
+    const { data } = await api.get(API_ROUTES.notification.getUnreadCount, 
+      { params: { userId }
     });
     return data.count; 
   },
 
-  async markAsRead(id: string, userId: string) {
-    await api.patch(`${API_ROUTES.notification.markAsRead}/${id}`, null, {
-      params: { userId }
+  async markAllAsRead(userId: string) {
+    console.log("markas",userId)
+    await api.patch(API_ROUTES.notification.markAllAsRead,
+      null,
+      { params: { userId }
     });
+    console.log("response")
   }
 };

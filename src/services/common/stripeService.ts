@@ -132,4 +132,8 @@ export const StripeService = {
       );
     }
   },
+   async createConnectAccount() {
+    const res = await api.post(API_ROUTES.stripe.createConnectAccount);
+    return res.data;
+  },
 };

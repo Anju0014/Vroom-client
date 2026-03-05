@@ -17,7 +17,8 @@ import {
   LogOut,
   CheckCircleIcon,
   CreditCard,
-  Pen
+  Pen,
+  Wallet
 } from "lucide-react";
 import LoadingButton from "../common/LoadingButton";
 
@@ -84,6 +85,12 @@ const Sidebar: React.FC = () => {
       path: "/admin/dashboard/complaints", 
       icon: <Pen size={18} /> 
     },
+    { 
+      name: "Payments", 
+      path: "/admin/dashboard/payments", 
+      icon: <Wallet size={18} /> 
+    },
+    
     { 
       name: "Sales", 
       path: "/admin/sales", 

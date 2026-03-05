@@ -5,7 +5,6 @@ import { Wallet, ArrowUpRight, ArrowDownLeft, RefreshCw, X, ChevronLeft, Chevron
 import Pagination from '@/components/pagination';
 import {ITransaction ,IWalletData, IWalletResponse }  from '@/types/walletTypes'
 import LoadingButton from '@/components/common/LoadingButton';
-import { OwnerAuthService } from '@/services/carOwner/authService';
 
 const WalletPage: React.FC = () => {
   const [walletData, setWalletData] = useState<IWalletData | null>(null);
@@ -151,7 +150,7 @@ const WalletPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Transactions Section */}
+      
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-xl font-bold text-gray-800">Transaction History</h2>

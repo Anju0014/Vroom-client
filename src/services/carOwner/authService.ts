@@ -201,4 +201,17 @@ export const OwnerAuthService = {
       throw new Error("Failed to fetch stats");
     }
   },
+   findOwnerWalletDetails: async (page = 1, limit = 5) => {
+    console.log("sending request for user wallet");
+    const response = await carOwnerApi.get(API_ROUTES.owner.findOwnerWalletDetails, {
+      params: { page, limit },
+    });
+    console.log("getWallets response:", response.data);
+    return response.data;
+  },
+   async createConnectAccount() {
+    const res = await carOwnerApi.post(API_ROUTES.stripe.createConnectAccount);
+    return res.data;
+  },
+  
 };

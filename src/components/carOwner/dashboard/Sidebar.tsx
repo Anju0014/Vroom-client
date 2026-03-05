@@ -16,7 +16,8 @@ import {
   AlertTriangle, 
   DollarSign, 
   Settings, 
-  LogOut 
+  LogOut, 
+  Wallet
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { OwnerAuthService } from "@/services/carOwner/authService";
@@ -51,6 +52,7 @@ const Sidebar: React.FC = () => {
     { name: "Bookings", path: "/carOwner/dashboard/bookings", icon: <Calendar size={18} /> },
     // { name: "Report & Complaint", path: "/carOwner/dashboard/complaints", icon: <AlertTriangle size={18} /> },
     { name: "Revenue", path: "/carOwner/dashboard/revenue", icon: <DollarSign size={18} /> },
+    { name: "Wallet", path: "/carOwner/dashboard/wallet", icon: <Wallet size={18} /> },
     { name: "Chats", path: "/carOwner/dashboard/chats", icon: <MessageSquare size={18} /> },
     { name: "Settings", path: "/carOwner/dashboard/settings", icon: <Settings size={18} /> },
     //  { name: "Logout", path: "/logout", icon: <LogOut size={18} /> },
