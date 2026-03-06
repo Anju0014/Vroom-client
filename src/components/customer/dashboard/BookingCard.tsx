@@ -57,15 +57,14 @@ const BookingCard: React.FC<BookingCardProps> = memo(({ booking, onViewDetails }
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200 group">
       <div className="p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          {/* Left Section - Car Info */}
           <div className="flex-1">
             <div className="flex items-start gap-4">
-              {/* Car Icon/Image Placeholder */}
+  
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
                 <span className="text-2xl">🚗</span>
               </div>
               
-              {/* Car Details */}
+
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-xl font-bold text-slate-900 truncate">
@@ -96,7 +95,7 @@ const BookingCard: React.FC<BookingCardProps> = memo(({ booking, onViewDetails }
             </div>
           </div>
 
-          {/* Middle Section - Dates */}
+
           <div className="flex-1 border-l border-slate-200 pl-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
@@ -134,7 +133,7 @@ const BookingCard: React.FC<BookingCardProps> = memo(({ booking, onViewDetails }
 )}
 
 
-          {/* Right Section - Price & Status */}
+
           <div className="flex flex-col items-end gap-3">
             <div className="text-right">
               <div className="text-2xl font-bold text-slate-900">

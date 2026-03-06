@@ -1,5 +1,5 @@
-"use client";
 
+"use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -61,7 +61,7 @@ export default function PickupPage() {
       await AuthService.requestPickupOTP(bookingId);
       toast.success("OTP has sent to your email");
       setStep("OTP");
-      setResendTimer(5*60);
+      setResendTimer(5 * 60);
     } catch {
       toast.error("Failed to send OTP");
     } finally {
@@ -69,7 +69,6 @@ export default function PickupPage() {
     }
   };
 
-  
   const verifyOtp = async () => {
     if (otp.length !== 6) {
       toast.error("Enter valid 6 digit OTP");
@@ -80,11 +79,7 @@ export default function PickupPage() {
       setActionLoading(true);
       await AuthService.verifyPickupOTP(bookingId, otp);
       toast.success("Pickup verified");
-      setStep("DONE");
-
-      setTimeout(() => {
-        router.replace(`/customer/dashboard/bookings`);
-      }, 1200);
+      setStep("DONE"); // ← show action buttons, no auto-redirect
     } catch {
       toast.error("Invalid OTP");
       setOtp("");
@@ -92,6 +87,15 @@ export default function PickupPage() {
       setActionLoading(false);
     }
   };
+
+  const handleOpenMaps = () => {
+    window.open("https://maps.google.com", "_blank");
+  };
+
+  const handleGoBack = () => {
+    router.replace("/customer/dashboard/bookings");
+  };
+
   if (!user) {
     router.replace("/login");
     return null;
@@ -99,10 +103,10 @@ export default function PickupPage() {
 
   if (loading) {
     return (
-         <div className="flex items-center justify-center h-20">
-      <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
-       <p>Loading pickup details...</p>
-    </div>
+      <div className="flex items-center justify-center h-20">
+        <div className="w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+        <p>Loading pickup details...</p>
+      </div>
     );
   }
 
@@ -117,6 +121,7 @@ export default function PickupPage() {
             {booking.pickupLocation}
           </p> */}
         </div>
+
         {step === "START" && (
           <LoadingButton
             onClick={requestOtp}
@@ -161,12 +166,42 @@ export default function PickupPage() {
           </div>
         )}
 
-    
         {step === "DONE" && (
-          <div className="text-center text-green-400 text-lg">
-            Pickup Verified ✔ Redirecting...
+          <div className="bg-slate-800 p-6 rounded-xl space-y-5">
+            <div className="flex flex-col items-center gap-2 pb-2">
+              <div className="w-14 h-14 rounded-full bg-green-500/20 flex items-center justify-center">
+                <svg className="w-7 h-7 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-green-400 font-semibold text-lg">Pickup Verified!</p>
+              <p className="text-slate-400 text-sm text-center">
+                Your trip has started. What would you like to do next?
+              </p>
+            </div>
+            <div className="border-t border-slate-700" />
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={handleOpenMaps}
+                className="flex flex-col items-center gap-2 p-4 bg-slate-700 hover:bg-slate-600 rounded-xl transition-colors"
+              >
+                <span className="text-2xl">🗺️</span>
+                <span className="text-sm font-semibold text-white">Navigate</span>
+                <span className="text-xs text-slate-400 text-center">Open Google Maps</span>
+              </button>
+
+              <button
+                onClick={handleGoBack}
+                className="flex flex-col items-center gap-2 p-4 bg-slate-700 hover:bg-slate-600 rounded-xl transition-colors"
+              >
+                <span className="text-2xl">↩️</span>
+                <span className="text-sm font-semibold text-white">Go Back</span>
+                <span className="text-xs text-slate-400 text-center">Return to Bookings</span>
+              </button>
+            </div>
           </div>
         )}
+
       </div>
     </div>
   );
